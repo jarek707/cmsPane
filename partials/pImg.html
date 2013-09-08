@@ -1,15 +1,17 @@
 <div sid={{$id}}>
-    <div class='active' ng-Dblclick='blr()'>
+    <div row-buttons class="button"></div>
+    <p ng-click='clk()'>
+        <img ng-src='{{workRow[1]}}'></img>
+        <span>{{workRow[0]}}</span>
+    </p>
+    <div class='active'>
         <ul>
             <li>
-            <label>Caption</label><textarea ng-model="workRow[0]" ng-change='chg(0)'></textarea>
-            <li></li>
-            <label>Url:</label><textarea ng-model="workRow[1]" ng-change='chg(1)'></textarea>
+                <label>Caption</label><textarea ng-model="workRow[0]" ng-change='chg(0)'></textarea>
+            <li>
+            </li>
+                <label>Url:</label><textarea ng-model="workRow[1]" ng-change='chg(1)'></textarea>
             </li>
         </ul>
     </div>
-    <p class='' ng-click='clk()'>
-        <img ng-src='{{workRow[1]}}'></img>{{workRow[0]}}
-    </p>
-    <div row-buttons class="button"></div>
 </div>

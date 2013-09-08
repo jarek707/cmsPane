@@ -513,9 +513,10 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                         }
 
                         $scope.edit = function() {
-                            $scope.buttonsOnOff('close','edit');
-                            $scope.closeLastRow($scope);
                             $scope.chg();
+                            $scope.closeLastRow($scope);
+                            $scope.buttonsOnOff('close','edit');
+                            LG( 'close and off edit');
                         }
 
                         $scope.close = function() {

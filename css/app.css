@@ -324,7 +324,9 @@ cms-pane[key="salons"] ul li div[p-img] [row-buttons],
 [cms-pane][key="salons"] ul li div[p-img] [row-buttons],
 cms-pane[key="members"] ul li div[p-img] [row-buttons],
 [cms-pane][key="members"] ul li div[p-img] [row-buttons] {
-  posiiton: relative;
+  position: absolute;
+  height: 12px;
+  width: 88%;
 }
 cms-pane[key="stylists"] ul li div.buttons,
 [cms-pane][key="stylists"] ul li div.buttons,
@@ -333,7 +335,6 @@ cms-pane[key="salons"] ul li div.buttons,
 cms-pane[key="members"] ul li div.buttons,
 [cms-pane][key="members"] ul li div.buttons {
   float: right;
-  margin-top: -36px;
   display: none;
 }
 cms-pane[key="stylists"] ul li:hover div.buttons,
@@ -343,36 +344,6 @@ cms-pane[key="salons"] ul li:hover div.buttons,
 cms-pane[key="members"] ul li:hover div.buttons,
 [cms-pane][key="members"] ul li:hover div.buttons {
   display: block;
-}
-cms-pane[child] li,
-[cms-pane][child] li {
-  position: relative;
-  float: left;
-  width: auto;
-}
-cms-pane[child] li div[p-img],
-[cms-pane][child] li div[p-img] {
-  margin: 5px;
-  border: 1px solid #aaa;
-  padding: 5px;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
-  -o-border-radius: 5px;
-  border-radius: 5px;
-}
-cms-pane[child] li div[p-img] p,
-[cms-pane][child] li div[p-img] p {
-  margin: 0;
-  padding: 0;
-}
-cms-pane[child] li div[p-img] div[row-buttons] .buttons,
-[cms-pane][child] li div[p-img] div[row-buttons] .buttons {
-  float: right;
-}
-cms-pane[child] li div[p-img] img,
-[cms-pane][child] li div[p-img] img {
-  height: 80px;
 }
 cms-pane ul.dataContent,
 [cms-pane] ul.dataContent {

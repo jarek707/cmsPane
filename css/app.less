@@ -228,43 +228,19 @@ cms-pane,
                         width:100%;
                     }
                     [row-buttons] {
-                       posiiton:relative;
+                       position:absolute;
+                       height:16px;
+                       width:85%;
                     }
                 }
                 div.buttons {
                     float:right;
-                    margin-top:-36px;
                     display:none;
                 }
             }
             li:hover {
                 div.buttons {
                     display:block;
-                }
-            }
-        }
-    }
-    &[child] {
-        li {
-            position:relative;
-            float:left;
-            width:auto;
-            div[p-img]{
-                margin:5px;
-                border:1px solid #aaa;
-                padding:5px;
-                .rounded-corners; 
-                p {
-                    margin:0;
-                    padding:0;
-                }
-                div[row-buttons] {
-                    .buttons {
-                        float:right;
-                    }
-                }
-                img {
-                    height:80px;
                 }
             }
         }
