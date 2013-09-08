@@ -1,0 +1,500 @@
+.hidden {
+  display: none;
+}
+body {
+  min-width: 490px;
+  background: #eee;
+  margin: 0;
+  padding: 0;
+  font-family: Helvetica;
+}
+div#page {
+  min-width: 400px;
+  max-width: 68em;
+  margin: 0 auto;
+}
+div#footer {
+  position: absolute;
+  bottom: 0;
+  height: 45px;
+  background: red;
+}
+input {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+  border-radius: 4px;
+  border: 2px solid #aaa;
+}
+li {
+  list-style: none;
+}
+div.topMenu {
+  position: relative;
+  float: left;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 15px;
+  color: #eeeeee;
+  background: #6aa3c8;
+  overflow: hidden;
+}
+div.contentWrap {
+  border-left: 180px solid #d3dce0;
+  border-right: 180px solid #d3dce0;
+  height: 100%;
+}
+div.contentPane,
+.left,
+.right {
+  float: left;
+}
+.right,
+.left {
+  position: relative;
+}
+div.contentPane {
+  width: 100%;
+  background: #d0e5f2;
+}
+div.right {
+  width: 180px;
+  margin-right: -180px;
+}
+div.left {
+  width: 180px;
+  margin-left: -180px;
+  left: -100%;
+}
+div.gridBox {
+  margin: 10px;
+  padding: 8px;
+  border: 3px solid #afbfc7;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+  border-radius: 10px;
+  overflow: auto;
+}
+cms-pane,
+[cms-pane] {
+  margin: 0;
+}
+cms-pane .delButton,
+[cms-pane] .delButton {
+  background: transparent url('../image/glyph.png') -456px 0px no-repeat;
+}
+cms-pane .editButton,
+[cms-pane] .editButton {
+  background: transparent url('../image/glyph.png') 0px -72px no-repeat;
+}
+cms-pane .subButton,
+[cms-pane] .subButton {
+  background: transparent url('../image/glyph.png') -410px -120px no-repeat;
+}
+cms-pane .savButton,
+[cms-pane] .savButton {
+  background: transparent url('../image/glyph.png') -290px 0px no-repeat;
+}
+cms-pane .addButton,
+[cms-pane] .addButton {
+  background: transparent url('../image/glyph.png') -408px -96px no-repeat;
+}
+cms-pane .closeButton,
+[cms-pane] .closeButton,
+cms-pane .removeButton,
+[cms-pane] .removeButton {
+  background: transparent url('../image/glyph.png') -312px 0px no-repeat;
+}
+cms-pane .restoreTable,
+[cms-pane] .restoreTable {
+  background: transparent url('../image/glyph.png') -266px -24px no-repeat;
+}
+cms-pane .peekTable,
+[cms-pane] .peekTable {
+  background: transparent url('../image/glyph-white.png') -266px -24px no-repeat;
+}
+cms-pane .button,
+[cms-pane] .button {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+  border-radius: 4px;
+  padding: 0 2px 0 1px;
+}
+cms-pane .button input,
+[cms-pane] .button input {
+  font-size: 0px;
+  min-height: 14px;
+  float: left;
+  cursor: pointer;
+  border: 1px solid transparent;
+  padding: 0;
+  width: 14px;
+  margin-left: 2px;
+  -webkit-border-radius: 0;
+}
+cms-pane cms-header,
+[cms-pane] cms-header,
+cms-pane [cms-header],
+[cms-pane] [cms-header] {
+  float: left;
+  width: 100%;
+  margin-bottom: 2px;
+  padding: 0px;
+  background: #6aa3c8;
+  font-family: Helvetica;
+  font-size: 0.9em;
+}
+cms-pane cms-header div:first-child,
+[cms-pane] cms-header div:first-child,
+cms-pane [cms-header] div:first-child,
+[cms-pane] [cms-header] div:first-child {
+  font-style: italic;
+  font-weight: bold;
+  margin: 0;
+  padding: 0px 3px;
+  border-radius: 2px;
+}
+cms-pane cms-header div,
+[cms-pane] cms-header div,
+cms-pane [cms-header] div,
+[cms-pane] [cms-header] div {
+  padding: 3px 0;
+  position: relative;
+  float: left;
+  margin-left: 3px;
+}
+cms-pane cms-header .button,
+[cms-pane] cms-header .button,
+cms-pane [cms-header] .button,
+[cms-pane] [cms-header] .button {
+  float: right;
+  margin: 3px 2px 0px 1px;
+  padding: 0px 1px 6px 0px;
+  height: 11px;
+  border-radius: 2px;
+}
+cms-pane cms-header input.reloadButton,
+[cms-pane] cms-header input.reloadButton,
+cms-pane [cms-header] input.reloadButton,
+[cms-pane] [cms-header] input.reloadButton {
+  background: transparent url('../image/glyph.png') -218px -24px no-repeat;
+}
+cms-pane cms-header input.restoreTable,
+[cms-pane] cms-header input.restoreTable,
+cms-pane [cms-header] input.restoreTable,
+[cms-pane] [cms-header] input.restoreTable {
+  background: transparent url('../image/glyph.png') -266px -24px no-repeat;
+}
+cms-pane cms-header input.peekTable,
+[cms-pane] cms-header input.peekTable,
+cms-pane [cms-header] input.peekTable,
+[cms-pane] [cms-header] input.peekTable {
+  background: transparent url('../image/glyph-white.png') -266px -24px no-repeat;
+}
+cms-pane cms-header input.peekTable.hidden,
+[cms-pane] cms-header input.peekTable.hidden,
+cms-pane [cms-header] input.peekTable.hidden,
+[cms-pane] [cms-header] input.peekTable.hidden {
+  background: transparent url('../image/glyph.png') -266px -24px no-repeat;
+}
+cms-pane cms-header div.spaces,
+[cms-pane] cms-header div.spaces,
+cms-pane [cms-header] div.spaces,
+[cms-pane] [cms-header] div.spaces {
+  position: relative;
+  float: left;
+  height: 22px;
+  margin: 0px;
+  padding: 0px;
+  background-color: #c7d2d8;
+}
+cms-pane cms-header div.spaces div.space,
+[cms-pane] cms-header div.spaces div.space,
+cms-pane [cms-header] div.spaces div.space,
+[cms-pane] [cms-header] div.spaces div.space {
+  float: left;
+  width: 22px;
+  height: 22px;
+  border-right: 1px dashed #6aa3c8;
+}
+cms-pane cms-header span,
+[cms-pane] cms-header span,
+cms-pane [cms-header] span,
+[cms-pane] [cms-header] span {
+  display: none;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  -o-border-radius: 2px;
+  border-radius: 2px;
+  float: right;
+  margin: 2px 4px  0 0;
+  height: 16px;
+  padding: 1px 2px;
+  font-family: Helvetica;
+  font-size: 1em;
+  color: green;
+  background: #d0e5f2;
+}
+cms-pane cms-header span.success,
+[cms-pane] cms-header span.success,
+cms-pane [cms-header] span.success,
+[cms-pane] [cms-header] span.success {
+  color: #008000;
+}
+cms-pane cms-header span.info,
+[cms-pane] cms-header span.info,
+cms-pane [cms-header] span.info,
+[cms-pane] [cms-header] span.info {
+  color: #0000ff;
+}
+cms-pane cms-header span.warning,
+[cms-pane] cms-header span.warning,
+cms-pane [cms-header] span.warning,
+[cms-pane] [cms-header] span.warning {
+  color: #ffff00;
+}
+cms-pane cms-header span.error,
+[cms-pane] cms-header span.error,
+cms-pane [cms-header] span.error,
+[cms-pane] [cms-header] span.error {
+  color: #a03a5e;
+}
+cms-pane[key="stylists"] ul,
+[cms-pane][key="stylists"] ul,
+cms-pane[key="salons"] ul,
+[cms-pane][key="salons"] ul,
+cms-pane[key="members"] ul,
+[cms-pane][key="members"] ul {
+  margin-top: 0;
+}
+cms-pane[key="stylists"] ul li,
+[cms-pane][key="stylists"] ul li,
+cms-pane[key="salons"] ul li,
+[cms-pane][key="salons"] ul li,
+cms-pane[key="members"] ul li,
+[cms-pane][key="members"] ul li {
+  position: relative;
+  float: left;
+  width: 100%;
+}
+cms-pane[key="stylists"] ul li div[p-img],
+[cms-pane][key="stylists"] ul li div[p-img],
+cms-pane[key="salons"] ul li div[p-img],
+[cms-pane][key="salons"] ul li div[p-img],
+cms-pane[key="members"] ul li div[p-img],
+[cms-pane][key="members"] ul li div[p-img] {
+  margin: 5px;
+  border: 1px solid #aaa;
+  padding: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
+}
+cms-pane[key="stylists"] ul li div[p-img] img,
+[cms-pane][key="stylists"] ul li div[p-img] img,
+cms-pane[key="salons"] ul li div[p-img] img,
+[cms-pane][key="salons"] ul li div[p-img] img,
+cms-pane[key="members"] ul li div[p-img] img,
+[cms-pane][key="members"] ul li div[p-img] img {
+  width: 40px;
+  margin: 0 8px 0 0;
+}
+cms-pane[key="stylists"] ul li div[p-img] p,
+[cms-pane][key="stylists"] ul li div[p-img] p,
+cms-pane[key="salons"] ul li div[p-img] p,
+[cms-pane][key="salons"] ul li div[p-img] p,
+cms-pane[key="members"] ul li div[p-img] p,
+[cms-pane][key="members"] ul li div[p-img] p {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+cms-pane[key="stylists"] ul li div[p-img] [row-buttons],
+[cms-pane][key="stylists"] ul li div[p-img] [row-buttons],
+cms-pane[key="salons"] ul li div[p-img] [row-buttons],
+[cms-pane][key="salons"] ul li div[p-img] [row-buttons],
+cms-pane[key="members"] ul li div[p-img] [row-buttons],
+[cms-pane][key="members"] ul li div[p-img] [row-buttons] {
+  posiiton: relative;
+}
+cms-pane[key="stylists"] ul li div.buttons,
+[cms-pane][key="stylists"] ul li div.buttons,
+cms-pane[key="salons"] ul li div.buttons,
+[cms-pane][key="salons"] ul li div.buttons,
+cms-pane[key="members"] ul li div.buttons,
+[cms-pane][key="members"] ul li div.buttons {
+  float: right;
+  margin-top: -36px;
+  display: none;
+}
+cms-pane[key="stylists"] ul li:hover div.buttons,
+[cms-pane][key="stylists"] ul li:hover div.buttons,
+cms-pane[key="salons"] ul li:hover div.buttons,
+[cms-pane][key="salons"] ul li:hover div.buttons,
+cms-pane[key="members"] ul li:hover div.buttons,
+[cms-pane][key="members"] ul li:hover div.buttons {
+  display: block;
+}
+cms-pane[child] li,
+[cms-pane][child] li {
+  position: relative;
+  float: left;
+  width: auto;
+}
+cms-pane[child] li div[p-img],
+[cms-pane][child] li div[p-img] {
+  margin: 5px;
+  border: 1px solid #aaa;
+  padding: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
+}
+cms-pane[child] li div[p-img] p,
+[cms-pane][child] li div[p-img] p {
+  margin: 0;
+  padding: 0;
+}
+cms-pane[child] li div[p-img] div[row-buttons] .buttons,
+[cms-pane][child] li div[p-img] div[row-buttons] .buttons {
+  float: right;
+}
+cms-pane[child] li div[p-img] img,
+[cms-pane][child] li div[p-img] img {
+  height: 80px;
+}
+cms-pane ul.dataContent,
+[cms-pane] ul.dataContent {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
+  box-shadow: 1px 1px 11px #aaa;
+  float: left;
+  width: 98%;
+  font-size: 0.9em;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow: hidden;
+}
+cms-pane ul.dataContent li.row,
+[cms-pane] ul.dataContent li.row {
+  background: #d0e5f2;
+}
+cms-pane ul.dataContent li.row.editable .active,
+[cms-pane] ul.dataContent li.row.editable .active {
+  display: block;
+}
+cms-pane ul.dataContent li.row.editable .active textarea,
+[cms-pane] ul.dataContent li.row.editable .active textarea,
+cms-pane ul.dataContent li.row.editable .active input,
+[cms-pane] ul.dataContent li.row.editable .active input {
+  max-width: 95%;
+}
+cms-pane ul.dataContent li.row.editable .text,
+[cms-pane] ul.dataContent li.row.editable .text {
+  display: none;
+}
+cms-pane ul.dataContent li.row:hover,
+[cms-pane] ul.dataContent li.row:hover,
+cms-pane ul.dataContent li.row.selected,
+[cms-pane] ul.dataContent li.row.selected {
+  background: #a8cfe7;
+}
+cms-pane ul.dataContent li,
+[cms-pane] ul.dataContent li {
+  float: left;
+}
+cms-pane ul.dataContent li.button,
+[cms-pane] ul.dataContent li.button {
+  height: 16px;
+  margin-top: 2px;
+  float: right;
+  width: auto;
+  white-space: nowrap;
+}
+cms-pane ul.dataContent ul,
+[cms-pane] ul.dataContent ul {
+  margin: 0;
+  padding: 0;
+}
+.active,
+.editable .text {
+  display: none;
+}
+.text,
+.editable .active {
+  display: block;
+}
+.pimg .row {
+  float: left;
+  width: auto;
+  padding: 0;
+  margin: 0;
+  max-width: 300px;
+  min-height: 80px;
+  overflow: auto;
+}
+.pimg .row > div {
+  border-radius: 5px;
+  border: 1px solid #aaa;
+  margin: 8px;
+  overflow: auto;
+  padding: 8px;
+}
+.pimg .row p {
+  margin: 0;
+}
+.pimg .row img {
+  float: right;
+}
+.pimg .row .button {
+  float: left;
+}
+.pimg .active {
+  padding: 8px 8px 20px 8px;
+  margin-bottom: 8px;
+  border: 1px solid #aaa;
+}
+.pimg .active textarea {
+  width: 100%;
+}
+.pimg .active label {
+  clear: left;
+  font-size: 0.9em;
+}
+.pimg .active ul li {
+  width: 100%;
+}
+.pimg .active .button {
+  float: right;
+}
+.members input {
+  width: 100px;
+}
+.box {
+  margin: 20px 8px 8px 8px;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  -ms-border-radius: 8px;
+  -o-border-radius: 8px;
+  border-radius: 8px;
+  border: 2px solid #aaa;
+}
+.paneScroll {
+  overflow-y: auto;
+  height: 650px;
+}

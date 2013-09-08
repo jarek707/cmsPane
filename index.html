@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html id="ng-app" ng-app="app">
+    <!-- Plceholder for global scope params -->
+
+    <head>
+        <title>Angular Grid (DEV)</title>
+
+        <link href="css/app.css" rel="stylesheet" type="text/css" />
+
+        <![if lte IE 8]>
+            <link href="http://ang/css/ie8.css" rel="stylesheet" type="text/css" />
+            <script src='http://ang/js/lib/json2.js'></script>
+            <script>
+                document.createElement('row-buttons');
+                document.createElement('cms-pane');
+                document.createElement('cms-header');
+                document.createElement('cms-footer');
+            </script>
+        <![endif]>
+
+        <script src='lib/underscore.js'></script>
+        <script src="lib/jquery.js"></script>
+        <script src="lib/angular.js"></script>
+        <script src="js/utils.js"></script>
+        <script src="js/paneConfig.js"></script>
+        <script src="js/config.js"></script>
+        <script src="js/services.js"></script>
+        <script src="js/custom.js"></script>
+        <script src="js/controllers.js"></script>
+        <script src="js/cmsPane.js"></script>
+        <script src="js/app.js"></script>
+    </head>
+
+    <body>
+        <div id='page'>
+            <div class='topMenu' ng-controller="topMenu">
+            </div>
+            <div class='contentWrap'>
+                <div class='contentPane' ng-controller="contentPane">
+                    <div class='box' id='childMembers'></div>
+                    <input type='button' value="Clear Local Storage" ng-click='clearLocalStorage()' />
+                    <input type='button' value="" ng-click='moveData()' />
+                </div>
+                <div class='left'>
+                    <cms-pane key='stylists'>
+                        <div cms-header></div>
+                        <!-- ITERATE <div p-img></div> -->
+                        <div cms-footer></div>
+                    </cms-pane>
+                </div>
+                <div class='right'>
+                    <div id="salons" style='border:1px solid red;'></div>
+                </div>
+            </div> <!-- contentWrap -->
+        </div> <!-- page -->
+    </body>
+</html>
