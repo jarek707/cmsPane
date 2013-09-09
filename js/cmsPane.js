@@ -7,8 +7,8 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
             transclude  : true,
             templateUrl : 'partials/pImg.html',
             link        : function($scope, $element) { 
-                if (!_.isUndefined($scope.meta.columns))
-                    $scope.meta = $scope.meta.columns;
+                //if (!_.isUndefined($scope.meta.columns))
+                    //$scope.meta = $scope.meta.columns;
             },
             controller: function($scope, $element) {
                 $scope.trClass = false;
@@ -119,6 +119,9 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                 compile     : function(el, attrs) {
                     return function($scope, $element) { 
                         linkers.set('row', $scope, $element); 
+
+                        //if ( !_.isUndefined($scope.$parent.meta) )
+                            //$scope.meta = $scope.$parent.meta.columns;
                     }
                 },
                 controller  : function($scope, $element) { 

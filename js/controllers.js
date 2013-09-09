@@ -33,9 +33,10 @@ angular.module('app.directiveScopes', ['app.gridConf'])
 
                 'set' : function(type, $scope, $element) {
                     this[type]['default']($scope, $element);
+                    var rel = $scope.meta.rel;
                     
-                    if (!_.isUndefined($scope.meta.rel) && _.isFunction(this[type][$scope.meta.rel])) {
-                        this[type][$scope.meta.rel]($scope, $element);
+                    if (!_.isUndefined(rel) && _.isFunction(this[type][rel])) {
+                        this[type][rel]($scope, $element);
                     }
                 },
                 'head' :  {
@@ -43,9 +44,21 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                     }
                 },
                 'row' : {
+                    '1-m' : function($scope) {
+                    },
+                    'm-1' : function($scope) {
+                    },
+                    'm-1-m' : function($scope) {
+                        $scope.buttonsOnOff('close', 'add,save,sub,del,save,edit');
+                    },
                     'default' : function($scope) {
-                        if ( !_.isUndefined($scope.$parent.meta) )
-                            $scope.meta = $scope.$parent.meta.columns;
+                        $scope.buttons = {};
+                        $scope.buttonsOnOff = function (on, off) {
+                            _(on.split(',')).each(function(v,k)  { $scope.buttons[v] = true; });
+                            _(off.split(',')).each(function(v,k)  { $scope.buttons[v] = false; });
+                        }
+
+                        $scope.buttonsOnOff('edit,del', 'add,save,sub,close');
 
                         $scope.metaType = 'tab';
                         $scope.rowClass  = '';
@@ -67,7 +80,7 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                     },
                     'm-1'  :function($scope) {
                         $scope.relDataKey = $scope.expose({data: 'meta'}).key + '/' + $scope.meta.key;
-                        $scope.updateRelData = function(data) {
+                        $scope.updateRelData = function() {
                             gridDataSrv.save($scope.relDataKey, $scope.relData);
                         };
 
@@ -77,39 +90,29 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                     },
                     'm-1-m'  :function($scope) {
                         $scope.updateList = function() {
-                            $scope.list = {};
-                            var relData = $scope.expose({data:'relData'})[$scope.rowId];
+                            if ( $scope.rowId ) {
+                                $scope.list = {};
+                                var relData = $scope.expose({data:'relData'})[$scope.rowId];
 
-                            if (!_.isUndefined(relData)) {
-                                for (var i=0; i<relData.length; i++ )
-                                    $scope.list[relData[i]] = $scope.parentList[relData[i]];
+                                if (!_.isUndefined(relData))
+                                    for (var i=0; i<relData.length; i++ )
+                                        $scope.list[relData[i]] = $scope.parentList[relData[i]];
+
+                                $scope.expose({data:'updateRelData'})();
                             }
                         }
 
-                        $scope.$on('relDataChanged', function(evt) {
-                            $scope.updateList();
-                        });
-
-                        $scope.$watch('rowId', function() {
-                            if ( $scope.rowId )
-                                $scope.updateList();
-                        });
+                        $scope.$on('relDataChanged', function() { $scope.updateList(); });
+                        $scope.$watch('rowId',       function() { $scope.updateList(); });
                     },
                     'default' : function($scope, $element) {
-                        $scope.buttons = {};
-                        $scope.buttonsOnOff = function (on, off) {
-                            _(on.split(',')).each(function(v,k)  { $scope.buttons[v] = true; });
-                            _(off.split(',')).each(function(v,k)  { $scope.buttons[v] = false; });
-                        }
-
-                        $scope.buttonsOnOff('edit,del', 'add,save,sub,close');
-                        $scope.lastRowScope         = null;
-                        $scope.relScope       = null;
+                        $scope.lastRowScope = null;
+                        $scope.relScope     = null;
                         $scope.ngRepeatColumnLimit  = $scope.meta.columns.tab.length;
 
                         //$scope.list = gridDataSrv.get($scope.meta, $scope);
                         gridDataSrv.getData($scope.$attrs.key, function(data) {
-                             $scope.list = data;
+                             $scope.list  = data;
                              $scope.listW = angular.copy(data);
                         });
                         
@@ -122,13 +125,6 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                             var compiled = $compile(html)(rowScope);
                             $element.find('table').after( compiled );
                         }
-
-                        $scope.restore = function() {
-                            $element.find('grid').remove();
-                            $scope.tableHide = false;
-                            return $scope.rowContent = '';
-                        }
-
                     }
                 }
             }
@@ -173,15 +169,33 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                         }
                     },
                     'm-1' : function($scope) {
-                        var parentClk = $scope.clk;
-                        $scope.clk = function(){
+                        $scope.clk = function(){ // We are adding on click in this one
                             if (!_.contains($scope.relData[$scope.rowId], $scope.id)) {
                                 if ( _.isUndefined($scope.relData[$scope.rowId])) 
                                     $scope.relData[$scope.rowId] = [];
+
                                 $scope.relData[$scope.rowId].push($scope.id);
                             }
+
                             $scope.updateRelData();
                             $scope.$parent.$broadcast('relDataChanged'); // update rel pane
+                        }
+
+                        var parentDel = $scope.del;
+                        $scope.del = function() {
+                            for (var i in $scope.relData )
+                                $scope.relData[i] = _($scope.relData[i]).without($scope.id);
+
+                            $scope.updateRelData();
+                            $scope.$parent.$broadcast('relDataChanged'); // update rel pane
+                            parentDel();
+                        }
+                    },
+                    'm-1-m' : function($scope) {
+                        $scope.close = function() {
+                            var relData = $scope.expose({data:'relData'});
+                            relData[$scope.rowId] = _(relData[$scope.rowId]).without($scope.id);
+                            $scope.updateList();
                         }
                     },
                     'default' : function($scope) {
