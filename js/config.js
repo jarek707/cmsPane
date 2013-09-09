@@ -16,11 +16,11 @@ angular.module('app.gridConf', ['app.directives'])
                 };
 
                 setDefault('config',         'PaneConfig');
-                setDefault('tplDir',         '');
+                setDefault('tplDir',         'partials');
                 setDefault('pane',           'cmsMain');
-                setDefault('childContainer', false);
+                setDefault('relContainer',   false);
                 setDefault('rel',            '');
-                setDefault('relKey',       '');
+                setDefault('relKey',         '');
                 setDefault('key',            false);
 
                 $ret.child     = $ret['child']      || !_.isUndefined(attrs['child']);
@@ -31,18 +31,19 @@ angular.module('app.gridConf', ['app.directives'])
                 return $ret;
             },
 
-            standardTemplates: [
-                'cmsPane',   'cmsCheckbox', 'cmsFooter', 'cmsPane', 'cmsRadio', 
-                'cmsSelect', 'cmsText',     'pImg',      'rowButtons'
-            ],
-            getAllTemplates: function($scope, tplDir, extras, cb) {
-                var tpls = _.isEmpty(extras) ? this.standardTemplates
-                                             : _.union(this.standardTemplates, extras);
+            getAllTemplates: function($scope, extras, cb) {
+                var standardTemplates = [
+                    'cmsPane',   'cmsCheckbox', 'cmsFooter', 'cmsPane', 'cmsRadio', 
+                    'cmsSelect', 'cmsText',     'pImg',      'rowButtons'
+                ];
+                $scope.templates = {};
+                var tpls = _.isEmpty(extras) ? standardTemplates
+                                             : _.union(standardTemplates, extras);
 
                 var load = function(tpls, templates) {
                     var tplName = tpls.shift();
 
-                    $http.get( tplDir + '/' + tplName + '.html').success(function(html) {
+                    $http.get( $scope.meta.tplDir + '/' + tplName + '.html').success(function(html) {
                         templates[tplName] = html;
                         tpls.length ? load(tpls, templates) : cb();
                     });
@@ -67,6 +68,13 @@ angular.module('app.gridConf', ['app.directives'])
                 for (var i=0 ; i<keys.length ; i++ )
                     meta = meta.children[keys[i]];
 
+                return meta;
+            },
+
+            getMeta : function(key) {
+                var meta = this.findMeta(key);
+                if (_.isUndefined(meta)) return false;
+                meta.columns = this.getAllColumns(meta);
                 return meta;
             },
 
@@ -120,23 +128,6 @@ angular.module('app.gridConf', ['app.directives'])
                         $return.push(cols[0]);
                 });
                 return $return;
-            },
-
-            getMeta : function(key) {
-                var meta = this.findMeta(key);
-
-                if (_.isUndefined(meta)) return false;
-
-                meta.columns = this.getAllColumns(meta);
-
-                // Defaults START
-                if (_.isUndefined(meta.autoHide))  meta.autoHide  = true;   
-                if (_.isUndefined(meta.headHide))  meta.headHide  = false;
-                if (_.isUndefined(meta.singleRow)) meta.singleRow = false;
-                if (_.isUndefined(meta.autoAdd)  ) meta.autoAdd   = false;
-                // Defaults END
-
-                return meta;
             },
 
             getChildren: function(key) {

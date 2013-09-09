@@ -1,7 +1,5 @@
 <!DOCTYPE html>
 <html id="ng-app" ng-app="app">
-    <!-- Plceholder for global scope params -->
-
     <head>
         <title>Angular Grid (DEV)</title>
 
@@ -15,6 +13,7 @@
                 document.createElement('cms-pane');
                 document.createElement('cms-header');
                 document.createElement('cms-footer');
+                document.createElement('params');
             </script>
         <![endif]>
 
@@ -37,19 +36,24 @@
             </div>
             <div class='contentWrap'>
                 <div class='contentPane' ng-controller="contentPane">
-                    <div class='box' id='childMembers'></div>
+                    <salon-stylist cms-pane key="salon-stylist" rel='m-1-m'>
+                        <div cms-header></div>
+                        <iterate><div p-img></div></iterate>
+                    </salon-stylist>
                     <input type='button' value="Clear Local Storage" ng-click='clearLocalStorage()' />
-                    <input type='button' value="" ng-click='moveData()' />
                 </div>
                 <div class='left'>
-                    <cms-pane key='stylists'>
+                    <cms-pane key='stylists' rel-container="salons" rel="1-m">
                         <div cms-header></div>
-                        <!-- ITERATE <div p-img></div> -->
+                        <iterate><div p-img></div></iterate>
                         <div cms-footer></div>
                     </cms-pane>
                 </div>
                 <div class='right'>
-                    <div id="salons" style='border:1px solid red;'></div>
+                    <salons cms-pane key="salons" rel-container='salon-stylist' rel='m-1'>
+                        <div cms-header></div>
+                        <iterate><div p-img></div></iterate>
+                    </salons>
                 </div>
             </div> <!-- contentWrap -->
         </div> <!-- page -->

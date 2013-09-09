@@ -266,6 +266,8 @@ cms-pane [cms-header] span.error,
 [cms-pane] [cms-header] span.error {
   color: #a03a5e;
 }
+cms-pane[key="salon-stylist"] ul,
+[cms-pane][key="salon-stylist"] ul,
 cms-pane[key="stylists"] ul,
 [cms-pane][key="stylists"] ul,
 cms-pane[key="salons"] ul,
@@ -274,6 +276,8 @@ cms-pane[key="members"] ul,
 [cms-pane][key="members"] ul {
   margin-top: 0;
 }
+cms-pane[key="salon-stylist"] ul li,
+[cms-pane][key="salon-stylist"] ul li,
 cms-pane[key="stylists"] ul li,
 [cms-pane][key="stylists"] ul li,
 cms-pane[key="salons"] ul li,
@@ -284,6 +288,8 @@ cms-pane[key="members"] ul li,
   float: left;
   width: 100%;
 }
+cms-pane[key="salon-stylist"] ul li div[p-img],
+[cms-pane][key="salon-stylist"] ul li div[p-img],
 cms-pane[key="stylists"] ul li div[p-img],
 [cms-pane][key="stylists"] ul li div[p-img],
 cms-pane[key="salons"] ul li div[p-img],
@@ -299,6 +305,8 @@ cms-pane[key="members"] ul li div[p-img],
   -o-border-radius: 5px;
   border-radius: 5px;
 }
+cms-pane[key="salon-stylist"] ul li div[p-img] img,
+[cms-pane][key="salon-stylist"] ul li div[p-img] img,
 cms-pane[key="stylists"] ul li div[p-img] img,
 [cms-pane][key="stylists"] ul li div[p-img] img,
 cms-pane[key="salons"] ul li div[p-img] img,
@@ -308,6 +316,8 @@ cms-pane[key="members"] ul li div[p-img] img,
   width: 40px;
   margin: 0 8px 0 0;
 }
+cms-pane[key="salon-stylist"] ul li div[p-img] p,
+[cms-pane][key="salon-stylist"] ul li div[p-img] p,
 cms-pane[key="stylists"] ul li div[p-img] p,
 [cms-pane][key="stylists"] ul li div[p-img] p,
 cms-pane[key="salons"] ul li div[p-img] p,
@@ -318,6 +328,8 @@ cms-pane[key="members"] ul li div[p-img] p,
   padding: 0;
   width: 100%;
 }
+cms-pane[key="salon-stylist"] ul li div[p-img] [row-buttons],
+[cms-pane][key="salon-stylist"] ul li div[p-img] [row-buttons],
 cms-pane[key="stylists"] ul li div[p-img] [row-buttons],
 [cms-pane][key="stylists"] ul li div[p-img] [row-buttons],
 cms-pane[key="salons"] ul li div[p-img] [row-buttons],
@@ -325,9 +337,11 @@ cms-pane[key="salons"] ul li div[p-img] [row-buttons],
 cms-pane[key="members"] ul li div[p-img] [row-buttons],
 [cms-pane][key="members"] ul li div[p-img] [row-buttons] {
   position: absolute;
-  height: 12px;
-  width: 88%;
+  height: 16px;
+  width: 85%;
 }
+cms-pane[key="salon-stylist"] ul li div.buttons,
+[cms-pane][key="salon-stylist"] ul li div.buttons,
 cms-pane[key="stylists"] ul li div.buttons,
 [cms-pane][key="stylists"] ul li div.buttons,
 cms-pane[key="salons"] ul li div.buttons,
@@ -337,6 +351,8 @@ cms-pane[key="members"] ul li div.buttons,
   float: right;
   display: none;
 }
+cms-pane[key="salon-stylist"] ul li:hover div.buttons,
+[cms-pane][key="salon-stylist"] ul li:hover div.buttons,
 cms-pane[key="stylists"] ul li:hover div.buttons,
 [cms-pane][key="stylists"] ul li:hover div.buttons,
 cms-pane[key="salons"] ul li:hover div.buttons,

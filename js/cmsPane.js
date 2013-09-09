@@ -118,7 +118,6 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                 templateUrl : 'partials/rowButtons.html',
                 compile     : function(el, attrs) {
                     return function($scope, $element) { 
-                        LG( ' linker' , $scope.$id );
                         linkers.set('row', $scope, $element); 
                     }
                 },
@@ -132,45 +131,57 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
         function ($compile, config, controllers, linkers) {
             return {
                 replace     : false,
-                restrict    : 'E',
-                scope       : { expose : '&', parentList : '='},
+                restrict    : 'EA',
+                scope       : { expose : '&', parentList : '=', rowId : "@"},
                 transclude  : false,
                 template    : "",
-                //templateUrl : 'partials/cmsPane.html',
                 compile     : function(el, attrs, trans) {
-                    var meta     = !_.isUndefined(attrs.meta) ? JSON.parse(attrs.meta) : {};
-                    var children = '';
-                    var matches  = $(el).html().match(/<!--.*?ITERATE([\s\S]*?)-->/);
-                    var iterate  = matches ? matches[1] : '';
-
-                    if ( el.find('*').length ) {
-                        // Use the first comment that has ITERATE string in it, discard such others
-                        children     = el.html().replace(/<!--.*?ITERATE[\s\S]*?-->/, '{{ITERATION}}')
-                                                .replace(/<!--.*?ITERATE[\s\S]*?-->/g, '');
+                    function extractPaneContent( domEl ) {
+                        var iterate  = domEl.find('iterate').replaceWith('{{ITERATION}}').html();
+                        var children = domEl.html();
+                        domEl.find('*').remove();
+                        return {iterate : iterate, children : children};
                     }
-                    el.find('*').remove();
+
+                    var content = extractPaneContent(el);
+
+                    if ( !_.isUndefined(attrs.cmsPane) ) {
+                        el.attr('pane-content', JSON.stringify(content));
+
+                        return null; // Don't link at this point, this is for deferred processing
+                    }
                     
                     return  function($scope, $element, $attrs) {
-                        $scope.templates = {};
-                        var tplDir = _.isUndefined($attrs['tpl-dir']) ? 'partials' : $attrs['tpl-dir'];
+                    $scope.rowId = 999;
+                        $scope.meta = _.isUndefined($attrs.meta) 
+                                    ? {} 
+                                    : JSON.parse(decodeURIComponent(($attrs.meta)));
 
-                        config.getAllTemplates($scope, tplDir, [], function() {
-                            $scope.meta = _.extend(config.setParams($scope.$attrs), 
-                                                   config.getMeta($scope.$attrs.key));
-                            $scope.meta.children = children;
-                            $scope.meta.iterate  = iterate;
+                        if (_.isEmpty($scope.meta)) {
+                            $scope.meta = _.extend(config.setParams($attrs), 
+                                                   config.getMeta($attrs.key));
 
-                            linkers.set('main', $scope, $element);
+                            $scope.meta.paneContent = content;
+                        } else {
+                            content = $scope.meta.paneContent;
+                        }
+
+                        linkers.set('main', $scope, $element);
+
+                        config.getAllTemplates($scope, [], function() {
 
                             html = $scope.templates['cmsPane'];
 
                             if (html.indexOf('{{injectHtml}}') > -1)
-                                html = html.replace('{{injectHtml}}', iterate);
+                                html = html.replace('{{injectHtml}}', content.iterate);
 
-                            if (children.indexOf('{{ITERATION}}') > -1)
-                                html = children.replace('{{ITERATION}}',html); 
+                            if (content.children.indexOf('{{ITERATION}}') > -1)
+                                html = content.children.replace('{{ITERATION}}',html); 
 
                             $element.append($compile(html)($scope));
+                            if (!_.isUndefined($attrs.relContainer)) {
+                                linkers.injectRelChild( $scope );
+                            }
                         });
                     }
                 },
