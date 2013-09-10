@@ -204,45 +204,40 @@ cms-pane,
         span.warning {color:@warningColor;}
         span.error   {color:@errorColor;  }
     }
-    &[key="salon-stylist"],
-    &[key="stylists"],
-    &[key="salons"],
-    &[key="members"] {
-        ul {
-            margin-top:0;
-            li {
-                position:relative;
-                float:left;
-                width:100%;
-                div[p-img] {
-                    margin:5px;
-                    border:1px solid #aaa;
-                    padding:5px;
-                    .rounded-corners; 
-                    img {
-                        width: 40px;
-                        margin:0 8px 0 0;
-                    }
-                    p {
-                        margin:0;
-                        padding:0;
-                        width:100%;
-                    }
-                    [row-buttons] {
-                       position:absolute;
-                       height:16px;
-                       width:85%;
-                    }
+    ul {
+       margin-top:0;
+        li {
+            position:relative;
+            float:left;
+            width:100%;
+            div[p-img] {
+                margin:5px;
+                border:1px solid #aaa;
+                padding:5px;
+                .rounded-corners; 
+                img {
+                    width: 40px;
+                    margin:0 8px 0 0;
                 }
-                div.buttons {
-                    float:right;
-                    display:none;
+                p {
+                    margin:0;
+                    padding:0;
+                    width:100%;
+                }
+                [row-buttons] {
+                   position:absolute;
+                   height:16px;
+                   width:85%;
                 }
             }
-            li:hover {
-                div.buttons {
-                    display:block;
-                }
+            div.buttons {
+                float:right;
+                display:none;
+            }
+        }
+        li:hover {
+            div.buttons {
+                display:block;
             }
         }
     }
@@ -288,6 +283,21 @@ cms-pane,
         ul {
             margin:0;
             padding:0;
+        }
+    }
+    &[rel="m-1-m"] {
+        ul.dataContent {
+            li.row {
+                float:left;
+                width:auto;
+                div[p-img] {
+                    height:85px;
+                    img { 
+                        height:80px;
+                        width:auto;
+                    }
+                }
+            }
         }
     }
 }

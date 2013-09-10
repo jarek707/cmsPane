@@ -6,7 +6,7 @@ angular.module('app.directiveScopes', ['app.gridConf'])
     */
     .service('linkers', ['$http', 'config', '$compile', 'gridDataSrv', 
         function($http, config, $compile, gridDataSrv) {
-
+            'use strict';
 
             return {
                 'injectRelChild' : function($scope) {
@@ -137,6 +137,7 @@ angular.module('app.directiveScopes', ['app.gridConf'])
     */
     .service('controllers', ['$http', 'config', '$compile', 'gridDataSrv', 
         function($http, config, $compile, gridDataSrv) {
+            'use strict';
             return {
                 'set' : function(type, $scope) {
                     this[type]['default']($scope);

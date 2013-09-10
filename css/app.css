@@ -266,36 +266,18 @@ cms-pane [cms-header] span.error,
 [cms-pane] [cms-header] span.error {
   color: #a03a5e;
 }
-cms-pane[key="salon-stylist"] ul,
-[cms-pane][key="salon-stylist"] ul,
-cms-pane[key="stylists"] ul,
-[cms-pane][key="stylists"] ul,
-cms-pane[key="salons"] ul,
-[cms-pane][key="salons"] ul,
-cms-pane[key="members"] ul,
-[cms-pane][key="members"] ul {
+cms-pane ul,
+[cms-pane] ul {
   margin-top: 0;
 }
-cms-pane[key="salon-stylist"] ul li,
-[cms-pane][key="salon-stylist"] ul li,
-cms-pane[key="stylists"] ul li,
-[cms-pane][key="stylists"] ul li,
-cms-pane[key="salons"] ul li,
-[cms-pane][key="salons"] ul li,
-cms-pane[key="members"] ul li,
-[cms-pane][key="members"] ul li {
+cms-pane ul li,
+[cms-pane] ul li {
   position: relative;
   float: left;
   width: 100%;
 }
-cms-pane[key="salon-stylist"] ul li div[p-img],
-[cms-pane][key="salon-stylist"] ul li div[p-img],
-cms-pane[key="stylists"] ul li div[p-img],
-[cms-pane][key="stylists"] ul li div[p-img],
-cms-pane[key="salons"] ul li div[p-img],
-[cms-pane][key="salons"] ul li div[p-img],
-cms-pane[key="members"] ul li div[p-img],
-[cms-pane][key="members"] ul li div[p-img] {
+cms-pane ul li div[p-img],
+[cms-pane] ul li div[p-img] {
   margin: 5px;
   border: 1px solid #aaa;
   padding: 5px;
@@ -305,60 +287,30 @@ cms-pane[key="members"] ul li div[p-img],
   -o-border-radius: 5px;
   border-radius: 5px;
 }
-cms-pane[key="salon-stylist"] ul li div[p-img] img,
-[cms-pane][key="salon-stylist"] ul li div[p-img] img,
-cms-pane[key="stylists"] ul li div[p-img] img,
-[cms-pane][key="stylists"] ul li div[p-img] img,
-cms-pane[key="salons"] ul li div[p-img] img,
-[cms-pane][key="salons"] ul li div[p-img] img,
-cms-pane[key="members"] ul li div[p-img] img,
-[cms-pane][key="members"] ul li div[p-img] img {
+cms-pane ul li div[p-img] img,
+[cms-pane] ul li div[p-img] img {
   width: 40px;
   margin: 0 8px 0 0;
 }
-cms-pane[key="salon-stylist"] ul li div[p-img] p,
-[cms-pane][key="salon-stylist"] ul li div[p-img] p,
-cms-pane[key="stylists"] ul li div[p-img] p,
-[cms-pane][key="stylists"] ul li div[p-img] p,
-cms-pane[key="salons"] ul li div[p-img] p,
-[cms-pane][key="salons"] ul li div[p-img] p,
-cms-pane[key="members"] ul li div[p-img] p,
-[cms-pane][key="members"] ul li div[p-img] p {
+cms-pane ul li div[p-img] p,
+[cms-pane] ul li div[p-img] p {
   margin: 0;
   padding: 0;
   width: 100%;
 }
-cms-pane[key="salon-stylist"] ul li div[p-img] [row-buttons],
-[cms-pane][key="salon-stylist"] ul li div[p-img] [row-buttons],
-cms-pane[key="stylists"] ul li div[p-img] [row-buttons],
-[cms-pane][key="stylists"] ul li div[p-img] [row-buttons],
-cms-pane[key="salons"] ul li div[p-img] [row-buttons],
-[cms-pane][key="salons"] ul li div[p-img] [row-buttons],
-cms-pane[key="members"] ul li div[p-img] [row-buttons],
-[cms-pane][key="members"] ul li div[p-img] [row-buttons] {
+cms-pane ul li div[p-img] [row-buttons],
+[cms-pane] ul li div[p-img] [row-buttons] {
   position: absolute;
   height: 16px;
   width: 85%;
 }
-cms-pane[key="salon-stylist"] ul li div.buttons,
-[cms-pane][key="salon-stylist"] ul li div.buttons,
-cms-pane[key="stylists"] ul li div.buttons,
-[cms-pane][key="stylists"] ul li div.buttons,
-cms-pane[key="salons"] ul li div.buttons,
-[cms-pane][key="salons"] ul li div.buttons,
-cms-pane[key="members"] ul li div.buttons,
-[cms-pane][key="members"] ul li div.buttons {
+cms-pane ul li div.buttons,
+[cms-pane] ul li div.buttons {
   float: right;
   display: none;
 }
-cms-pane[key="salon-stylist"] ul li:hover div.buttons,
-[cms-pane][key="salon-stylist"] ul li:hover div.buttons,
-cms-pane[key="stylists"] ul li:hover div.buttons,
-[cms-pane][key="stylists"] ul li:hover div.buttons,
-cms-pane[key="salons"] ul li:hover div.buttons,
-[cms-pane][key="salons"] ul li:hover div.buttons,
-cms-pane[key="members"] ul li:hover div.buttons,
-[cms-pane][key="members"] ul li:hover div.buttons {
+cms-pane ul li:hover div.buttons,
+[cms-pane] ul li:hover div.buttons {
   display: block;
 }
 cms-pane ul.dataContent,
@@ -417,6 +369,20 @@ cms-pane ul.dataContent ul,
 [cms-pane] ul.dataContent ul {
   margin: 0;
   padding: 0;
+}
+cms-pane[rel="m-1-m"] ul.dataContent li.row,
+[cms-pane][rel="m-1-m"] ul.dataContent li.row {
+  float: left;
+  width: auto;
+}
+cms-pane[rel="m-1-m"] ul.dataContent li.row div[p-img],
+[cms-pane][rel="m-1-m"] ul.dataContent li.row div[p-img] {
+  height: 85px;
+}
+cms-pane[rel="m-1-m"] ul.dataContent li.row div[p-img] img,
+[cms-pane][rel="m-1-m"] ul.dataContent li.row div[p-img] img {
+  height: 80px;
+  width: auto;
 }
 .active,
 .editable .text {
