@@ -9,7 +9,6 @@ angular.module('app.services', ['app.gridConf'])
                     var items =  $(evt.target).find('.sort-item');
 
                     for (var i=0; i<items.length; i++) {
-                    LG( items[i] );
                         relData[$(items[i]).attr('ord-id')].ord = i;
                     }
 
