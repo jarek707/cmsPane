@@ -1,4 +1,23 @@
 angular.module('app.services', ['app.gridConf'])
+    .factory('jquery_ui', function($http, config) {
+        return  {
+            mkSortable : function( $scope, relData ) { 
+                $scope.sortable = 'sortable';
+
+                $('[key="' + $scope.meta.key + '"] .sortable').sortable();
+                $('[key="' + $scope.meta.key + '"] .sortable').on('sortupdate' , function(evt, obj) { 
+                    var items =  $(evt.target).find('.sort-item');
+
+                    for (var i=0; i<items.length; i++) {
+                    LG( items[i] );
+                        relData[$(items[i]).attr('ord-id')].ord = i;
+                    }
+
+                    $scope.expose({data:'updateRelData'})();
+                });
+            }
+        }
+    })
     .factory('gridDataSrv', function($http, config) {
         return  {
             prefix: 'GRID:',

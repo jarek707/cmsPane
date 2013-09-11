@@ -18,7 +18,8 @@ PaneConfig  = {
         'columns' : ["",""]
     },
     'stylists' : {
-        'columns' : ["", ""]
+        'columns' : ["", ""],
+        'cols'    : {"caption" : ["Caption"], "url" : ["Url"]}
     },
     'layout' : {
         'autoHide' : false,

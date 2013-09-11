@@ -4,8 +4,8 @@ angular.module('app.directiveScopes', ['app.gridConf'])
      *          LINKERS
      *
     */
-    .service('linkers', ['$http', 'config', '$compile', 'gridDataSrv', 
-        function($http, config, $compile, gridDataSrv) {
+    .service('linkers', ['$http', 'config', '$compile', 'gridDataSrv','jquery_ui',
+        function($http, config, $compile, gridDataSrv, jquery_ui) {
             'use strict';
 
             return {
@@ -53,7 +53,7 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                     'm-1-m' : function($scope) {
                         $scope.buttonsOnOff('close', 'add,save,sub,del,save,edit');
                     },
-                    'default' : function($scope) {
+                    'default' : function($scope, $element) {
                         $scope.buttons = {};
                         $scope.buttonsOnOff = function (on, off) {
                             _(on.split(',')).each(function(v,k)  { $scope.buttons[v] = true; });
@@ -91,36 +91,23 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                         });
                     },
                     'm-1-m'  :function($scope) {
+                        $scope.sortable = 'sortable';
+
                         $scope.updateList = function() {
                             if ( $scope.rowId ) {
                                 $scope.list = {};
                                 var relData = $scope.expose({data:'relData'})[$scope.rowId];
 
                                 if (!_.isUndefined(relData)) {
-                                    for (var i=0; i<relData.length; i++ ) {
-                                        $scope.list[relData[i]] = $scope.parentList[relData[i]];
+                                    for (var i in relData) {
+                                        $scope.list[relData[i].ord] = $scope.parentList[i];
+                                        $scope.list[relData[i].ord].id = i;
                                     }
                                 }
 
                                 $scope.expose({data:'updateRelData'})();
 
-                                setTimeout( function() {
-                                    //LG ( 'executing ', $('[key="salon-stylist"] .row'));
-                                    //LG ( 'executing ', $('[key="salon-stylist"] .dataContent'));
-                                    //$('[key="salon-stylist"] .row').draggable();
-                                    //$('[key="salon-stylist"] .dataContent').droppable({"accept" : '[key="salon-stylist"] .row'});
-                                    //$('[key="salon-stylist"] .row').droppable({"accept" : '[key="salon-stylist"] .dataContent'});
-                                    $('[key="salon-stylist"] .dataContent').sortable();
-
-                                    $('[key="salon-stylist"] .dataContent').on(
-                                        'sortupdate' , function(evt, obj) { 
-                                            var items =  $(evt.target).find('li.row');
-                                            for (var i=0; i<items.length; i++) {
-                                                LG( $(items[i]).attr('ref-id'));
-                                            }
-                                        }
-                                    );
-                                }, 200);
+                                jquery_ui.mkSortable($scope, relData);
                             }
                         };
 
@@ -198,12 +185,25 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                     },
                     'm-1' : function($scope) {
                         $scope.clk = function(){ // We are adding on click in this one
+                            /// TODO see if contains does anything here
                             if (!_.contains($scope.relData[$scope.rowId], $scope.id)) {
-                                if ( _.isUndefined($scope.relData[$scope.rowId])) {
-                                    $scope.relData[$scope.rowId] = [];
+                                var relData = $scope.relData[$scope.rowId];
+
+                                if ( _.isUndefined(relData)) {
+                                    $scope.relData[$scope.rowId] = relData = {};
                                 }
 
-                                $scope.relData[$scope.rowId].push($scope.id);
+                                var maxId = 0;
+                                // Get max id of all related items 
+                                for ( var i in relData) {
+                                    if (relData[i].ord >= maxId ) {
+                                       maxId = parseInt(relData[i].ord) + 1;
+                                    }
+                                }
+
+                                if (_.isUndefined(relData[$scope.id])) {
+                                    $scope.relData[$scope.rowId][$scope.id] = ({'ord' : maxId});
+                                }
                             }
 
                             $scope.updateRelData();
@@ -212,9 +212,11 @@ angular.module('app.directiveScopes', ['app.gridConf'])
 
                         var parentDel = $scope.del;
                         $scope.del = function() {
+                            // TODO add sorting 'ord' for relData
                             if ( $scope.relData ) {
                                 for (var i in $scope.relData ) {
-                                    $scope.relData[i] = _($scope.relData[i]).without($scope.id);
+                                    if (!_.has($scope.relData[i], $scope.id))
+                                        $scope.relData[i] = _($scope.relData[i]).omit($scope.id);
                                 }
                             }
 
@@ -224,9 +226,8 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                         };
                     },
                     'm-1-m' : function($scope) {
-                        $scope.close = function() {
-                            var relData = $scope.expose({data:'relData'});
-                            relData[$scope.rowId] = _(relData[$scope.rowId]).without($scope.id);
+                        $scope.close = function() { // Remove related item
+                            delete $scope.expose({data:'relData'})[$scope.rowId][$scope.list[$scope.id].id];
                             $scope.updateList();
                         };
                     },
@@ -343,7 +344,7 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                         };
 
                         $scope.del = function(id)  { 
-                            var firstField = $scope.list[id].shift();
+                            var firstField = _($scope.list[id]).values().pop();
                             delete $scope.list[id];
                             $scope.notify(  'del', 
                                             gridDataSrv.save($scope.key, $scope.list), 
@@ -354,8 +355,12 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                         $scope.add = function() {
                             var newIdx = UT.minIntKey($scope.list, -1);
 
-                            $scope.list[newIdx]  = UT.mkEmpty($scope.meta.columns.all, '');
-                            $scope.listW[newIdx] = UT.mkEmpty($scope.meta.columns.all, '');
+                            $scope.list[newIdx]  = {};
+                            $scope.listW[newIdx] = {};
+                            for (var i in $scope.meta.cols) {
+                                $scope.list[newIdx][i]  = '';
+                                $scope.listW[newIdx][i] = '';
+                            }
 
                             $scope.closeLastRow(false);
                             $scope.tableHide = false;

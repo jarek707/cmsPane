@@ -1,5 +1,5 @@
-<ul class="dataContent">
-     <li ng-repeat="(id,row) in list" ng-class='rowClass' class='row' ref-id="{{id}}" >
+<ul class="dataContent" ng-class='sortable'>
+     <li ng-repeat="(id,row) in list" ng-class='rowClass' class='row sort-item' ord-id="{{row.id}}" >
         {{injectHtml}}
      </li>
 </ul>

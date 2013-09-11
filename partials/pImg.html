@@ -1,16 +1,16 @@
 <div ng-click='clk()'>
     <div row-buttons class="button"></div>
     <p>
-        <img ng-src='{{workRow[1]}}'></img>
-        <span>{{workRow[0]}}</span>
+        <img ng-src='{{workRow.url}}'></img>
+        <span>{{workRow.caption}}</span>
     </p>
     <div class='active'>
         <ul>
             <li>
-                <label>Caption</label><textarea ng-model="workRow[0]" ng-change='chg(0)'></textarea>
+                <label>Caption</label><textarea ng-model="workRow.caption" ng-change='chg(0)'></textarea>
             <li>
             </li>
-                <label>Url:</label><textarea ng-model="workRow[1]" ng-change='chg(1)'></textarea>
+                <label>Url:</label><textarea ng-model="workRow.url" ng-change='chg(1)'></textarea>
             </li>
         </ul>
     </div>
