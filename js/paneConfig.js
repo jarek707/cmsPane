@@ -20,18 +20,6 @@ PaneConfig  = {
     'stylists' : {
         'columns' : ["", ""]
     },
-    'salons' : {
-        'columns' : ["", ""],
-        'rel'     : 'friend',
-        'mutual'  : true,
-        'children' : {
-            'friend' : {
-                'rel'     :'friend',
-                'mutual'  : true,
-                'columns' : [""]
-            }
-        }
-    },
     'layout' : {
         'autoHide' : false,
         'columns' : [ 
@@ -139,4 +127,4 @@ PaneConfig  = {
     'localstuff' : {
         'columns' : ['First', 'Last' , 'Local']
     }
-}
+};

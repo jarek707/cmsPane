@@ -53,6 +53,6 @@ angular.module('app.services', ['app.gridConf'])
                     });
                 }
             }
-        }
+        };
     })
 ;

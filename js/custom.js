@@ -12,7 +12,7 @@ angular.module('app.customDirectives', ['app.gridConf'])
                     $scope.getType = function(i) {
                         return $scope.meta.all[i].type;
                     };
-                }
+                };
             },
             controller: function($scope, $element) {
                 $scope.metaType = 'all';
@@ -25,8 +25,8 @@ angular.module('app.customDirectives', ['app.gridConf'])
                 $scope.close = function() {
                     $element.remove();
                     $scope.$parent.$parent.tableHide = false;
-                }
+                };
             }
-        }
+        };
     })
 ;

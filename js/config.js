@@ -13,7 +13,7 @@ angular.module('app.gridConf', ['app.directives'])
                 function setDefault(arg, defaultVal) {
                     $ret[arg] = _.isUndefined(attrs[arg]) || _.isEmpty(attrs[arg])
                                 ? defaultVal : attrs[arg];
-                };
+                }
 
                 setDefault('config',         'PaneConfig');
                 setDefault('tplDir',         'partials');
@@ -23,7 +23,7 @@ angular.module('app.gridConf', ['app.directives'])
                 setDefault('relKey',         '');
                 setDefault('key',            false);
 
-                $ret.child     = $ret['child']      || !_.isUndefined(attrs['child']);
+                $ret.child     = $ret.child      || !_.isUndefined(attrs.child);
                 $ret.autoClose = $ret['auto-close'] || !_.isUndefined(attrs['auto-close']);
 
                 this.setConfigObject($ret.config);
@@ -47,7 +47,7 @@ angular.module('app.gridConf', ['app.directives'])
                         templates[tplName] = html;
                         tpls.length ? load(tpls, templates) : cb();
                     });
-                }
+                };
                
                 load(tpls, $scope.templates);
             },
@@ -133,6 +133,6 @@ angular.module('app.gridConf', ['app.directives'])
             getChildren: function(key) {
                 return _.isUndefined(m = this.findMeta(key)) ? false : m.children; 
             }
-        }
+        };
     })
 ;

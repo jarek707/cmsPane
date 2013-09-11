@@ -1,4 +1,3 @@
-LG( localStorage);
 angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
     .directive('pImg', ['config', function(config) {
         return {
@@ -13,7 +12,7 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
             controller: function($scope, $element) {
                 $scope.trClass = false;
             }
-        }
+        };
     }])
     .directive('cmsText', ['config', function(config) {
         return {
@@ -25,15 +24,15 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                 if (!_.isUndefined($scope.meta.columns))
                     $scope.meta = $scope.meta.columns;
 
-                $scope.meta = $scope.meta['tab'][$scope.i]; 
-                $scope.chg  = function() { $scope.$parent.chg($scope.meta.pos) };
+                $scope.meta = $scope.meta.tab[$scope.i]; 
+                $scope.chg  = function() { $scope.$parent.chg($scope.meta.pos); };
 
-                if ($scope.i == 0 && $scope.row[$scope.i] == '')
+                if ($scope.i === 0 && $scope.row[$scope.i] === '')
                     $($element.find('input')).focus();
             },
             controller: function($scope, $element) {
             }
-        }
+        };
     }])
     .directive('cmsRadio', ['config', function(config) {
         return {
@@ -46,9 +45,9 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                     $scope.meta = $scope.meta.columns;
 
                 $scope.meta = $scope.meta[$scope.metaType][$scope.i]; 
-                $scope.chg  = function() { $scope.$parent.chg($scope.meta.pos) };
+                $scope.chg  = function() { $scope.$parent.chg($scope.meta.pos); };
             }
-        }
+        };
     }])
     .directive('cmsCheckbox', ['config', function(config) {
         return {
@@ -69,7 +68,7 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
 
                 $scope.chg = function() { $scope.$parent.chg($scope.meta.pos); };
             }
-        }
+        };
     }])
     .directive('cmsSelect', ['config', function(config) {
         return {
@@ -82,7 +81,7 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                 $scope.meta = $scope.meta[$scope.metaType][$scope.i];
                 $scope.chg  = function() { $scope.$parent.chg($scope.meta.pos); };
             }
-        }
+        };
     }])
     .directive('cmsFooter', ['config', 'controllers', 'linkers', '$compile',
         function(config, controllers, linkers, $compile) {
@@ -94,7 +93,7 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                     //($scope.spaces = UT.gridKey($scope.$attrs.key).split('/')).pop();
                 },
                 controller  : function($scope) { controllers.head['default']($scope); }
-            }
+            };
         }
     ])
     .directive('cmsHeader', ['config', 'controllers', 'linkers', '$compile',
@@ -107,7 +106,7 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                     //($scope.spaces = UT.gridKey($scope.$attrs.key).split('/')).pop();
                 },
                 controller  : function($scope) { controllers.head['default']($scope); }
-            }
+            };
         }
     ])
     .directive('rowButtons', ['config', 'controllers', 'linkers',
@@ -122,12 +121,12 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
 
                         //if ( !_.isUndefined($scope.$parent.meta) )
                             //$scope.meta = $scope.$parent.meta.columns;
-                    }
+                    };
                 },
                 controller  : function($scope, $element) { 
                     controllers.set('row', $scope, $element); 
                 }
-            }
+            };
         }
     ])
     .directive('cmsPane', ['$compile',  'config', 'controllers','linkers',
@@ -148,17 +147,13 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
 
                     var content = extractPaneContent(el);
 
-                    if ( !_.isUndefined(attrs.cmsPane) ) {
+                    if ( !_.isUndefined(attrs.wrapper)) {
                         el.attr('pane-content', JSON.stringify(content));
-
                         return null; // Don't link at this point, this is for deferred processing
                     }
                     
                     return  function($scope, $element, $attrs) {
-                    $scope.rowId = 999;
-                        $scope.meta = _.isUndefined($attrs.meta) 
-                                    ? {} 
-                                    : JSON.parse(decodeURIComponent(($attrs.meta)));
+                        $scope.meta = _.isUndefined($attrs.meta) ? {} : JSON.parse(decodeURIComponent(($attrs.meta)));
 
                         if (_.isEmpty($scope.meta)) {
                             $scope.meta = _.extend(config.setParams($attrs), 
@@ -173,7 +168,7 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
 
                         config.getAllTemplates($scope, [], function() {
 
-                            html = $scope.templates['cmsPane'];
+                            html = $scope.templates.cmsPane;
 
                             if (html.indexOf('{{injectHtml}}') > -1)
                                 html = html.replace('{{injectHtml}}', content.iterate);
@@ -181,12 +176,15 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                             if (content.children.indexOf('{{ITERATION}}') > -1)
                                 html = content.children.replace('{{ITERATION}}',html); 
 
-                            $element.append($compile(html)($scope));
+
+                            var compiled = $compile(html)($scope);
+                            $element.append(compiled);
+
                             if (!_.isUndefined($attrs.relContainer)) {
                                 linkers.injectRelChild( $scope );
                             }
                         });
-                    }
+                    };
                 },
                 controller  :  function($scope, $element, $attrs) {
                     $scope.exposing = function(dataItem) {
@@ -197,7 +195,7 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                     $scope.key    = $attrs.key;
                     controllers.set('main', $scope);
                 }
-            }
+            };
         }
     ])
     .directive('notify', function factory() {
@@ -227,10 +225,10 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                     $element.html('<b><i>' + UT.camelize(type, true) + ':</i></b> ' + msg)
                             .css( {display:"block", color:colors[type]} );
 
-                    setTimeout(function() {$element.css({display:"none"})}, 2000*howLong);
-                };
+                    setTimeout(function() {$element.css({display:"none"}); }, 2000*howLong);
+                }
             }
-        }
+        };
     })
     .directive('box', function factory() {
         return {
@@ -238,24 +236,23 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
             template:   '<div class="box">text in a box</div>',
             transclude: true,
             replace:    true
-        }
-        
+        };
     })
     .filter('last', function() {
         return function(input, delim) {
             return input.split(_.isUndefined(delim) ? '/' : delim).pop();
-        }
+        };
     })
     .filter('Last', function() {
         return function(input, delim) {
             var last = input.split(_.isUndefined(delim) ? '/' : delim).pop();
             return last.charAt(0).toUpperCase() + last.substr(1);
-        }
+        };
     })
     .filter('colName', function() {
         return function(input, delim) {
             return input.split(_.isUndefined(delim) ? ':' : delim).shift();
-        }
+        };
     })
     .filter('toLabel', function() {
         return function(input, labels, type) {
@@ -268,7 +265,7 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                 switch (type) {
                     case 'chk' :
                         _.some(input) 
-                            ?  _(input).each(function(v,k) { $return += v ? ',' + labels[k] : ''; })
+                            ? _(input).each(function(v,k) { $return += v ? ',' + labels[k] : ''; })
                             : $return = ' --none--';
                         $return = $return.substr(1);
                         break;
@@ -277,14 +274,14 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                             if ( v.id == input ) {
                                 $return = v.val;
                             }
-                        }) 
+                        });
                         break;
                     default    : $return = labels[input];     break;
                 }
 
                 return $return;
             }
-        }
+        };
     })
 ;
 //  Directives END
