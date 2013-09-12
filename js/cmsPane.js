@@ -129,20 +129,32 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
             };
         }
     ])
-    .directive('cmsPaneContent', ['config', function(config) {
+    .directive('cmsPaneRel', ['config', function(config) {
         return {
-            restrict    : 'E',
+            restrict    : 'EA',
             replace     : true,
             transclude  : false,
             template    : '',
             compile     : function(el, attrs) { 
-                LG( attrs.key, ' in params ' );
-                el.parent().attr('paneContent', JSON.stringify({
-                    "params"  : el.find('params').remove().html(),
-                    "iterate" : el.find('iterate').replaceWith('{{ITERATE}}').html(),
-                    "content" : el.html()
-                }));
-                el.remove();
+                var params = {};
+
+                if (el.find('params').length ) {
+                    params = JSON.parse(el.find('params').remove().attr('value'));
+                }
+                _(params).extend( {
+                    "iterate" : el.find('iterate').replaceWith('{{ITERATION}}').html().trim(),
+                    "children" : el.html().trim()
+                });
+
+                // Attributes of the wrapper element override ones in <cms-pane-content><params>
+                _(attrs).each(function(v,k) { 
+                    if (typeof v === 'string')
+                        params[k] = v;
+                });
+                params.key = attrs.cmsPaneRel;
+
+                el.attr('params', JSON.stringify(params));
+                el.find('*').remove();
             }
         };
     }])
@@ -157,7 +169,7 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                 compile     : function(el, attrs, trans) {
                     function extractPaneContent( domEl ) {
                         var iterate  = domEl.find('iterate').replaceWith('{{ITERATION}}').html();
-                        var children = domEl.find('cms-pane-content').html();
+                        var children = domEl.html();
                         domEl.find('*').remove();
                         return {iterate : iterate, children : children};
                     }
@@ -165,52 +177,41 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                     // Always pull out the content and clear the element
                     var content = extractPaneContent(el);
 
-                    if ( !_.isUndefined(attrs.placeHolder)) {
-                        el.attr('params', JSON.stringify(config.setParams( 
-                            _.extend(attrs,{'paneContent' : content})
-                        )));
-                        return null; // Don't link at this point, this is for deferred processing
-                    } else {
-                        return  function($scope, $element, $attrs) {
-                            $scope.meta = _.isUndefined($attrs.params) ? {} : JSON.parse(decodeURIComponent($attrs.params));
+                    return  function($scope, $element, $attrs) {
+                        if (_.isEmpty($scope.meta)) {
+                            $scope.meta = _(config.setParams($attrs)).extend(content);
+                        }
 
-                            if (_.isEmpty($scope.meta)) {
-                                $scope.meta = config.setParams($attrs);
-                                $scope.meta.paneContent = content;
-                            } else {
-                                content = $scope.meta.paneContent;
-                            }
+                        linkers.set('main', $scope, $element);
 
-                            linkers.set('main', $scope, $element);
+                        config.getAllTemplates($scope, [], function() {
 
-                            config.getAllTemplates($scope, [], function() {
+                            html = $scope.templates.cmsPane;
 
-                                html = $scope.templates.cmsPane;
+                            if (html.indexOf('{{injectHtml}}') > -1)
+                                html = html.replace('{{injectHtml}}', $scope.meta.iterate);
 
-                                if (html.indexOf('{{injectHtml}}') > -1)
-                                    html = html.replace('{{injectHtml}}', content.iterate);
+                            if ($scope.meta.children.indexOf('{{ITERATION}}') > -1)
+                                html = $scope.meta.children.replace('{{ITERATION}}',html); 
 
-                                if (content.children.indexOf('{{ITERATION}}') > -1)
-                                    html = content.children.replace('{{ITERATION}}',html); 
+                            var compiled = $compile(html)($scope);
+                            $element.append(compiled);
 
-
-                                var compiled = $compile(html)($scope);
-                                $element.append(compiled);
-
-                                if (!_.isUndefined($attrs.relContainer)) {
+                            if (!_.isUndefined($scope.meta.relContainer)) {
+                                setTimeout( function() {
                                     linkers.injectRelChild( $scope );
-                                }
-                            });
-                        };
-                    }
+                                }, 30);
+                            }
+                        });
+                    };
                 },
                 controller  :  function($scope, $element, $attrs) {
+                    $scope.meta = _.isUndefined($attrs.params) ? {} 
+                                : JSON.parse(decodeURIComponent($attrs.params));
+
                     $scope.exposing = function(dataItem) {
                         return $scope[dataItem];
                     };
-
-                    $scope.$attrs = $attrs;
-                    $scope.key    = $attrs.key;
 
                     controllers.set('main', $scope);
                 }

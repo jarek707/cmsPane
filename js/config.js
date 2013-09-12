@@ -25,7 +25,6 @@ angular.module('app.gridConf', ['app.directives'])
                 setDefault('relKey',         '');
                 setDefault('key',            false);
                 setDefault('jqueryUi',       false);
-                setDefault('paneContent',    null);
 
                 $ret.autoClose = $ret['auto-close'] || !_.isUndefined(attrs['auto-close']);
 

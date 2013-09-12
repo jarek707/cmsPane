@@ -53,32 +53,23 @@
             </div>
             <div class='contentWrap'>
                 <div class='contentPane' ng-controller="contentPane">
-                    <salon-stylist cms-pane key="salon-stylist" rel='m-1-m' place-holder jquery-ui='{"sortable" : ""}'>
-                        <cms-pane-content>
-                            <iterate><div p-img></div></iterate>
-                        </cms-pane-content>
+                    <salon-stylist cms-pane-rel="salon-stylist" rel='m-1-m' jquery-ui='{"sortable" : ""}'>
+                        <iterate><div p-img></div></iterate>
                     </salon-stylist>
                     <input type='button' value="Clear Local Storage" ng-click='clearLocalStorage()' />
                 </div>
                 <div class='left'>
                     <cms-pane key='stylists' rel-container="salons" rel="1-m">
-                        <cms-pane-content>
-                            <div cms-header></div>
-                            <iterate><div p-img></div></iterate>
-                            <div cms-footer></div>
-                        </cms-pane-content>
+                        <div cms-header></div>
+                        <iterate><div p-img></div></iterate>
+                        <div cms-footer></div>
                     </cms-pane>
                 </div>
                 <div class='right'>
-                    <salons cms-pane key="salons" rel-container='salon-stylist' rel='m-1' place-holder jquery-ui='{"sortable" : "[key=\"salon-stylist\"] .dataContent"}'>
-                        <cms-pane-content>
-                            <params value='{
-                                "rel" : "m-1",
-                                "key" : "salons"
-                            }'><params>
-                            <div cms-header></div>
-                            <iterate><div p-img></div></iterate>
-                        </cms-pane-content>
+                    <salons cms-pane-rel="salons" rel-container='salon-stylist' rel='m-1' jquery-ui='{"sortable" : "[key=\"salon-stylist\"] .dataContent"}'>
+                        <params value='{ "rel" : "m-1", "key" : "salons"}'></params>
+                        <div cms-header></div>
+                        <iterate><div p-img></div></iterate>
                     </salons>
                 </div>
             </div> <!-- contentWrap -->
