@@ -123,12 +123,29 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                             //$scope.meta = $scope.$parent.meta.columns;
                     };
                 },
-                controller  : function($scope, $element) { 
-                    controllers.set('row', $scope, $element); 
+                controller  : function($scope) { 
+                    controllers.set('row', $scope); 
                 }
             };
         }
     ])
+    .directive('cmsPaneContent', ['config', function(config) {
+        return {
+            restrict    : 'E',
+            replace     : true,
+            transclude  : false,
+            template    : '',
+            compile     : function(el, attrs) { 
+                LG( attrs.key, ' in params ' );
+                el.parent().attr('paneContent', JSON.stringify({
+                    "params"  : el.find('params').remove().html(),
+                    "iterate" : el.find('iterate').replaceWith('{{ITERATE}}').html(),
+                    "content" : el.html()
+                }));
+                el.remove();
+            }
+        };
+    }])
     .directive('cmsPane', ['$compile',  'config', 'controllers','linkers',
         function ($compile, config, controllers, linkers) {
             return {
@@ -140,51 +157,52 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                 compile     : function(el, attrs, trans) {
                     function extractPaneContent( domEl ) {
                         var iterate  = domEl.find('iterate').replaceWith('{{ITERATION}}').html();
-                        var children = domEl.html();
+                        var children = domEl.find('cms-pane-content').html();
                         domEl.find('*').remove();
                         return {iterate : iterate, children : children};
                     }
 
+                    // Always pull out the content and clear the element
                     var content = extractPaneContent(el);
 
-                    if ( !_.isUndefined(attrs.wrapper)) {
-                        el.attr('pane-content', JSON.stringify(content));
+                    if ( !_.isUndefined(attrs.placeHolder)) {
+                        el.attr('params', JSON.stringify(config.setParams( 
+                            _.extend(attrs,{'paneContent' : content})
+                        )));
                         return null; // Don't link at this point, this is for deferred processing
-                    }
-                    
-                    return  function($scope, $element, $attrs) {
-                        $scope.meta = _.isUndefined($attrs.meta) ? {} : JSON.parse(decodeURIComponent(($attrs.meta)));
+                    } else {
+                        return  function($scope, $element, $attrs) {
+                            $scope.meta = _.isUndefined($attrs.params) ? {} : JSON.parse(decodeURIComponent($attrs.params));
 
-                        if (_.isEmpty($scope.meta)) {
-                            $scope.meta = _.extend(config.setParams($attrs), 
-                                                   config.getMeta($attrs.key));
-
-                            $scope.meta.paneContent = content;
-                        } else {
-                            content = $scope.meta.paneContent;
-                        }
-
-                        linkers.set('main', $scope, $element);
-
-                        config.getAllTemplates($scope, [], function() {
-
-                            html = $scope.templates.cmsPane;
-
-                            if (html.indexOf('{{injectHtml}}') > -1)
-                                html = html.replace('{{injectHtml}}', content.iterate);
-
-                            if (content.children.indexOf('{{ITERATION}}') > -1)
-                                html = content.children.replace('{{ITERATION}}',html); 
-
-
-                            var compiled = $compile(html)($scope);
-                            $element.append(compiled);
-
-                            if (!_.isUndefined($attrs.relContainer)) {
-                                linkers.injectRelChild( $scope );
+                            if (_.isEmpty($scope.meta)) {
+                                $scope.meta = config.setParams($attrs);
+                                $scope.meta.paneContent = content;
+                            } else {
+                                content = $scope.meta.paneContent;
                             }
-                        });
-                    };
+
+                            linkers.set('main', $scope, $element);
+
+                            config.getAllTemplates($scope, [], function() {
+
+                                html = $scope.templates.cmsPane;
+
+                                if (html.indexOf('{{injectHtml}}') > -1)
+                                    html = html.replace('{{injectHtml}}', content.iterate);
+
+                                if (content.children.indexOf('{{ITERATION}}') > -1)
+                                    html = content.children.replace('{{ITERATION}}',html); 
+
+
+                                var compiled = $compile(html)($scope);
+                                $element.append(compiled);
+
+                                if (!_.isUndefined($attrs.relContainer)) {
+                                    linkers.injectRelChild( $scope );
+                                }
+                            });
+                        };
+                    }
                 },
                 controller  :  function($scope, $element, $attrs) {
                     $scope.exposing = function(dataItem) {
@@ -193,6 +211,7 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
 
                     $scope.$attrs = $attrs;
                     $scope.key    = $attrs.key;
+
                     controllers.set('main', $scope);
                 }
             };

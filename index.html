@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html id="ng-app" ng-app="app" debug="false">
     <head>
@@ -54,23 +53,32 @@
             </div>
             <div class='contentWrap'>
                 <div class='contentPane' ng-controller="contentPane">
-                    <salon-stylist cms-pane key="salon-stylist" rel='m-1-m' wrapper="true">
-                        <div cms-header></div>
-                        <iterate><div p-img></div></iterate>
+                    <salon-stylist cms-pane key="salon-stylist" rel='m-1-m' place-holder jquery-ui='{"sortable" : ""}'>
+                        <cms-pane-content>
+                            <iterate><div p-img></div></iterate>
+                        </cms-pane-content>
                     </salon-stylist>
                     <input type='button' value="Clear Local Storage" ng-click='clearLocalStorage()' />
                 </div>
                 <div class='left'>
                     <cms-pane key='stylists' rel-container="salons" rel="1-m">
-                        <div cms-header></div>
-                        <iterate><div p-img></div></iterate>
-                        <div cms-footer></div>
+                        <cms-pane-content>
+                            <div cms-header></div>
+                            <iterate><div p-img></div></iterate>
+                            <div cms-footer></div>
+                        </cms-pane-content>
                     </cms-pane>
                 </div>
                 <div class='right'>
-                    <salons cms-pane key="salons" rel-container='salon-stylist' rel='m-1'wrapper="true">
-                        <div cms-header></div>
-                        <iterate><div p-img></div></iterate>
+                    <salons cms-pane key="salons" rel-container='salon-stylist' rel='m-1' place-holder jquery-ui='{"sortable" : "[key=\"salon-stylist\"] .dataContent"}'>
+                        <cms-pane-content>
+                            <params value='{
+                                "rel" : "m-1",
+                                "key" : "salons"
+                            }'><params>
+                            <div cms-header></div>
+                            <iterate><div p-img></div></iterate>
+                        </cms-pane-content>
                     </salons>
                 </div>
             </div> <!-- contentWrap -->

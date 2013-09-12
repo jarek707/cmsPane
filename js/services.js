@@ -1,19 +1,41 @@
 angular.module('app.services', ['app.gridConf'])
     .factory('jquery_ui', function($http, config) {
         return  {
-            mkSortable : function( $scope, relData ) { 
-                $scope.sortable = 'sortable';
+            setUp : function($scope) {
+                if ( $scope.meta.jqueryUi ){
+                    var jqObj = JSON.parse($scope.meta.jqueryUi);
 
-                $('[key="' + $scope.meta.key + '"] .sortable').sortable();
-                $('[key="' + $scope.meta.key + '"] .sortable').on('sortupdate' , function(evt, obj) { 
-                    var items =  $(evt.target).find('.sort-item');
-
-                    for (var i=0; i<items.length; i++) {
-                        relData[$(items[i]).attr('ord-id')].ord = i;
+                    if ( _(jqObj).has('sortable')) {
+                        $scope.sortable = 'sortable';
                     }
+                }
+            },
+            mkSortable : function( $scope, cb, sortItem) { 
+                var jqObj = JSON.parse($scope.meta.jqueryUi);
 
-                    $scope.expose({data:'updateRelData'})();
-                });
+                if (_.isUndefined(sortItem) ) {
+                    sortItem = '.sort-item';
+                }
+
+                var params = {
+                    'tolerance' : 'pointer',
+                    'helper'    : 'clone',
+                    //'containment' : 'parent',
+                    'cursor'    : 'move',
+                    'distance'  : 1,
+                    'cursorAt'  : { left: 5},
+                    'update'    : function(evt, obj) { 
+                        if (_.isFunction(cb)) {
+                            cb($(evt.target).find(sortItem));
+                        }
+                    }
+                };
+
+                if (!_.isEmpty(jqObj.sortable)) {
+                    params = _.extend(params, {"connectWith" : jqObj.sortable});
+                }
+
+                $('[key="' + $scope.meta.key + '"] .sortable').sortable(params);
             }
         }
     })

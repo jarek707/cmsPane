@@ -10,23 +10,21 @@ angular.module('app.directiveScopes', ['app.gridConf'])
 
             return {
                 'injectRelChild' : function($scope) {
-                   // var relEl = angular.element($scope.meta.relContainer);
-                    var relEl = $($scope.meta.relContainer);
-                    var meta  = angular.copy($scope.meta);
+                    var el = angular.element($scope.meta.relContainer);
+                    LG( el , 'el', $scope.key);
+                    if ( !_.isEmpty(el.find('params') )) {
+                        LG( el.find('params').attr('value') , ' param s');
+                    }
+                    var meta = JSON.parse(el.attr('params'));
 
-                    meta.relContainer = relEl.attr('rel-container');
-                    meta.paneContent  = JSON.parse(relEl.attr('pane-content'));
-                    meta.key    = relEl.attr('key');
-                    meta.rel    = relEl.attr('rel');
                     var html = '<div cms-pane' + 
                         ' key="' + meta.key + '"' +
                         ' rel="' + meta.rel + '"' + 
-                        ' rel-key="' + meta.relKey + '"' +
                         (meta.relContainer ? ' rel-container="' + meta.relContainer + '"' : '') +
                         ' row-id="{{rowId}}"' +
                         ' expose="exposing(data)"' +
                         ' parent-list="list"' +
-                        ' meta="' + encodeURIComponent(JSON.stringify(meta)) + '"' +
+                        ' params="' + encodeURIComponent(JSON.stringify(meta)) + '"' +
                         ' ></div>';
 
                     var compiled = $compile(html)($scope);
@@ -39,10 +37,6 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                     
                     if (!_.isUndefined(rel) && _.isFunction(this[type][rel])) {
                         this[type][rel]($scope, $element);
-                    }
-                },
-                'head' :  {
-                    'default' : function(el, attrs) {
                     }
                 },
                 'row' : {
@@ -61,11 +55,9 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                         };
 
                         $scope.buttonsOnOff('edit,del', 'add,save,sub,close');
-
-                        $scope.metaType = 'tab';
                         $scope.rowClass  = '';
 
-                        if (_.some($scope.row)) {
+                        if (_.isEmpty(_($scope.meta.cols).filter(function(v,k) { return $scope.row[k] == ''}))) {
                             $scope.rowClass = false; 
                         } else {
                             $scope.rowClass = 'editable'; 
@@ -82,16 +74,19 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                     },
                     'm-1'  :function($scope) {
                         $scope.relDataKey = $scope.expose({data: 'meta'}).key + '/' + $scope.meta.key;
-                        $scope.updateRelData = function() {
+                        
+                        $scope.saveRelData = function() {
                             gridDataSrv.save($scope.relDataKey, $scope.relData);
                         };
 
                         gridDataSrv.getData($scope.relDataKey, function(data) {
                             $scope.relData = _.isEmpty(data) ? {} : data;
                         });
+
+                        setTimeout( function() { jquery_ui.mkSortable($scope); }, 300);
                     },
                     'm-1-m'  :function($scope) {
-                        $scope.sortable = 'sortable';
+                        var saveRelData = $scope.expose({data:'saveRelData'});
 
                         $scope.updateList = function() {
                             if ( $scope.rowId ) {
@@ -105,9 +100,14 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                                     }
                                 }
 
-                                $scope.expose({data:'updateRelData'})();
+                                jquery_ui.mkSortable($scope, function(items) {
+                                    for (var i=0; i<items.length; i++) {
+                                        relData[$(items[i]).attr('ord-id')].ord = i;
+                                    }
+                                    saveRelData();
+                                });
 
-                                jquery_ui.mkSortable($scope, relData);
+                                saveRelData();
                             }
                         };
 
@@ -115,11 +115,11 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                         $scope.$watch('rowId',       function() { $scope.updateList(); });
                     },
                     'default' : function($scope, $element) {
+                        jquery_ui.setUp($scope);
+
                         $scope.lastRowScope = null;
                         $scope.relScope     = null;
-                        $scope.ngRepeatColumnLimit  = $scope.meta.columns.tab.length;
 
-                        //$scope.list = gridDataSrv.get($scope.meta, $scope);
                         gridDataSrv.getData($scope.$attrs.key, function(data) {
                              $scope.list  = data;
                              $scope.listW = angular.copy(data);
@@ -206,7 +206,7 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                                 }
                             }
 
-                            $scope.updateRelData();
+                            $scope.saveRelData();
                             $scope.$parent.$broadcast('relDataChanged'); // update rel pane
                         };
 
@@ -220,7 +220,7 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                                 }
                             }
 
-                            $scope.updateRelData();
+                            $scope.saveRelData();
                             $scope.$parent.$broadcast('relDataChanged'); // update rel pane
                             parentDel();
                         };

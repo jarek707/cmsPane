@@ -8,25 +8,26 @@ angular.module('app.gridConf', ['app.directives'])
 
         return {
             setParams : function(attrs) {
-                var $ret = {};
-
                 function setDefault(arg, defaultVal) {
                     $ret[arg] = _.isUndefined(attrs[arg]) || _.isEmpty(attrs[arg])
                                 ? defaultVal : attrs[arg];
                 }
 
-                setDefault('config',         'PaneConfig');
+                this.setConfigObject(_.isUndefined(attrs.PaneConfig) ? 'PaneConfig' : attrs.PaneConfig);
+
+                var $ret = this.getMeta(attrs.key);;
+
+                setDefault('paneConfig',     'PaneConfig');
                 setDefault('tplDir',         'partials');
                 setDefault('pane',           'cmsMain');
                 setDefault('relContainer',   false);
                 setDefault('rel',            '');
                 setDefault('relKey',         '');
                 setDefault('key',            false);
+                setDefault('jqueryUi',       false);
+                setDefault('paneContent',    null);
 
-                $ret.child     = $ret.child      || !_.isUndefined(attrs.child);
                 $ret.autoClose = $ret['auto-close'] || !_.isUndefined(attrs['auto-close']);
-
-                this.setConfigObject($ret.config);
 
                 return $ret;
             },
@@ -68,14 +69,11 @@ angular.module('app.gridConf', ['app.directives'])
                 for (var i=0 ; i<keys.length ; i++ )
                     meta = meta.children[keys[i]];
 
-                return meta;
+                return _.isUndefined(meta) ? {} : meta;
             },
 
             getMeta : function(key) {
-                var meta = this.findMeta(key);
-                if (_.isUndefined(meta)) return false;
-                meta.columns = this.getAllColumns(meta);
-                return meta;
+                return this.findMeta(key);
             },
 
             getAllColumns:  function(meta) { 

@@ -29,4 +29,12 @@ angular.module('app.customDirectives', ['app.gridConf'])
             }
         };
     })
+    .directive('cmsUser', ['config', function(config) {
+        return {
+            restrict    : 'A',
+            replace     : true,
+            transclude  : true,
+            templateUrl : 'partials/cmsUser.html'
+        };
+    }])
 ;

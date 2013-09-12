@@ -1,0 +1,21 @@
+<div ng-click='clk()'>
+    <div row-buttons class="button"></div>
+    <p>
+        <span>{{workRow.first}}</span>
+        <span>{{workRow.last}}</span>
+        <span>{{workRow.email}}</span>
+    </p>
+    <div class='active'>
+        <ul>
+            <li>
+                <label>{{meta.cols.first[0]}}</label><input type="text" ng-model="workRow.first" ng-change="chg()"></input>
+            <li>
+            <li>
+                <label>{{meta.cols.last[0]}}</label><input type="text" ng-model="workRow.last" ng-change="chg()"></input>
+            <li>
+            <li>
+                <label>{{meta.cols.email[0]}}</label><input type="text" ng-model="workRow.email" ng-change="chg()"></input>
+            <li>
+        </ul>
+    </div>
+</div>
