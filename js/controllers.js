@@ -11,14 +11,14 @@ angular.module('app.directiveScopes', ['app.gridConf'])
             return {
                 'injectRelChild' : function($scope) {
                     var el = angular.element($scope.meta.relContainer);
-                    if ( el.length == 0 ) return; // safety
+                    if ( el.length === 0 ) return; // safety
 
-                    var meta = _(angular.copy($scope.meta)).omit('relContainer');
+                    var meta = _(angular.copy($scope.meta)).omit('relContainer','jqueryUi')
                     meta     = _(meta).extend(JSON.parse(el.attr('params')));
 
                     var html = '<div cms-pane' + 
                         ' key="' + meta.key + '"' + // gotta have it for sortable  and css
-                        //' rel="' + meta.rel + '"' +
+                        ' rel="' + meta.rel + '"' +
                         ' row-id="{{rowId}}"' +
                         ' expose="exposing(data)"' +
                         ' parent-list="list"' +
@@ -55,7 +55,12 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                         $scope.buttonsOnOff('edit,del', 'add,save,sub,close');
                         $scope.rowClass  = '';
 
-                        if (_.isEmpty(_($scope.meta.cols).filter(function(v,k) { return $scope.row[k] == ''}))) {
+                        var joinVals = false;
+                        for (var i in $scope.meta.cols) {
+                            joinVals |= $scope.row[i] !== '';
+                        }
+
+                        if (joinVals) {
                             $scope.rowClass = false; 
                         } else {
                             $scope.rowClass = 'editable'; 
@@ -98,7 +103,9 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                                     }
                                 }
 
-                                jquery_ui.mkSortable($scope, function(items) {
+                                jquery_ui.mkSortable($scope, function(evt) {
+                                    var items = $(evt.target).find('.sort-item');
+
                                     for (var i=0; i<items.length; i++) {
                                         relData[$(items[i]).attr('ord-id')].ord = i;
                                     }

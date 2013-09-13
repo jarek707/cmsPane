@@ -129,7 +129,7 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
             };
         }
     ])
-    .directive('cmsPaneRel', ['config', function(config) {
+    .directive('cmsPaneRelKey', ['config', function(config) {
         return {
             restrict    : 'EA',
             replace     : true,
@@ -138,20 +138,28 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
             compile     : function(el, attrs) { 
                 var params = {};
 
-                if (el.find('params').length ) {
-                    params = JSON.parse(el.find('params').remove().attr('value'));
+                try {
+                    if (el.find('params').length ) {
+                    LG( el.find('params').attr('value') );
+                        params = JSON.parse(el.find('params').remove().attr('value'));
+                    }
+                } catch(e) { console.log('bad JSON in cmsPaneRelKey compiler'); }
+
+                var iterate =   el.find('iterate'); 
+                if ( iterate.length ) {
+                    params.iterate = iterate.replaceWith('{{ITERATION}}').html();
                 }
-                _(params).extend( {
-                    "iterate" : el.find('iterate').replaceWith('{{ITERATION}}').html().trim(),
-                    "children" : el.html().trim()
-                });
+
+                var children = el.html();
+                if ( !_.isEmpty(children) && children !== '') {
+                    params.children = children;
+                }
 
                 // Attributes of the wrapper element override ones in <cms-pane-content><params>
                 _(attrs).each(function(v,k) { 
-                    if (typeof v === 'string')
-                        params[k] = v;
+                    if (typeof v === 'string') params[k] = v;
                 });
-                params.key = attrs.cmsPaneRel;
+                params.key = attrs.cmsPaneRelKey;
 
                 el.attr('params', JSON.stringify(params));
                 el.find('*').remove();

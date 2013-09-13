@@ -1,10 +1,8 @@
 PaneConfig  = {
     'stylists' : {
-        'columns' : ["", ""],
         'cols'    : {"caption" : ["Caption"], "url" : ["Url"]}
     },
     'salons' : {
-        'columns' : ["",""],
         'cols'    : {"caption" : ["Caption"], "url" : ["Url"]}
     },
     'users' :{

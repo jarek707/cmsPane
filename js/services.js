@@ -3,19 +3,25 @@ angular.module('app.services', ['app.gridConf'])
         return  {
             setUp : function($scope) {
                 if ( $scope.meta.jqueryUi ){
-                    var jqObj = JSON.parse($scope.meta.jqueryUi);
+                    if (_.isObject($scope.meta.jqueryUi)) {
+                        var jqObj = $scope.meta.jqueryUi;
+                    } else {
+                        var jqObj = JSON.parse($scope.meta.jqueryUi);
+                    }
 
                     if ( _(jqObj).has('sortable')) {
                         $scope.sortable = 'sortable';
                     }
                 }
             },
-            mkSortable : function( $scope, cb, sortItem) { 
-                var jqObj = JSON.parse($scope.meta.jqueryUi);
+            mkSortable : function( $scope, cb) { 
+                    if (_.isObject($scope.meta.jqueryUi)) {
+                        var jqObj = $scope.meta.jqueryUi;
+                    } else {
+                        var jqObj = JSON.parse($scope.meta.jqueryUi);
+                    }
 
-                if (_.isUndefined(sortItem) ) {
-                    sortItem = '.sort-item';
-                }
+                if (!_.isFunction(cb)) cb = function() {};
 
                 var params = {
                     'tolerance' : 'pointer',
@@ -24,11 +30,7 @@ angular.module('app.services', ['app.gridConf'])
                     'cursor'    : 'move',
                     'distance'  : 1,
                     'cursorAt'  : { left: 5},
-                    'update'    : function(evt, obj) { 
-                        if (_.isFunction(cb)) {
-                            cb($(evt.target).find(sortItem));
-                        }
-                    }
+                    'update'    : cb
                 };
 
                 if (!_.isEmpty(jqObj.sortable)) {
@@ -43,16 +45,6 @@ angular.module('app.services', ['app.gridConf'])
         return  {
             prefix: 'GRID:',
             useLocal : true,
-
-            parentKey : function(attrs) {
-                var sp = attrs.key.split('/');
-                sp.pop();
-                sp.pop();
-                
-                var $return = _.clone(attrs);
-                $return.key = UT.joins(sp, '/');
-                return $return;
-            }, 
 
             clear: function() { 
                 var keys = '';

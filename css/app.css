@@ -304,6 +304,41 @@ cms-pane ul li div[p-img] [row-buttons],
   height: 16px;
   width: 85%;
 }
+cms-pane ul li div,
+[cms-pane] ul li div {
+  overflow: auto;
+  float: left;
+}
+cms-pane ul li div[div-img],
+[cms-pane] ul li div[div-img] {
+  margin: 5px;
+  border: 1px solid #aaa;
+  padding: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
+}
+cms-pane ul li div[div-img] img,
+[cms-pane] ul li div[div-img] img {
+  width: 80px;
+  margin: 0 0px 0 12px;
+  float: right;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -o-border-radius: 3px;
+  border-radius: 3px;
+}
+cms-pane ul li div[div-img] [row-buttons],
+[cms-pane] ul li div[div-img] [row-buttons] {
+  position: relative;
+  float: left;
+  height: 16px;
+  display: block;
+  clear: left;
+}
 cms-pane ul li div.buttons,
 [cms-pane] ul li div.buttons {
   float: right;

@@ -19,6 +19,24 @@ function topMenu($scope) {
 function contentPane($scope, $routeParams, $http, gridDataSrv, config) {
     $scope.clearLocalStorage = function() {
         gridDataSrv.clear();
+    };
+
+    $scope.dumpLocalStorage = function() {
+        LG ( localStorage );
+        var loc = angular.copy(_(localStorage).omit('FirebugLite'));
+        $.post('data/postLocStorage.php', {"data" : JSON.stringify(loc)}).success(function(retData) {
+            LG( 'send', retData);
+        });
+    }
+
+    $scope.restoreLocalStorage = function() {
+        var loc = angular.copy(_(localStorage).omit('FirebugLite'));
+        $.get('data/getLocStorage.php').success(function(retData) {
+            var data = JSON.parse(retData);
+            _(data).each(function(v,k) { 
+                localStorage[k] = v;
+            });
+        });
     }
     //if ( _.isUndefined(localStorage['GRID:METADATA']) ) 
         //localStorage['GRID:METADATA'] = JSON.stringify(config.meta);

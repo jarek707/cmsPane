@@ -230,6 +230,29 @@ cms-pane,
                    width:85%;
                 }
             }
+            div {
+                overflow:auto;
+                float:left;
+                &[div-img] {
+                    margin:5px;
+                    border:1px solid #aaa;
+                    padding:5px;
+                    .rounded-corners; 
+                    img {
+                        width: 80px;
+                        margin:0 0px 0 12px;
+                        float:right;
+                        .rounded-corners(3px);
+                    }
+                    [row-buttons] {
+                       position:relative;
+                       float:left;
+                       height:16px;
+                       display:block;
+                       clear:left;
+                    }
+                }
+            }
             div.buttons {
                 float:right;
                 display:none;

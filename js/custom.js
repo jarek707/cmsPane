@@ -37,4 +37,12 @@ angular.module('app.customDirectives', ['app.gridConf'])
             templateUrl : 'partials/cmsUser.html'
         };
     }])
+    .directive('divImg', ['config', function(config) {
+        return {
+            restrict    : 'A',
+            replace     : true,
+            transclude  : true,
+            templateUrl : 'partials/divImg.html'
+        };
+    }])
 ;
