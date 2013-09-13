@@ -19,13 +19,12 @@ function topMenu($scope) {
 function contentPane($scope, $routeParams, $http, gridDataSrv, config) {
     $scope.clearLocalStorage = function() {
         gridDataSrv.clear();
+        document.location = document.location;
     };
 
     $scope.dumpLocalStorage = function() {
-        LG ( localStorage );
         var loc = angular.copy(_(localStorage).omit('FirebugLite'));
         $.post('data/postLocStorage.php', {"data" : JSON.stringify(loc)}).success(function(retData) {
-            LG( 'send', retData);
         });
     }
 
@@ -35,6 +34,7 @@ function contentPane($scope, $routeParams, $http, gridDataSrv, config) {
             var data = JSON.parse(retData);
             _(data).each(function(v,k) { 
                 localStorage[k] = v;
+                document.location = document.location;
             });
         });
     }
