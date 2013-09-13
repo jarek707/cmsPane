@@ -9,12 +9,18 @@ angular.module('app.directiveScopes', ['app.gridConf'])
             'use strict';
 
             return {
-                'injectRelChild' : function($scope) {
+                'injectRelChild' : function($scope, $element) {
                     var el = angular.element($scope.meta.relContainer);
-                    if ( el.length === 0 ) return; // safety
+                    if ( $scope.meta.relContainer !== 'element' ) {
+                        if ( el.length === 0 ) return; // safety
+                    } else {
+                            el = $element.find('inline');
+                    }
 
                     var meta = _(angular.copy($scope.meta)).omit('relContainer','jqueryUi')
-                    meta     = _(meta).extend(JSON.parse(el.attr('params')));
+                    var params = el.attr('params');
+                    if (!_.isUndefined(params) )
+                        meta     = _(meta).extend(JSON.parse(params));
 
                     var html = '<div cms-pane' + 
                         ' key="' + meta.key + '"' + // gotta have it for sortable  and css
@@ -25,8 +31,15 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                         ' params="' + encodeURIComponent(JSON.stringify(meta)) + '"' +
                         ' ></div>';
 
-                    var compiled = $compile(html)($scope);
-                    angular.element($scope.meta.relContainer).replaceWith(compiled);
+
+                    if ( $scope.meta.relContainer === 'element' ) {
+                        $scope.inlineHtml = '<li>' + html + '</li>';
+                        $scope.compiled = $compile($scope.inlineHtml)($scope);
+                        LG( $scope.$id );
+                    } else {
+                        var compiled = $compile(html)($scope);
+                        angular.element($scope.meta.relContainer).replaceWith(compiled);
+                    }
                 },
 
                 'set' : function(type, $scope, $element) {
@@ -38,7 +51,10 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                     }
                 },
                 'row' : {
-                    '1-m' : function($scope) {
+                    '1-m' : function($scope, $element) {
+                        $scope.attachToRow = function() {
+                            $element.parent().parent().append($scope.compiled);
+                        }
                     },
                     'm-1' : function($scope) {
                     },
@@ -163,14 +179,14 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                 },
                 'head' : {
                     'default' : function($scope) {
-                        $scope.peekTable = function() {
-                            $scope.tableHide = $scope.tableHide ? false : 'hidden';
+                        $scope.showContent = function() {
+                            $scope.hideContent = $scope.hideContent ? false : 'hidden';
                         };
 
                         $scope.reload = function() {
                             $scope.list  = UT.dobuleCopy($scope.list, $scope.listW);
                             $scope.notify('rel', 'success', _.isEmpty($scope.list) ? ' (empty)' : '');
-                            if ($scope.tableHide) { 
+                            if ($scope.hideContent) { 
                                 $scope.toggleTable();
                             }
                         };
@@ -182,6 +198,9 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                         $scope.clk = function(){
                             $scope.$parent.rowId = $scope.id;
                             parentClk();
+                            if ($scope.meta.relContainer === 'element') {
+                                $scope.attachToRow();
+                            }
                         };
                     },
                     'm-1' : function($scope) {
@@ -364,13 +383,13 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                             }
 
                             $scope.closeLastRow(false);
-                            $scope.tableHide = false;
+                            $scope.hideContent = false;
                         };
                         // Row data methods END
 
                         // Sub panes BEGIN
                         $scope.openSub = function(rowData) {
-                            $scope.tableHide  = $scope.meta.autoHide;
+                            $scope.hideContent  = $scope.meta.autoHide;
                             $scope.rowContent = '{' + rowData + '}';
                         };
 

@@ -1,4 +1,4 @@
-<ul class="dataContent" ng-class='sortable'>
+<ul class="dataContent" ng-class='sortable' ng-hide='hideContent'>
      <li ng-repeat="(id,row) in list" ng-class='rowClass' class='row sort-item' ord-id="{{row.id}}" >
         {{injectHtml}}
      </li>

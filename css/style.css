@@ -322,7 +322,8 @@ cms-pane ul li div[div-img],
 }
 cms-pane ul li div[div-img] img,
 [cms-pane] ul li div[div-img] img {
-  width: 80px;
+  height: 80px;
+  width: auto;
   margin: 0 0px 0 12px;
   float: right;
   -webkit-border-radius: 3px;

@@ -136,6 +136,7 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
             transclude  : false,
             template    : '',
             compile     : function(el, attrs) { 
+                LG( ' compile rel key ' );
                 var params = {};
 
                 try {
@@ -175,6 +176,7 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                 transclude  : false,
                 template    : "",
                 compile     : function(el, attrs, trans) {
+                    LG( ' commpile pane' );
                     function extractPaneContent( domEl ) {
                         var iterate  = domEl.find('iterate').replaceWith('{{ITERATION}}').html();
                         var children = domEl.html();
@@ -207,8 +209,9 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
 
                             if (!_.isUndefined($scope.meta.relContainer)) {
                                 setTimeout( function() {
-                                    linkers.injectRelChild( $scope );
-                                }, 30);
+                                    LG( ' send to inject ');
+                                    linkers.injectRelChild($scope, $element);
+                                }, 300);
                             }
                         });
                     };

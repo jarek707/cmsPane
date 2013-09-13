@@ -3,7 +3,7 @@
     <head>
         <title>Angular Grid (DEV)</title>
 
-        <link href="css/app.css" rel="stylesheet" type="text/css" />
+        <link href="css/style.css" rel="stylesheet" type="text/css" />
         <!--
         <script type="text/javascript" src="https://getfirebug.com/firebug-lite-debug.js"></script>
         -->
@@ -56,24 +56,23 @@
             </div>
             <div class='contentWrap'>
                 <div class='contentPane' ng-controller="contentPane">
-                    <salon-stylist cms-pane-rel-key="salon-stylist" rel='m-1-m' jquery-ui='{"sortable" : ""}'>
-                        <iterate><div div-img></div></iterate>
-                    </salon-stylist>
                     <input type='button' value="Clear Local Storage" ng-click='clearLocalStorage()' />
                     <input type='button' value="Dump Local Storage" ng-click='dumpLocalStorage()' />
                     <input type='button' value="Restore Local Storage" ng-click='restoreLocalStorage()' />
+                    <salon-stylist cms-pane-rel-key="salon-stylist" rel='m-1-m' jquery-ui='{"sortable" : ""}'>
+                        <iterate><div div-img></div></iterate>
+                    </salon-stylist>
                 </div>
                 <div class='left'>
-                    <cms-pane key='stylists' rel-container="salons" rel="1-m">
+                    <cms-pane key='stylists' rel-container="element" rel="1-m">
                         <div cms-header></div>
                         <iterate><div p-img></div></iterate>
-                        <div cms-footer></div>
+                        <inline rel='m-1' cms-pane-rel-key="salons" rel-container="salon-stylist" iterate="<div cms-caption></div>" children="<hr />{{ITERATION}}<hr />"></inline>
                     </cms-pane>
                 </div>
                 <div class='right'>
                     <salons cms-pane-rel-key="salons" rel-container='salon-stylist' rel='m-1' jquery-ui='{"sortable" : "[key=\"salon-stylist\"] .dataContent"}'>
                         <div cms-header></div>
-                        <iterate><div div-img></div></iterate>
                     </salons>
                 </div>
             </div> <!-- contentWrap -->

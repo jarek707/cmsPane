@@ -5,7 +5,7 @@
     <div>{{rowContent}}</div>
     <div class='headButtons button'>
         <input type="button" class="addButton"    value='X' ng-click="add()"></input>
-        <input type="button" class="peekTable"    ng-hide='tableHide' value='X' ng-click="peekTable();" ></input>
-        <input type="button" class="restoreTable" ng-show='tableHide' value='X' ng-click="restore();"></input>
+        <input type="button" class="peekTable"    ng-hide='hideContent' value='X' ng-click="showContent();" ></input>
+        <input type="button" class="restoreTable" ng-show='hideContent' value='X' ng-click="showContent();"></input>
     </div>
     <span class='notify'></span>

@@ -2,7 +2,7 @@ angular.module('app.services', ['app.gridConf'])
     .factory('jquery_ui', function($http, config) {
         return  {
             setUp : function($scope) {
-                if ( $scope.meta.jqueryUi ){
+                if ( !_.isUndefined($scope.meta.jqueryUi)){
                     if (_.isObject($scope.meta.jqueryUi)) {
                         var jqObj = $scope.meta.jqueryUi;
                     } else {
@@ -15,29 +15,31 @@ angular.module('app.services', ['app.gridConf'])
                 }
             },
             mkSortable : function( $scope, cb) { 
+                if ( !_.isUndefined($scope.meta.jqueryUi)){
                     if (_.isObject($scope.meta.jqueryUi)) {
                         var jqObj = $scope.meta.jqueryUi;
                     } else {
                         var jqObj = JSON.parse($scope.meta.jqueryUi);
                     }
 
-                if (!_.isFunction(cb)) cb = function() {};
+                    if (!_.isFunction(cb)) cb = function() {};
 
-                var params = {
-                    'tolerance' : 'pointer',
-                    'helper'    : 'clone',
-                    //'containment' : 'parent',
-                    'cursor'    : 'move',
-                    'distance'  : 1,
-                    'cursorAt'  : { left: 5},
-                    'update'    : cb
-                };
+                    var params = {
+                        'tolerance' : 'pointer',
+                        'helper'    : 'clone',
+                        //'containment' : 'parent',
+                        'cursor'    : 'move',
+                        'distance'  : 1,
+                        'cursorAt'  : { left: 5},
+                        'update'    : cb
+                    };
 
-                if (!_.isEmpty(jqObj.sortable)) {
-                    params = _.extend(params, {"connectWith" : jqObj.sortable});
+                    if (!_.isEmpty(jqObj.sortable)) {
+                        params = _.extend(params, {"connectWith" : jqObj.sortable});
+                    }
+
+                    $('[key="' + $scope.meta.key + '"] .sortable').sortable(params);
                 }
-
-                $('[key="' + $scope.meta.key + '"] .sortable').sortable(params);
             }
         }
     })

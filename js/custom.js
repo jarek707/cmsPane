@@ -45,4 +45,12 @@ angular.module('app.customDirectives', ['app.gridConf'])
             templateUrl : 'partials/divImg.html'
         };
     }])
+    .directive('cmsCaption', ['config', function(config) {
+        return {
+            restrict    : 'A',
+            replace     : true,
+            transclude  : true,
+            template    : "<div ng-click='clk()'>{{row.caption}}<div row-buttons class='button'></div></div>"
+        };
+    }])
 ;
