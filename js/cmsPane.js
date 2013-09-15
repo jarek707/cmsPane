@@ -221,8 +221,8 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
 
                             html = $scope.templates.cmsPane;
 
-                            if (html.indexOf('{{injectHtml}}') > -1)
-                                html = html.replace('{{injectHtml}}', $scope.meta.iterate);
+                            if (html.indexOf('<inject-iterator-here />') > -1)
+                                html = html.replace('<inject-iterator-here />', $scope.meta.iterate);
 
                             if ($scope.meta.children.indexOf('{{ITERATION}}') > -1)
                                 html = $scope.meta.children.replace('{{ITERATION}}',html); 
