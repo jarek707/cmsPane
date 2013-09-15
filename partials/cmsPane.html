@@ -1,5 +1,6 @@
 <ul class="dataContent" ng-class='sortable' ng-hide='hideContent'>
-     <li ng-repeat="(id,row) in list" ng-class='rowClass' class='row sort-item' ord-id="{{row.id}}" >
+     <li ng-repeat="(id,row) in list" ng-class='rowClass' class='row' ord-id="{{row.id}}" ng-click="clk()">
         {{injectHtml}}
+        <div row-buttons></div>
      </li>
 </ul>

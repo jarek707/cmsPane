@@ -50,7 +50,23 @@ angular.module('app.customDirectives', ['app.gridConf'])
             restrict    : 'A',
             replace     : true,
             transclude  : true,
-            template    : "<div ng-click='clk()'>{{row.caption}}<div row-buttons class='button'></div></div>"
+            template    : "<div ng-click='clk()'>{{row[meta.cols[0][0]]}}:{{row[meta.cols[1][0]]}}</div>"
+        };
+    }])
+    .directive('cmsImg', ['config', function(config) {
+        return {
+            restrict    : 'A',
+            replace     : true,
+            transclude  : true,
+            template    : "<div ng-click='clk()'><img ng-src='{{row[meta.cols[1][0]]}}' width=20 height=20></img></div>"
+        };
+    }])
+    .directive('aCaption', ['config', function(config) {
+        return {
+            restrict    : 'A',
+            replace     : true,
+            transclude  : true,
+            template    : "<div ng-click='clk()'>{{row[meta.cols[0][0]]}}:{{row[meta.cols[1][0]]}}></div>"
         };
     }])
 ;

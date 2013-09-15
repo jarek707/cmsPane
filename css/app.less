@@ -123,7 +123,7 @@ cms-pane,
     .peekTable      { .glyphBgWhite(-266px,  -24px); }
     .button {
         .rounded-corners(4px);
-        padding:0 2px 0 1px;
+        padding:0;
     }
     .button input {
         font-size:0px;
@@ -212,9 +212,7 @@ cms-pane,
             width:100%;
             div[p-img] {
                 margin:5px;
-                border:1px solid #aaa;
                 padding:5px;
-                .rounded-corners; 
                 img {
                     width: 40px;
                     margin:0 8px 0 0;
@@ -270,8 +268,6 @@ cms-pane,
         .rounded-corners(5px);
         box-shadow: 1px 1px 11px #aaa;
         float:left;
-        width:98%;
-        padding:0;
         font-size:0.9em;
         margin:0;
         padding:0;
@@ -279,6 +275,8 @@ cms-pane,
         overflow:hidden;
         li.row {
             background:@mainPaneBg;
+            border-bottom:1px solid #aaa;
+            margin: 0 0 4px 0;
             &.editable .active {
                 display:block;
                 textarea,

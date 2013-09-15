@@ -3,34 +3,28 @@ angular.module('app.services', ['app.gridConf'])
         return  {
             setUp : function($scope) {
                 if ( !_.isUndefined($scope.meta.jqueryUi)){
-                    if (_.isObject($scope.meta.jqueryUi)) {
-                        var jqObj = $scope.meta.jqueryUi;
-                    } else {
-                        var jqObj = JSON.parse($scope.meta.jqueryUi);
-                    }
+                    var jqObj = _.isObject($scope.meta.jqueryUi) ?
+                                $scope.meta.jqueryUi             :
+                                JSON.parse($scope.meta.jqueryUi);
 
-                    if ( _(jqObj).has('sortable')) {
-                        $scope.sortable = 'sortable';
-                    }
+                    $scope.sortable = _(jqObj).has('sortable')  ? 'sortable' : false;
                 }
             },
-            mkSortable : function( $scope, cb) { 
+            mkSortable : function( $scope, $element, cb) { 
                 if ( !_.isUndefined($scope.meta.jqueryUi)){
-                    if (_.isObject($scope.meta.jqueryUi)) {
-                        var jqObj = $scope.meta.jqueryUi;
-                    } else {
-                        var jqObj = JSON.parse($scope.meta.jqueryUi);
-                    }
+                    
+                    var jqObj = _.isObject($scope.meta.jqueryUi) ?
+                                $scope.meta.jqueryUi             :
+                                JSON.parse($scope.meta.jqueryUi);
 
                     if (!_.isFunction(cb)) cb = function() {};
 
                     var params = {
                         'tolerance' : 'pointer',
                         'helper'    : 'clone',
-                        //'containment' : 'parent',
                         'cursor'    : 'move',
                         'distance'  : 1,
-                        'cursorAt'  : { left: 5},
+                        'cursorAt'  : {left: 5},
                         'update'    : cb
                     };
 
@@ -38,7 +32,7 @@ angular.module('app.services', ['app.gridConf'])
                         params = _.extend(params, {"connectWith" : jqObj.sortable});
                     }
 
-                    $('[key="' + $scope.meta.key + '"] .sortable').sortable(params);
+                    $($element).find('.sortable').sortable(params);
                 }
             }
         }

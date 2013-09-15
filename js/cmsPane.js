@@ -109,10 +109,27 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
             };
         }
     ])
+    .directive('cmsRow', ['config', 'controllers', 'linkers',
+        function(config, controllers, linkers) {
+            return {
+                replace     : true,
+                restrict    : 'AE',
+                template : '<li ng-repeat="(id,row) in list" ng-class="rowClass" class="row" ord-id="{{row.id}}">',
+                compile     : function(el, attrs) {
+                    return function($scope, $element) { 
+                        linkers.set('row', $scope, $element); 
+                    };
+                },
+                controller  : function($scope) { 
+                    controllers.set('row', $scope); 
+                }
+            };
+        }
+    ])
     .directive('rowButtons', ['config', 'controllers', 'linkers',
         function(config, controllers, linkers) {
             return {
-                replace     : false,
+                replace     : true,
                 restrict    : 'AE',
                 templateUrl : 'partials/rowButtons.html',
                 compile     : function(el, attrs) {
@@ -129,19 +146,17 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
             };
         }
     ])
-    .directive('cmsPaneRelKey', ['config', function(config) {
+    .directive('replaceWithCmsPane', ['config', function(config) {
         return {
             restrict    : 'EA',
             replace     : true,
             transclude  : false,
             template    : '',
             compile     : function(el, attrs) { 
-                LG( ' compile rel key ' );
                 var params = {};
 
                 try {
                     if (el.find('params').length ) {
-                    LG( el.find('params').attr('value') );
                         params = JSON.parse(el.find('params').remove().attr('value'));
                     }
                 } catch(e) { console.log('bad JSON in cmsPaneRelKey compiler'); }
@@ -156,15 +171,24 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                     params.children = children;
                 }
 
+                params.key = attrs.replaceWithCmsPane;
+
                 // Attributes of the wrapper element override ones in <cms-pane-content><params>
                 _(attrs).each(function(v,k) { 
                     if (typeof v === 'string') params[k] = v;
                 });
-                params.key = attrs.cmsPaneRelKey;
 
                 el.attr('params', JSON.stringify(params));
                 el.find('*').remove();
             }
+        };
+    }])
+    .directive('cmsIterate', ['config', function(config) {
+        return {
+            restrict   : 'E',
+            replace    : true,
+            transclude : 'element',
+            template   : '<div></div>'
         };
     }])
     .directive('cmsPane', ['$compile',  'config', 'controllers','linkers',
@@ -176,7 +200,6 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                 transclude  : false,
                 template    : "",
                 compile     : function(el, attrs, trans) {
-                    LG( ' commpile pane' );
                     function extractPaneContent( domEl ) {
                         var iterate  = domEl.find('iterate').replaceWith('{{ITERATION}}').html();
                         var children = domEl.html();
@@ -209,9 +232,8 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
 
                             if (!_.isUndefined($scope.meta.relContainer)) {
                                 setTimeout( function() {
-                                    LG( ' send to inject ');
                                     linkers.injectRelChild($scope, $element);
-                                }, 300);
+                                }, 0);
                             }
                         });
                     };

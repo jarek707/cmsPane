@@ -10,20 +10,21 @@ angular.module('app.directiveScopes', ['app.gridConf'])
 
             return {
                 'injectRelChild' : function($scope, $element) {
-                    var el = angular.element($scope.meta.relContainer);
                     if ( $scope.meta.relContainer !== 'element' ) {
+                        var el = angular.element($scope.meta.relContainer);
                         if ( el.length === 0 ) return; // safety
                     } else {
-                            el = $element.find('inline');
+                        var el = $element.find('inline');
                     }
 
                     var meta = _(angular.copy($scope.meta)).omit('relContainer','jqueryUi')
                     var params = el.attr('params');
-                    if (!_.isUndefined(params) )
+                    if (!_.isUndefined(params)) {
                         meta     = _(meta).extend(JSON.parse(params));
+                    }
 
                     var html = '<div cms-pane' + 
-                        ' key="' + meta.key + '"' + // gotta have it for sortable  and css
+                        ' key="' + meta.key + '"' +
                         ' rel="' + meta.rel + '"' +
                         ' row-id="{{rowId}}"' +
                         ' expose="exposing(data)"' +
@@ -35,7 +36,6 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                     if ( $scope.meta.relContainer === 'element' ) {
                         $scope.inlineHtml = '<li>' + html + '</li>';
                         $scope.compiled = $compile($scope.inlineHtml)($scope);
-                        LG( $scope.$id );
                     } else {
                         var compiled = $compile(html)($scope);
                         angular.element($scope.meta.relContainer).replaceWith(compiled);
@@ -53,7 +53,7 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                 'row' : {
                     '1-m' : function($scope, $element) {
                         $scope.attachToRow = function() {
-                            $element.parent().parent().append($scope.compiled);
+                            $element.parent().append($scope.compiled);
                         }
                     },
                     'm-1' : function($scope) {
@@ -72,8 +72,8 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                         $scope.rowClass  = '';
 
                         var joinVals = false;
-                        for (var i in $scope.meta.cols) {
-                            joinVals |= $scope.row[i] !== '';
+                        for (var i=0; i<$scope.meta.cols.length; i++ ) {
+                            joinVals |= $scope.row[$scope.meta.cols[i][0]] !== '';
                         }
 
                         if (joinVals) {
@@ -91,7 +91,7 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                 'main' : {
                     '1-m'  :function($scope) {
                     },
-                    'm-1'  :function($scope) {
+                    'm-1'  :function($scope, $element) {
                         $scope.relDataKey = $scope.expose({data: 'meta'}).key + '/' + $scope.meta.key;
                         
                         $scope.saveRelData = function() {
@@ -102,13 +102,13 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                             $scope.relData = _.isEmpty(data) ? {} : data;
                         });
 
-                        setTimeout( function() { jquery_ui.mkSortable($scope); }, 300);
+                        setTimeout( function() { jquery_ui.mkSortable($scope, $element); }, 300);
                     },
-                    'm-1-m'  :function($scope) {
+                    'm-1-m'  :function($scope, $element) {
                         var saveRelData = $scope.expose({data:'saveRelData'});
 
                         $scope.updateList = function() {
-                            if ( $scope.rowId ) {
+                            if ($scope.rowId) {
                                 $scope.list = {};
                                 var relData = $scope.expose({data:'relData'})[$scope.rowId];
 
@@ -119,8 +119,8 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                                     }
                                 }
 
-                                jquery_ui.mkSortable($scope, function(evt) {
-                                    var items = $(evt.target).find('.sort-item');
+                                jquery_ui.mkSortable($scope, $element, function(evt) {
+                                    var items = $(evt.target).find('.row');
 
                                     for (var i=0; i<items.length; i++) {
                                         relData[$(items[i]).attr('ord-id')].ord = i;
@@ -141,10 +141,12 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                         $scope.lastRowScope = null;
                         $scope.relScope     = null;
 
-                        gridDataSrv.getData($scope.meta.key, function(data) {
-                             $scope.list  = data;
-                             $scope.listW = angular.copy(data);
-                        });
+                        if (!_.isUndefined($scope.meta.key)) {
+                            gridDataSrv.getData($scope.meta.key, function(data) {
+                                 $scope.list  = data;
+                                 $scope.listW = angular.copy(data);
+                            });
+                        }
                         
                         // Append child pane after the table
                         $scope.after = function(html, rowScope) {
@@ -377,9 +379,9 @@ angular.module('app.directiveScopes', ['app.gridConf'])
 
                             $scope.list[newIdx]  = {};
                             $scope.listW[newIdx] = {};
-                            for (var i in $scope.meta.cols) {
-                                $scope.list[newIdx][i]  = '';
-                                $scope.listW[newIdx][i] = '';
+                            for (var i=0; i<$scope.meta.cols.length; i++ ) {
+                                $scope.list[newIdx][$scope.meta.cols[i][0]]  = '';
+                                $scope.listW[newIdx][$scope.meta.cols[i][0]] = '';
                             }
 
                             $scope.closeLastRow(false);

@@ -59,21 +59,25 @@
                     <input type='button' value="Clear Local Storage" ng-click='clearLocalStorage()' />
                     <input type='button' value="Dump Local Storage" ng-click='dumpLocalStorage()' />
                     <input type='button' value="Restore Local Storage" ng-click='restoreLocalStorage()' />
-                    <salon-stylist cms-pane-rel-key="salon-stylist" rel='m-1-m' jquery-ui='{"sortable" : ""}'>
-                        <iterate><div div-img></div></iterate>
-                    </salon-stylist>
-                </div>
-                <div class='left'>
-                    <cms-pane key='stylists' rel-container="element" rel="1-m">
+                    <input type='button' value="Show Local Storage" onclick='LG(localStorage)' />
+                    <cms-pane key='bums' cols='[["left", "Left"], ["right", "Right"]]' rel='1-m' rel-container='element'>
                         <div cms-header></div>
                         <iterate><div p-img></div></iterate>
-                        <inline rel='m-1' cms-pane-rel-key="salons" rel-container="salon-stylist" iterate="<div cms-caption></div>" children="<hr />{{ITERATION}}<hr />"></inline>
+                        <inline replace-with-cms-pane
+                                key="assholes"
+                                rel='m-1'
+                                rel-container="assholes-bums" 
+                                iterate="<div cms-caption'>{{row[meta.cols[0][0]]}}</div>" 
+                                children="<hr />{{ITERATION}}<hr />">
+                        </inline>
                     </cms-pane>
                 </div>
+                <div class='left'>
+                </div>
                 <div class='right'>
-                    <salons cms-pane-rel-key="salons" rel-container='salon-stylist' rel='m-1' jquery-ui='{"sortable" : "[key=\"salon-stylist\"] .dataContent"}'>
-                        <div cms-header></div>
-                    </salons>
+                        <assholes-bums replace-with-cms-pane rel='m-1-m'>
+                            <iterate><div p-img></div></iterate>
+                        </assholes-bums>
                 </div>
             </div> <!-- contentWrap -->
         </div> <!-- page -->
