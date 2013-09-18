@@ -60,24 +60,23 @@
                     <input type='button' value="Dump Local Storage" ng-click='dumpLocalStorage()' />
                     <input type='button' value="Restore Local Storage" ng-click='restoreLocalStorage()' />
                     <input type='button' value="Show Local Storage" onclick='LG(localStorage)' />
-                    <cms-pane key='bums' cols='[["left", "Left"], ["right", "Right"]]' rel='1-m' rel-container='element'>
+                    <cms-pane key='stylists' cols='[["left", "Left"], ["right", "Right"]]' rel-container='element' jquery-ui='{"sortable" :""}' rel='1-m'>
                         <div cms-header></div>
                         <iterate><div p-img></div></iterate>
-                        <inline replace-with-cms-pane
-                                key="assholes"
-                                rel='m-1'
-                                rel-container="assholes-bums" 
-                                iterate="<div cms-caption'>{{row[meta.cols[0][0]]}}</div>" 
-                                children="<hr />{{ITERATION}}<hr />">
+                        <inline replace-with-cms-pane   key="salons" rel='m-p'
+                                                        cols='[["left", "Left"], ["right", "Right"]]' 
+                                                        rel-container="salon-stylist"
+                            >
+                            <iterate><div>{{row[meta.cols[0][0]]}}</div></iterate>
                         </inline>
                     </cms-pane>
                 </div>
                 <div class='left'>
                 </div>
                 <div class='right'>
-                        <assholes-bums replace-with-cms-pane rel='m-1-m'>
-                            <iterate><div p-img></div></iterate>
-                        </assholes-bums>
+                    <salon-stylist key='ss' replace-with-cms-pane rel='m-p-m'>
+                        <div>here</div>
+                    </salon-stylist>
                 </div>
             </div> <!-- contentWrap -->
         </div> <!-- page -->

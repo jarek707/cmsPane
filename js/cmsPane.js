@@ -6,8 +6,6 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
             transclude  : true,
             templateUrl : 'partials/pImg.html',
             link        : function($scope, $element) { 
-                //if (!_.isUndefined($scope.meta.columns))
-                    //$scope.meta = $scope.meta.columns;
             },
             controller: function($scope, $element) {
                 $scope.trClass = false;
@@ -146,40 +144,14 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
             };
         }
     ])
-    .directive('replaceWithCmsPane', ['config', function(config) {
+    .directive('replaceWithCmsPane', ['config', 'dom', function(config, dom) {
         return {
             restrict    : 'EA',
             replace     : true,
             transclude  : false,
             template    : '',
             compile     : function(el, attrs) { 
-                var params = {};
-
-                try {
-                    if (el.find('params').length ) {
-                        params = JSON.parse(el.find('params').remove().attr('value'));
-                    }
-                } catch(e) { console.log('bad JSON in cmsPaneRelKey compiler'); }
-
-                var iterate =   el.find('iterate'); 
-                if ( iterate.length ) {
-                    params.iterate = iterate.replaceWith('{{ITERATION}}').html();
-                }
-
-                var children = el.html();
-                if ( !_.isEmpty(children) && children !== '') {
-                    params.children = children;
-                }
-
-                params.key = attrs.replaceWithCmsPane;
-
-                // Attributes of the wrapper element override ones in <cms-pane-content><params>
-                _(attrs).each(function(v,k) { 
-                    if (typeof v === 'string') params[k] = v;
-                });
-
-                el.attr('params', JSON.stringify(params));
-                el.find('*').remove();
+                dom.paramTransclude(el, attrs);
             }
         };
     }])
@@ -191,8 +163,8 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
             template   : '<div></div>'
         };
     }])
-    .directive('cmsPane', ['$compile',  'config', 'controllers','linkers',
-        function ($compile, config, controllers, linkers) {
+    .directive('cmsPane', ['$compile',  'config', 'controllers','linkers','dom',
+        function ($compile, config, controllers, linkers, dom) {
             return {
                 replace     : false,
                 restrict    : 'EA',
@@ -200,20 +172,10 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                 transclude  : false,
                 template    : "",
                 compile     : function(el, attrs, trans) {
-                    function extractPaneContent( domEl ) {
-                        var iterate  = domEl.find('iterate').replaceWith('{{ITERATION}}').html();
-                        var children = domEl.html();
-                        domEl.find('*').remove();
-                        return {iterate : iterate, children : children};
-                    }
-
-                    // Always pull out the content and clear the element
-                    var content = extractPaneContent(el);
+                    var params = dom.paramTransclude(el, attrs);
 
                     return  function($scope, $element, $attrs) {
-                        if (_.isEmpty($scope.meta)) {
-                            $scope.meta = _(config.setParams($attrs)).extend(content);
-                        }
+                        $scope.meta = _(config.setParams($attrs)).extend(params);
 
                         linkers.set('main', $scope, $element);
 
@@ -232,7 +194,7 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
 
                             if (!_.isUndefined($scope.meta.relContainer)) {
                                 setTimeout( function() {
-                                    linkers.injectRelChild($scope, $element);
+                                    dom.injectRelChild($scope, $element);
                                 }, 0);
                             }
                         });
@@ -240,7 +202,7 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                 },
                 controller  :  function($scope, $element, $attrs) {
                     $scope.meta = _.isUndefined($attrs.params) ? {} 
-                                : JSON.parse(decodeURIComponent($attrs.params));
+                                : JSON.parse($attrs.params);
 
                     $scope.exposing = function(dataItem) {
                         return $scope[dataItem];

@@ -34,7 +34,7 @@ angular.module('app.gridConf', ['app.directives'])
                 setDefault('relKey',         '');
                 setDefault('key',            false);
                 setDefault('jqueryUi',       false);
-                setDefault('cols',           {});
+                setDefault('cols',           []);
 
                 $ret.autoClose = $ret['auto-close'] || !_.isUndefined(attrs['auto-close']);
 
