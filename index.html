@@ -56,27 +56,28 @@
             </div>
             <div class='contentWrap'>
                 <div class='contentPane' ng-controller="contentPane">
-                    <input type='button' value="Clear Local Storage" ng-click='clearLocalStorage()' />
-                    <input type='button' value="Dump Local Storage" ng-click='dumpLocalStorage()' />
-                    <input type='button' value="Restore Local Storage" ng-click='restoreLocalStorage()' />
-                    <input type='button' value="Show Local Storage" onclick='LG(localStorage)' />
-                    <cms-pane key='stylists' cols='[["left", "Left"], ["right", "Right"]]' rel-container='element' jquery-ui='{"sortable" :""}' rel='1-m'>
+                    <button ng-click='clearLocalStorage()'>Clear Local Storage</button>
+                    <button ng-click='dumpLocalStorage()'>Dump</button>
+                    <button ng-click='restoreLocalStorage()'>Restore</button>
+                    <button onclick='LG(localStorage)'>Log</button>
+                    <salon-stylist key='ss' replace-with-cms-pane rel='m-p-m' jquery-ui='{"sortable" :""}'>
+                        <div>Result Pane</div>
+                        <iterate><div p-img></div></iterate>
+                    </salon-stylist>
+                </div>
+                <div class='left'>
+                    <cms-pane key='stylists' cols='[["left", "Left"], ["right", "Right"]]' rel-container='inline' jquery-ui='{"sortable" :""}' rel='1-m'>
                         <div cms-header></div>
                         <iterate><div p-img></div></iterate>
                         <inline replace-with-cms-pane   key="salons" rel='m-p'
                                                         cols='[["left", "Left"], ["right", "Right"]]' 
-                                                        rel-container="salon-stylist"
-                            >
-                            <iterate><div>{{row[meta.cols[0][0]]}}</div></iterate>
+                                                        rel-container="inline">
+                            <div cms-header></div>
+                            <iterate><div p-img></div></iterate>
                         </inline>
                     </cms-pane>
                 </div>
-                <div class='left'>
-                </div>
                 <div class='right'>
-                    <salon-stylist key='ss' replace-with-cms-pane rel='m-p-m'>
-                        <div>here</div>
-                    </salon-stylist>
                 </div>
             </div> <!-- contentWrap -->
         </div> <!-- page -->

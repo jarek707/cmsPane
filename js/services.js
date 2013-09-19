@@ -2,23 +2,22 @@ angular.module('app.services', ['app.gridConf'])
     .factory('dom', function($compile) {
         return {
             'injectRelChild' : function($scope, $element) {
-                if ( $scope.meta.relContainer !== 'element' ) {
+                if ( $scope.meta.relContainer !== 'inline' ) {
                     var el = angular.element($scope.meta.relContainer);
                     if ( el.length === 0 ) return; // safety
                 } else {
                     var el = $element.find('inline');
-                    var params = JSON.parse(el.attr('params'));
                 }
+                var params = JSON.parse(decodeURIComponent(el.attr('params')));
 
                 var meta = _(angular.copy($scope.meta)).omit('relContainer','jqueryUi')
-                if (!_.isUndefined(params)) {
-                    meta = _(meta).extend(params);
-                }
+                meta = _(meta).extend(params);
 
                 if (typeof meta.cols === 'string') 
                     meta.cols = JSON.parse(meta.cols);
 
                 var html = '<div cms-pane' + 
+                    ' class="' + $scope.meta.relContainer + '"' +
                     ' key="' + meta.key + '"' +
                     ' rel="' + meta.rel + '"' +
                     ' row-id="{{rowId}}"' +
@@ -27,7 +26,7 @@ angular.module('app.services', ['app.gridConf'])
                     ' params=\'' + JSON.stringify(meta) + '\'' +
                     ' ></div>';
 
-                if ( $scope.meta.relContainer === 'element' ) {
+                if ( $scope.meta.relContainer === 'inline' ) {
                     $scope.inlineHtml = '<li>' + html + '</li>';
                     $scope.compiled = $compile($scope.inlineHtml)($scope);
                 } else {
@@ -39,21 +38,13 @@ angular.module('app.services', ['app.gridConf'])
             'paramTransclude' : function(el, attrs) {
                 var params = {};
 
-                try {
-                    if (el.find('params').length ) {
-                        params = JSON.parse(el.find('params').remove().attr('value'));
-                    }
-                } catch(e) { 
-                    console.log('bad JSON in params ');
-                }
-
                 if (!_.isUndefined(attrs.params)) {
-                    _.extend(params, JSON.parse(attrs.params) );
+                    _.extend(params, JSON.parse(decodeURIComponent(attrs.params)));
                 }
 
                 var iterate =   el.find('iterate'); 
                 if ( iterate.length ) {
-                    params.iterate = iterate.get()[0].innerHTML;
+                    params.iterate             = iterate.get()[0].innerHTML;
                     iterate.get()[0].outerHTML = '{{ITERATION}}';
                 }
 
@@ -79,7 +70,7 @@ angular.module('app.services', ['app.gridConf'])
                     }
                 });
 
-                el.attr('params', JSON.stringify(params));
+                el.attr('params', encodeURIComponent(JSON.stringify(params)));
 
                 el.get()[0].innerHTML = '';
 

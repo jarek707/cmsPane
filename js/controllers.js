@@ -257,7 +257,7 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                         $scope.clk = function(){
                             $scope.$parent.rowId = $scope.id;
                             parentClk();
-                            if ($scope.meta.relContainer === 'element') {
+                            if ($scope.meta.relContainer === 'inline') {
                                 $scope.attachAfterRow();
                             }
                         };
