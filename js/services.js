@@ -2,30 +2,36 @@ angular.module('app.services', ['app.gridConf'])
     .factory('dom', function($compile) {
         return {
             'injectRelChild' : function($scope, $element) {
-                if ( $scope.meta.relContainer !== 'inline' ) {
-                    var el = angular.element($scope.meta.relContainer);
-                    if ( el.length === 0 ) return; // safety
-                } else {
-                    var el = $element.find('inline');
+                
+                var elm = $scope.meta.relContainer !== 'inline'
+                         ? angular.element($scope.meta.relContainer)
+                         : $element.find('inline');
+
+                if ( elm.length === 0 ) return; // safety
+
+                var html = '';
+                for (var i=0; i<elm.length; i++) {
+                    el = angular.element(elm[i]);
+
+                    var params = JSON.parse(decodeURIComponent(el.attr('params')));
+
+                    var meta = _(angular.copy($scope.meta)).omit('relContainer','jqueryUi')
+                    meta = _(meta).extend(params);
+
+                    if (typeof meta.cols === 'string') 
+                        meta.cols = JSON.parse(meta.cols);
+
+                    html += '<div cms-pane' + 
+                        ' class="' + $scope.meta.relContainer + '"' +
+                        ' key="' + meta.key + '"' +
+                        ' rel="' + meta.rel + '"' +
+                        ' row-id="{{rowId}}"' +
+                        ' expose="exposing(data)"' +
+                        ' parent-list="list"' +
+                        ' params=\'' + JSON.stringify(meta) + '\'' +
+                        ' ></div>';
                 }
-                var params = JSON.parse(decodeURIComponent(el.attr('params')));
-
-                var meta = _(angular.copy($scope.meta)).omit('relContainer','jqueryUi')
-                meta = _(meta).extend(params);
-
-                if (typeof meta.cols === 'string') 
-                    meta.cols = JSON.parse(meta.cols);
-
-                var html = '<div cms-pane' + 
-                    ' class="' + $scope.meta.relContainer + '"' +
-                    ' key="' + meta.key + '"' +
-                    ' rel="' + meta.rel + '"' +
-                    ' row-id="{{rowId}}"' +
-                    ' expose="exposing(data)"' +
-                    ' parent-list="list"' +
-                    ' params=\'' + JSON.stringify(meta) + '\'' +
-                    ' ></div>';
-
+                    
                 if ( $scope.meta.relContainer === 'inline' ) {
                     $scope.inlineHtml = '<li>' + html + '</li>';
                     $scope.compiled = $compile($scope.inlineHtml)($scope);
@@ -48,10 +54,7 @@ angular.module('app.services', ['app.gridConf'])
                     iterate.get()[0].outerHTML = '{{ITERATION}}';
                 }
 
-                var children = el.get()[0].innerHTML;
-                if ( !_.isEmpty(children) && children !== '') {
-                    params.children = children;
-                }
+                _.isEmpty(el.get()[0].innerHTML) || (params.children = el.get()[0].innerHTML);
 
                 // Attributes of the wrapper element override ones in <cms-pane-content><params>
                 _(attrs).each(function(v,k) { 
