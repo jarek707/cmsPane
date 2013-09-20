@@ -23,6 +23,8 @@ function LGT()    {
 }
 
 function contentPane($scope, $routeParams, $http, gridDataSrv, config) {
+    $scope.saved = false;
+
     $scope.clearLocalStorage = function() {
         gridDataSrv.clear();
         document.location = document.location;
@@ -30,7 +32,12 @@ function contentPane($scope, $routeParams, $http, gridDataSrv, config) {
 
     $scope.dumpLocalStorage = function() {
         var loc = angular.copy(_(localStorage).omit('FirebugLite'));
-        $.post('data/postLocStorage.php', {"data" : JSON.stringify(loc)}).success(function(retData) {
+
+        $.post('data/postLocStorage.php', {"data" : JSON.stringify(loc)})
+            .success( function(retData) {
+                $scope.saved = true;
+                $scope.$digest();
+                setTimeout( function() { $scope.saved = false;  $scope.$digest(); }, 2000);
         });
     }
 

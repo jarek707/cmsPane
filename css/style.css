@@ -82,6 +82,9 @@ div.gridBox {
   border-radius: 10px;
   overflow: auto;
 }
+.savButton {
+  background: transparent url('../image/glyph.png') -290px 0px no-repeat;
+}
 cms-pane,
 [cms-pane] {
   margin: 0;
@@ -332,10 +335,17 @@ cms-pane ul li div[div-img] [row-buttons],
   display: block;
   clear: left;
 }
-cms-pane ul li div.buttons,
-[cms-pane] ul li div.buttons {
-  float: right;
+cms-pane ul li .buttons,
+[cms-pane] ul li .buttons {
+  position: absolute;
+  float: none;
+  width: 94%;
+  top: 8px;
   display: none;
+}
+cms-pane ul li .buttons > input,
+[cms-pane] ul li .buttons > input {
+  float: right;
 }
 cms-pane ul li:hover div.buttons,
 [cms-pane] ul li:hover div.buttons {

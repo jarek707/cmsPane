@@ -56,10 +56,12 @@
             </div>
             <div class='contentWrap'>
                 <div class='contentPane' ng-controller="contentPane">
-                    <button ng-click='clearLocalStorage()'>Clear Local Storage</button>
-                    <button ng-click='dumpLocalStorage()'>Dump</button>
+                    <div style='float:left; font-size:0.9em;'>Local Storage:</div>
+                    <button ng-click='clearLocalStorage()'>Clear</button>
+                    <button ng-click='dumpLocalStorage()'>Save</button>
                     <button ng-click='restoreLocalStorage()'>Restore</button>
-                    <button onclick='LG(localStorage)'>Log</button>
+                    <button onclick='LG(localStorage)'>To Console</button>
+                    <div style='float:right; height:16px; width:14px; margin-top:3px;' class='savButton' ng-show="saved" is-success='{{saved}}'></div>
                     <salon-stylist key='salon-stylist' replace-with-cms-pane rel='m-p-m' jquery-ui='{"sortable" :""}'>
                         <div cms-header></div>
                         <iterate><div div-img></div></iterate>
@@ -70,11 +72,13 @@
                         <div cms-header></div>
                         <iterate><div div-img></div></iterate>
                         <inline replace-with-cms-pane   key="salons" rel='m-p'
+ cols='[["left", "Left"], ["right", "Right"]]'
                                                         rel-container="salon-stylist">
                             <div cms-header></div>
                             <iterate><div p-img></div></iterate>
                         </inline>
                         <inline replace-with-cms-pane   key="clients" rel='m-p'
+                        cols='[["left", "Left"], ["right", "Right"]]'
                                                         rel-container="client-stylist">
                             <div cms-header></div>
                             <iterate><div p-img></div></iterate>
@@ -82,7 +86,9 @@
                     </cms-pane>
                 </div>
                 <div class='right'>
-                    <client-stylist key='client-stylist' replace-with-cms-pane rel='m-p-m' jquery-ui='{"sortable" :""}'>
+                    <client-stylist key='client-stylist' replace-with-cms-pane rel='m-p-m' jquery-ui='{"sortable" :""}'
+                        cols='[["left", "Left"], ["right", "Right"]]'
+                    >
                         <div cms-header></div>
                         <iterate><div div-img></div></iterate>
                     </client-stylist>

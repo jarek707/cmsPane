@@ -113,6 +113,8 @@ div.gridBox {
     overflow:auto;
 }
 
+.savButton      { .glyphBg(-290px,    0px); }
+
 cms-pane,
 [cms-pane] {
     &.inline {
@@ -256,8 +258,15 @@ cms-pane,
                     }
                 }
             }
-            div.buttons {
-                float:right;
+            .buttons {
+                //display:none;
+                position:absolute;
+                float:none;
+                width:94%;
+                top:8px;
+                &>input {
+                    float:right;
+                }
                 display:none;
             }
         }

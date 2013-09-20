@@ -41,7 +41,7 @@ angular.module('app.services', ['app.gridConf'])
                 }
             },
             
-            'paramTransclude' : function(el, attrs) {
+            'paramTransclude' : function(el, attrs, keepAttributes) {
                 var params = {};
 
                 if (!_.isUndefined(attrs.params)) {
@@ -59,6 +59,8 @@ angular.module('app.services', ['app.gridConf'])
                 // Attributes of the wrapper element override ones in <cms-pane-content><params>
                 _(attrs).each(function(v,k) { 
                     if (typeof v === 'string' && k !== 'params') params[k] = v;
+                    // Remove ones with JSON
+                    _(['jqueryUi','cols']).contains(k) && el.removeAttr(k);
                 });
                 
                 // Intercept all JSON param strings and convert them to an object
@@ -77,6 +79,7 @@ angular.module('app.services', ['app.gridConf'])
 
                 el.get()[0].innerHTML = '';
 
+                el.data({"params" : params}); // DATA instead of params - maybe
                 return params;
             }
         }

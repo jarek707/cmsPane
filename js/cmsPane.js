@@ -172,7 +172,7 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                 transclude  : false,
                 template    : "",
                 compile     : function(el, attrs, trans) {
-                    var params = dom.paramTransclude(el, attrs);
+                    var params = dom.paramTransclude(el, attrs, true);
 
                     return  function($scope, $element, $attrs) {
                         $scope.meta = _(config.setParams($attrs)).extend(params);
