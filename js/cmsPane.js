@@ -151,16 +151,9 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
             transclude  : false,
             template    : '',
             compile     : function(el, attrs) { 
+                dom.genMeta(el);
                 dom.paramTransclude(el, attrs);
             }
-        };
-    }])
-    .directive('cmsIterate', ['config', function(config) {
-        return {
-            restrict   : 'E',
-            replace    : true,
-            transclude : 'element',
-            template   : '<div></div>'
         };
     }])
     .directive('cmsPane', ['$compile',  'config', 'controllers','linkers','dom',
@@ -172,6 +165,8 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                 transclude  : false,
                 template    : "",
                 compile     : function(el, attrs, trans) {
+                    dom.genMeta(el);
+                    LG( SER(el.data().meta) );
                     var params = dom.paramTransclude(el, attrs, true);
 
                     return  function($scope, $element, $attrs) {

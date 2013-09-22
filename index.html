@@ -72,13 +72,11 @@
                         <div cms-header></div>
                         <iterate><div div-img></div></iterate>
                         <inline replace-with-cms-pane   key="salons" rel='m-p'
- cols='[["left", "Left"], ["right", "Right"]]'
                                                         rel-container="salon-stylist">
                             <div cms-header></div>
                             <iterate><div p-img></div></iterate>
                         </inline>
                         <inline replace-with-cms-pane   key="clients" rel='m-p'
-                        cols='[["left", "Left"], ["right", "Right"]]'
                                                         rel-container="client-stylist">
                             <div cms-header></div>
                             <iterate><div p-img></div></iterate>
@@ -87,7 +85,6 @@
                 </div>
                 <div class='right'>
                     <client-stylist key='client-stylist' replace-with-cms-pane rel='m-p-m' jquery-ui='{"sortable" :""}'
-                        cols='[["left", "Left"], ["right", "Right"]]'
                     >
                         <div cms-header></div>
                         <iterate><div div-img></div></iterate>

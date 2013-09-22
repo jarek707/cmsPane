@@ -1,6 +1,71 @@
 angular.module('app.services', ['app.gridConf'])
     .factory('dom', function($compile) {
         return {
+            'genMeta' : function(el) {
+                function propagate(el, parentMeta) {
+                    el.data().meta = parentMeta;
+
+                    _(el.get()[0].attributes).each(function(v,k) {
+                        _(['params', 'class', 'expose', 'row-id', 'parent-list']).contains(v.nodeName) 
+                        || (el.data().meta[v.nodeName] = v.nodeValue);
+                    });
+
+                    var iterate =   el.find('>iterate');
+                    if ( iterate.length ) {
+                        el.data().meta.iterate = iterate.get()[0].innerHTML;
+                        //iterate.get()[0].outerHTML = '{{ITERATION}}';
+                    } else {
+                        //el.prepend('{{ITERATION}}');
+                    }
+
+                    _(el.find('>inline')).each(function(v,k){ 
+                        propagate(angular.element(v), _(el.data().meta).omit(
+                            'rel', 'jquery-ui', 'rel-container', 'class'
+                        ));
+                    });
+                }
+
+                propagate(el, {});
+            },
+            'paramTransclude' : function(el, attrs, keepAttributes) {
+                var params = {};
+
+                if (!_.isUndefined(attrs.params)) {
+                    _.extend(params, JSON.parse(decodeURIComponent(attrs.params)));
+                }
+
+                var iterate =   el.find('iterate'); 
+                if ( iterate.length ) {
+                    params.iterate             = iterate.get()[0].innerHTML;
+                    iterate.get()[0].outerHTML = '{{ITERATION}}';
+                }
+
+                _.isEmpty(el.get()[0].innerHTML) || (params.children = el.get()[0].innerHTML);
+
+                // Attributes of the wrapper element override ones in <cms-pane-content><params>
+                _(attrs).each(function(v,k) { 
+                    if (typeof v === 'string' && k !== 'params') params[k] = v;
+                    // Remove ones with JSON
+                    _(['jqueryUi','cols']).contains(k) && el.removeAttr(k);
+                });
+                
+                // Intercept all JSON param strings and convert them to an object
+                _(params).each(function(v,k) {
+                    if ( _.isString(v)) {
+                        var firstChar = v.substr(0,1);
+                        if (firstChar == '[' || firstChar == '{') {
+                            try {
+                                params[k] = JSON.parse(v);
+                            } catch (e) { /* ignore exception, value will not change */}
+                        }
+                    }
+                });
+
+                el.attr('params', encodeURIComponent(JSON.stringify(params)));
+
+                el.get()[0].innerHTML = '';
+                return params;
+            },
             'injectRelChild' : function($scope, $element) {
                 
                 var elm = $scope.meta.relContainer !== 'inline'
@@ -39,48 +104,6 @@ angular.module('app.services', ['app.gridConf'])
                     var compiled = $compile(html)($scope);
                     angular.element($scope.meta.relContainer).replaceWith(compiled);
                 }
-            },
-            
-            'paramTransclude' : function(el, attrs, keepAttributes) {
-                var params = {};
-
-                if (!_.isUndefined(attrs.params)) {
-                    _.extend(params, JSON.parse(decodeURIComponent(attrs.params)));
-                }
-
-                var iterate =   el.find('iterate'); 
-                if ( iterate.length ) {
-                    params.iterate             = iterate.get()[0].innerHTML;
-                    iterate.get()[0].outerHTML = '{{ITERATION}}';
-                }
-
-                _.isEmpty(el.get()[0].innerHTML) || (params.children = el.get()[0].innerHTML);
-
-                // Attributes of the wrapper element override ones in <cms-pane-content><params>
-                _(attrs).each(function(v,k) { 
-                    if (typeof v === 'string' && k !== 'params') params[k] = v;
-                    // Remove ones with JSON
-                    _(['jqueryUi','cols']).contains(k) && el.removeAttr(k);
-                });
-                
-                // Intercept all JSON param strings and convert them to an object
-                _(params).each(function(v,k) {
-                    if ( _.isString(v)) {
-                        var firstChar = v.substr(0,1);
-                        if (firstChar == '[' || firstChar == '{') {
-                            try {
-                                params[k] = JSON.parse(v);
-                            } catch (e) { /* ignore exception, value will not change */}
-                        }
-                    }
-                });
-
-                el.attr('params', encodeURIComponent(JSON.stringify(params)));
-
-                el.get()[0].innerHTML = '';
-
-                el.data({"params" : params}); // DATA instead of params - maybe
-                return params;
             }
         }
     })
