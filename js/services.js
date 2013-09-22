@@ -1,6 +1,7 @@
 angular.module('app.services', ['app.gridConf'])
     .factory('dom', function($compile) {
         return {
+            // Convert all propagated attributes and convert <iterate> tag
             'genMeta' : function(el) {
                 function propagate(el, parentMeta) {
                     el.data().meta = parentMeta;
