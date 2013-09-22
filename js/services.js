@@ -25,7 +25,6 @@ angular.module('app.services', ['app.gridConf'])
                         ));
                     });
                 }
-
                 propagate(el, {});
             },
             'paramTransclude' : function(el, attrs, keepAttributes) {
