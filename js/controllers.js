@@ -22,8 +22,9 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                     '1-m'  :function($scope) {
                     },
                     'm-p'  :function($scope, $element) {
+                        LG( $scope, $scope.$id, $scope.meta, $scope.expose({data: 'meta'}) );
                         $scope.relDataKey = $scope.expose({data: 'meta'}).key + '/' + $scope.meta.key;
-                        
+
                         $scope.saveRelData = function() {
                             gridDataSrv.save($scope.relDataKey, $scope.relData);
                         };
@@ -98,6 +99,7 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                 'row' : { // LINK
                     '1-m' : function($scope, $element) {
                         $scope.attachAfterRow = function() {
+                            var pScope = $scope.$parent;
                             $element.parent().after($scope.compiled);
                         }
                     },

@@ -151,8 +151,7 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
             transclude  : false,
             template    : '',
             compile     : function(el, attrs) { 
-                dom.genMeta(el);
-                dom.paramTransclude(el, attrs);
+                //dom.paramTransclude(el, attrs);
             }
         };
     }])
@@ -165,12 +164,10 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                 transclude  : false,
                 template    : "",
                 compile     : function(el, attrs, trans) {
-                    dom.genMeta(el);
-                    LG( SER(el.data().meta) );
-                    var params = dom.paramTransclude(el, attrs, true);
+                    dom.paramTransclude(el, attrs, true);
 
                     return  function($scope, $element, $attrs) {
-                        $scope.meta = _(config.setParams($attrs)).extend(params);
+                        $scope.meta = _(config.setParams($attrs)).extend(el.data().meta);
 
                         linkers.set('main', $scope, $element);
 
@@ -187,11 +184,7 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                             var compiled = $compile(html)($scope);
                             $element.append(compiled);
 
-                            if (!_.isUndefined($scope.meta.relContainer)) {
-                                setTimeout( function() {
-                                    dom.injectRelChild($scope, $element);
-                                }, 0);
-                            }
+                            dom.compileChildren($element, $scope);
                         });
                     };
                 },

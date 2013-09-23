@@ -2,6 +2,14 @@ angular.module('app.services', ['app.gridConf'])
     .factory('dom', function($compile) {
         return {
             // Convert all propagated attributes and convert <iterate> tag
+            'compileChildren' : function(el, $scope) {
+                _.isUndefined(el.data().compiled) && (el.data().compiled = []);
+
+                _(el.data().inline).each(function(v,k) {
+                    el.data().compiled[k] = $compile(v)($scope);
+                });
+                //el.find('>inline').remove();
+            },
             'genMeta' : function(el) {
                 function propagate(el, parentMeta) {
                     el.data().meta = parentMeta;
@@ -11,99 +19,50 @@ angular.module('app.services', ['app.gridConf'])
                         || (el.data().meta[v.nodeName] = v.nodeValue);
                     });
 
-                    var iterate =   el.find('>iterate');
-                    if ( iterate.length ) {
-                        el.data().meta.iterate = iterate.get()[0].innerHTML;
-                        //iterate.get()[0].outerHTML = '{{ITERATION}}';
-                    } else {
-                        //el.prepend('{{ITERATION}}');
-                    }
+                    
+                    if (!_.isEmpty(el.find('>inline'))) {
+                        _.isUndefined(el.data().inline) && (el.data().inline = []);
 
-                    _(el.find('>inline')).each(function(v,k){ 
-                        propagate(angular.element(v), _(el.data().meta).omit(
-                            'rel', 'jquery-ui', 'rel-container', 'class'
-                        ));
-                    });
+                        _(el.find('>inline >cms-pane')).each( function(v,k) {
+                            propagate(angular.element(v), _(el.data().meta).omit(
+                                'rel', 'jquery-ui', 'rel-container', 'class'
+                            ));
+
+                            el.data().inline[k] = v;
+                            angular.element(v).data().meta.children = v.innerHTML;
+                        });
+
+                    }
                 }
+
                 propagate(el, {});
             },
             'paramTransclude' : function(el, attrs, keepAttributes) {
-                var params = {};
+                _.isUndefined(el.data().meta) && this.genMeta(el);
 
-                if (!_.isUndefined(attrs.params)) {
-                    _.extend(params, JSON.parse(decodeURIComponent(attrs.params)));
-                }
+                var meta = el.data().meta;
 
-                var iterate =   el.find('iterate'); 
+                var iterate =   el.find('>iterate'); 
                 if ( iterate.length ) {
-                    params.iterate             = iterate.get()[0].innerHTML;
+                    meta.iterate             = iterate.get()[0].innerHTML;
                     iterate.get()[0].outerHTML = '{{ITERATION}}';
                 }
 
-                _.isEmpty(el.get()[0].innerHTML) || (params.children = el.get()[0].innerHTML);
+                if (_.isEmpty(el.get()[0].innerHTML)) {
+                    meta.children = "{{ITERATION}}";
+                }else {
+                    meta.children = el.get()[0].innerHTML;
+                }
 
-                // Attributes of the wrapper element override ones in <cms-pane-content><params>
-                _(attrs).each(function(v,k) { 
-                    if (typeof v === 'string' && k !== 'params') params[k] = v;
-                    // Remove ones with JSON
-                    _(['jqueryUi','cols']).contains(k) && el.removeAttr(k);
-                });
-                
                 // Intercept all JSON param strings and convert them to an object
-                _(params).each(function(v,k) {
-                    if ( _.isString(v)) {
-                        var firstChar = v.substr(0,1);
-                        if (firstChar == '[' || firstChar == '{') {
-                            try {
-                                params[k] = JSON.parse(v);
-                            } catch (e) { /* ignore exception, value will not change */}
-                        }
+                _(meta).each(function(v,k) {
+                    if ( _.isString(v) &&  (v.substr(0,1) === '[' || v.substr(0,1) === '{')) {
+                        try       { meta[k] = JSON.parse(v); } 
+                        catch (e) { /* ignore exception, value will not change */}
                     }
                 });
 
-                el.attr('params', encodeURIComponent(JSON.stringify(params)));
-
                 el.get()[0].innerHTML = '';
-                return params;
-            },
-            'injectRelChild' : function($scope, $element) {
-                
-                var elm = $scope.meta.relContainer !== 'inline'
-                         ? angular.element($scope.meta.relContainer)
-                         : $element.find('inline');
-
-                if ( elm.length === 0 ) return; // safety
-
-                var html = '';
-                for (var i=0; i<elm.length; i++) {
-                    el = angular.element(elm[i]);
-
-                    var params = JSON.parse(decodeURIComponent(el.attr('params')));
-
-                    var meta = _(angular.copy($scope.meta)).omit('relContainer','jqueryUi')
-                    meta = _(meta).extend(params);
-
-                    if (typeof meta.cols === 'string') 
-                        meta.cols = JSON.parse(meta.cols);
-
-                    html += '<div cms-pane' + 
-                        ' class="' + $scope.meta.relContainer + '"' +
-                        ' key="' + meta.key + '"' +
-                        ' rel="' + meta.rel + '"' +
-                        ' row-id="{{rowId}}"' +
-                        ' expose="exposing(data)"' +
-                        ' parent-list="list"' +
-                        ' params=\'' + JSON.stringify(meta) + '\'' +
-                        ' ></div>';
-                }
-                    
-                if ( $scope.meta.relContainer === 'inline' ) {
-                    $scope.inlineHtml = '<li>' + html + '</li>';
-                    $scope.compiled = $compile($scope.inlineHtml)($scope);
-                } else {
-                    var compiled = $compile(html)($scope);
-                    angular.element($scope.meta.relContainer).replaceWith(compiled);
-                }
             }
         }
     })
