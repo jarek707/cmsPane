@@ -151,9 +151,7 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                 'set' : function(type, $scope) {
                     this[type]['default']($scope);
                     
-                    if (!_.isUndefined($scope.meta.rel) && _.isFunction(this[type][$scope.meta.rel])) {
-                        this[type][$scope.meta.rel]($scope);
-                    }
+                    _.isFunction(this[type][$scope.meta.rel]) && this[type][$scope.meta.rel]($scope);
                 },
                 'head' : {
                     'default' : function($scope) {

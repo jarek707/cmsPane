@@ -156,49 +156,28 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                     function link($scope, $element, $attrs) {
                         var parentMeta = _.clone($scope.expose({data:'meta'}));
 
-                        $scope.meta = _.isUndefined(parentMeta) ? domMeta : _(parentMeta).extend(domMeta);
-                        $scope.meta = _($scope.meta).extend(config.setParams(dom.attrParse($attrs)));
+                        $scope.meta = _.isUndefined(parentMeta) ? {} : parentMeta;
+                        $scope.meta = _($scope.meta).extend( config.setParams(domMeta) );
+                        LG("LIN",  $attrs.key, $scope.meta.children);
+
                         linkers.set('main', $scope, $element);
 
                         config.getAllTemplates($scope, [], function() {
-
-                            html = $scope.templates.cmsPane;
-
-                            if (html.indexOf('<inject-iterator-here />') > -1)
-                                html = html.replace('<inject-iterator-here />', $scope.meta.iterate);
-
-                            if ($scope.meta.children.indexOf('{{ITERATION}}') > -1)
-                                html = $scope.meta.children.replace('{{ITERATION}}',html); 
-
-                            var compiled = $compile(html)($scope);
-                            $element.append(compiled);
-
-                            if ( !_.isEmpty($scope.meta.inline)  ) {
-                               for (var i=0; i<$scope.meta.inline.length; i++){
-                                   el.append($compile($scope.meta.inline[i])($scope));
-                               }
-                            }
-                            if ( _.isUndefined($attrs.relChild) ) {
-                                LG( $attrs.relChild, $attrs.key );
-                            }
+                            dom.makeMain($element);
+                            _.isEmpty($scope.meta.inline ) || dom.injectInlines($element);
+                            _.isUndefined($attrs.relChild) || dom.replaceExternals($scope);
                         });
                     };
 
-                    function deferredLink($scope, $element, $attrs) {
-                    }
-
-                    var domMeta = dom.paramTransclude(el, attrs, true);
-                    return _.isUndefined(attrs.cmsPane) ? link : deferredLink;
-
+                    var domMeta = dom.paramTransclude(el, attrs);
+                    return _.isUndefined(attrs.cmsPane) ? link : null;
                 },
                 controller  :  function($scope, $element, $attrs) {
-                    $scope.meta = _.isUndefined($attrs.params) ? {} 
-                                : JSON.parse($attrs.params);
-
                     $scope.exposing = function(dataItem) {
                         return $scope[dataItem];
                     };
 
+                    $scope.meta = {"rel" : $attrs.rel};
                     controllers.set('main', $scope);
                 }
             };

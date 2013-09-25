@@ -62,35 +62,34 @@
                     <button ng-click='restoreLocalStorage()'>Restore</button>
                     <button onclick='LG(localStorage)'>To Console</button>
                     <div style='float:right; height:16px; width:14px; margin-top:3px;' class='savButton' ng-show="saved" is-success='{{saved}}'></div>
-                    <loosers cms-pane key="users" rel='m-p-m'>
+
+                    <loosers cms-pane key="users" rel='m-p-m' jquery-ui='{"sortable":""}'>
                         <div cms-header></div>
-                        <iterate><div p-img></div></iterate>
+                        <iterate><div div-img></div></iterate>
+                        <cms-pane key='stuff' cols='[["one", "One"], ["two", "Two"]]'>
+                            <div cms-header></div>
+                            <iterate><div p-img></div></iterate>
+                        </cms-pane>
                     </loosers>
                 </div>
                 <div class='left'>
-                    <cms-pane key='stylists' cols='[["left", "Left"], ["right", "Right"]]' 
-                        jquery-ui='{"sortable" :""}' rel='1-m'>
+                    <cms-pane key='stylists' cols='[["left", "Left"], ["right", "Right"]]' jquery-ui='{"sortable" :""}' rel='1-m'>
                         <div cms-header></div>
                         <iterate><div p-img></div></iterate>
 
-                        <cms-pane key="salons" rel='m-p' rel-child='loosers'>
+                        <cms-pane key="salons" rel='m-p' rel-child='loosers' jquery-ui='{"sortable":""}'>
                             <div cms-header></div>
                             <iterate><div p-img></div></iterate>
-
                         </cms-pane>
-                        <cms-pane key="clients" rel='m-p'>
+                        <cms-pane key="clients" rel='m-p' rel-child='chumps'>
                             <div cms-header></div>
-                            <iterate><div p-img></div></iterate>
-
-                            <cms-pane key="chumps"  rel='m-p-m'>
-                                <div cms-header></div>
-                                <iterate><div p-img></div></iterate>
-                            </cms-pane>
                         </cms-pane>
-
                     </cms-pane>
                 </div>
                 <div class='right'>
+                    <chumps cms-pane key="chumps"  rel='m-p-m'>
+                            <div>HEADER</div>
+                    </chumps>
                 </div>
             </div> <!-- contentWrap -->
         </div> <!-- page -->
