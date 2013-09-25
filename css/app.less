@@ -115,11 +115,7 @@ div.gridBox {
 
 .savButton      { .glyphBg(-290px,    0px); }
 
-cms-pane,
-[cms-pane] {
-    &.inline {
-        padding:0 12px;
-    }
+cms-pane {
     margin:0;
     .delButton      { .glyphBg(-458px,    0px); }
     .editButton     { .glyphBg(   0px,  -72px); }
@@ -130,6 +126,13 @@ cms-pane,
     .removeButton   { .glyphBg(-312px,    0px); }
     .restoreTable   { .glyphBg(-266px,  -24px); }
     .peekTable      { .glyphBgWhite(-266px,  -24px); }
+
+    &>cms-pane >* {
+        padding-left:12px;
+        &>cms-pane >* {
+            padding-left:12px;
+        }
+    }
 
     .buttons input {
         font-size:0px;
@@ -147,7 +150,6 @@ cms-pane,
         float:left;
         width:100%;
         margin-bottom:2px;
-        padding:0px;
         background: @menuBg;
         font-family:Helvetica;
         font-size:0.9em;

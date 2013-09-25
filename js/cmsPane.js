@@ -144,17 +144,6 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
             };
         }
     ])
-    .directive('replaceWithCmsPane', ['config', 'dom', function(config, dom) {
-        return {
-            restrict    : 'EA',
-            replace     : true,
-            transclude  : false,
-            template    : '',
-            compile     : function(el, attrs) { 
-                //dom.paramTransclude(el, attrs);
-            }
-        };
-    }])
     .directive('cmsPane', ['$compile',  'config', 'controllers','linkers','dom',
         function ($compile, config, controllers, linkers, dom) {
             return {
@@ -164,11 +153,11 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                 transclude  : false,
                 template    : "",
                 compile     : function(el, attrs, trans) {
-                    dom.paramTransclude(el, attrs, true);
+                    function link($scope, $element, $attrs) {
+                        var parentMeta = _.clone($scope.expose({data:'meta'}));
 
-                    return  function($scope, $element, $attrs) {
-                        $scope.meta = _(config.setParams($attrs)).extend(el.data().meta);
-
+                        $scope.meta = _.isUndefined(parentMeta) ? domMeta : _(parentMeta).extend(domMeta);
+                        $scope.meta = _($scope.meta).extend(config.setParams(dom.attrParse($attrs)));
                         linkers.set('main', $scope, $element);
 
                         config.getAllTemplates($scope, [], function() {
@@ -184,9 +173,23 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                             var compiled = $compile(html)($scope);
                             $element.append(compiled);
 
-                            dom.compileChildren($element, $scope);
+                            if ( !_.isEmpty($scope.meta.inline)  ) {
+                               for (var i=0; i<$scope.meta.inline.length; i++){
+                                   el.append($compile($scope.meta.inline[i])($scope));
+                               }
+                            }
+                            if ( _.isUndefined($attrs.relChild) ) {
+                                LG( $attrs.relChild, $attrs.key );
+                            }
                         });
                     };
+
+                    function deferredLink($scope, $element, $attrs) {
+                    }
+
+                    var domMeta = dom.paramTransclude(el, attrs, true);
+                    return _.isUndefined(attrs.cmsPane) ? link : deferredLink;
+
                 },
                 controller  :  function($scope, $element, $attrs) {
                     $scope.meta = _.isUndefined($attrs.params) ? {} 

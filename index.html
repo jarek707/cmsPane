@@ -62,47 +62,32 @@
                     <button ng-click='restoreLocalStorage()'>Restore</button>
                     <button onclick='LG(localStorage)'>To Console</button>
                     <div style='float:right; height:16px; width:14px; margin-top:3px;' class='savButton' ng-show="saved" is-success='{{saved}}'></div>
-                </div>
-                <div class='left'>
-                    <cms-pane key='stylists' cols='[["left", "Left"], ["right", "Right"]]' rel-container='inline' jquery-ui='{"sortable" :""}' rel='1-m'>
+                    <loosers cms-pane key="users" rel='m-p-m'>
                         <div cms-header></div>
                         <iterate><div p-img></div></iterate>
-                        <li class='row'>
-                        <inline>
-                            <cms-pane key="salons" rel='m-p' rel-container="salon-stylist" 
-                                row-id="{{rowId}}" parent-list="list" expose="exposing(data)"
-                                cols='[["left", "Left"], ["right", "Right"]]' >
+                    </loosers>
+                </div>
+                <div class='left'>
+                    <cms-pane key='stylists' cols='[["left", "Left"], ["right", "Right"]]' 
+                        jquery-ui='{"sortable" :""}' rel='1-m'>
+                        <div cms-header></div>
+                        <iterate><div p-img></div></iterate>
 
-                                <div cms-header></div>
-                                <iterate><div p-img></div></iterate>
-                                <inline>
-                                    <cms-pane key="users"  rel='m-p-m' 
-                                        row-id="{{rowId}}" parent-list="list" expose="exposing(data)"
-                                        cols='[["left", "Left"], ["right", "Right"]]' >
+                        <cms-pane key="salons" rel='m-p' rel-child='loosers'>
+                            <div cms-header></div>
+                            <iterate><div p-img></div></iterate>
 
-                                        <div cms-header></div>
-                                        <iterate><div p-img></div></iterate>
-                                    </cms-pane>
-                                </inline>
-                            </cms-pane>
-                            <cms-pane key="clients" rel='m-p' rel-container="client-stylist" 
-                                    row-id="{{rowId}}" parent-list="list" expose="exposing(data)"
-                                    cols='[["left", "Left"], ["right", "Right"]]' >
+                        </cms-pane>
+                        <cms-pane key="clients" rel='m-p'>
+                            <div cms-header></div>
+                            <iterate><div p-img></div></iterate>
 
-                                <inline>
-                                    <cms-pane key="chumps"  rel='m-p-m' 
-                                        row-id="{{rowId}}" parent-list="list" expose="exposing(data)"
-                                        cols='[["left", "Left"], ["right", "Right"]]' >
-
-                                        <div cms-header></div>
-                                        <iterate><div p-img></div></iterate>
-                                    </cms-pane>
-                                </inline>
+                            <cms-pane key="chumps"  rel='m-p-m'>
                                 <div cms-header></div>
                                 <iterate><div p-img></div></iterate>
                             </cms-pane>
-                        </inline>
-                        </li>
+                        </cms-pane>
+
                     </cms-pane>
                 </div>
                 <div class='right'>

@@ -2,50 +2,40 @@ angular.module('app.services', ['app.gridConf'])
     .factory('dom', function($compile) {
         return {
             // Convert all propagated attributes and convert <iterate> tag
-            'compileChildren' : function(el, $scope) {
-                _.isUndefined(el.data().compiled) && (el.data().compiled = []);
-
-                _(el.data().inline).each(function(v,k) {
-                    el.data().compiled[k] = $compile(v)($scope);
-                });
-                //el.find('>inline').remove();
-            },
-            'genMeta' : function(el) {
-                function propagate(el, parentMeta) {
-                    el.data().meta = parentMeta;
-
-                    _(el.get()[0].attributes).each(function(v,k) {
-                        _(['params', 'class', 'expose', 'row-id', 'parent-list']).contains(v.nodeName) 
-                        || (el.data().meta[v.nodeName] = v.nodeValue);
-                    });
-
-                    
-                    if (!_.isEmpty(el.find('>inline'))) {
-                        _.isUndefined(el.data().inline) && (el.data().inline = []);
-
-                        _(el.find('>inline >cms-pane')).each( function(v,k) {
-                            propagate(angular.element(v), _(el.data().meta).omit(
-                                'rel', 'jquery-ui', 'rel-container', 'class'
-                            ));
-
-                            el.data().inline[k] = v;
-                            angular.element(v).data().meta.children = v.innerHTML;
-                        });
-
+            'attrParse' : function($attrs) {
+                $ret = {};
+                _($attrs).each(function(v,k) {
+                    if (_.isString(v)) {
+                        $ret[k] = v.substr(0,1) === '[' || v.substr(0,1) === '{' ? JSON.parse(v) : v;
                     }
-                }
-
-                propagate(el, {});
+                });
+                return $ret;
             },
-            'paramTransclude' : function(el, attrs, keepAttributes) {
-                _.isUndefined(el.data().meta) && this.genMeta(el);
-
-                var meta = el.data().meta;
+            'paramTransclude' : function(el, attrs) {
+                var meta = {};
 
                 var iterate =   el.find('>iterate'); 
                 if ( iterate.length ) {
                     meta.iterate             = iterate.get()[0].innerHTML;
                     iterate.get()[0].outerHTML = '{{ITERATION}}';
+                }
+
+                if (!_.isUndefined(attrs.cmsPane)) {
+                    el.attr('row-id', '{{rowId}}');
+                    el.attr('parent-list', 'list');
+                    el.attr('expose', 'exposing(data)');
+                }
+
+                var cmsPane =   el.find('>cms-pane'); 
+                if ( cmsPane.length ) {
+                    meta.inline = [];
+                    for( var i=0; i<cmsPane.length; i++){
+                        meta.inline[i] = cmsPane[i].outerHTML.replace('<cms-pane',
+                            '<cms-pane row-id="{{rowId}}" parent-list="list" expose="exposing(data)" ');
+                    }
+                    cmsPane.remove();
+                } else {
+                    meta.inline = {};
                 }
 
                 if (_.isEmpty(el.get()[0].innerHTML)) {
@@ -54,15 +44,8 @@ angular.module('app.services', ['app.gridConf'])
                     meta.children = el.get()[0].innerHTML;
                 }
 
-                // Intercept all JSON param strings and convert them to an object
-                _(meta).each(function(v,k) {
-                    if ( _.isString(v) &&  (v.substr(0,1) === '[' || v.substr(0,1) === '{')) {
-                        try       { meta[k] = JSON.parse(v); } 
-                        catch (e) { /* ignore exception, value will not change */}
-                    }
-                });
-
                 el.get()[0].innerHTML = '';
+                return meta;
             }
         }
     })

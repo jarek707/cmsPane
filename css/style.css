@@ -85,50 +85,41 @@ div.gridBox {
 .savButton {
   background: transparent url('../image/glyph.png') -290px 0px no-repeat;
 }
-cms-pane,
-[cms-pane] {
+cms-pane {
   margin: 0;
 }
-cms-pane.inline,
-[cms-pane].inline {
-  padding: 0 12px;
-}
-cms-pane .delButton,
-[cms-pane] .delButton {
+cms-pane .delButton {
   background: transparent url('../image/glyph.png') -458px 0px no-repeat;
 }
-cms-pane .editButton,
-[cms-pane] .editButton {
+cms-pane .editButton {
   background: transparent url('../image/glyph.png') 0px -72px no-repeat;
 }
-cms-pane .subButton,
-[cms-pane] .subButton {
+cms-pane .subButton {
   background: transparent url('../image/glyph.png') -410px -120px no-repeat;
 }
-cms-pane .savButton,
-[cms-pane] .savButton {
+cms-pane .savButton {
   background: transparent url('../image/glyph.png') -290px 0px no-repeat;
 }
-cms-pane .addButton,
-[cms-pane] .addButton {
+cms-pane .addButton {
   background: transparent url('../image/glyph.png') -408px -96px no-repeat;
 }
 cms-pane .closeButton,
-[cms-pane] .closeButton,
-cms-pane .removeButton,
-[cms-pane] .removeButton {
+cms-pane .removeButton {
   background: transparent url('../image/glyph.png') -312px 0px no-repeat;
 }
-cms-pane .restoreTable,
-[cms-pane] .restoreTable {
+cms-pane .restoreTable {
   background: transparent url('../image/glyph.png') -266px -24px no-repeat;
 }
-cms-pane .peekTable,
-[cms-pane] .peekTable {
+cms-pane .peekTable {
   background: transparent url('../image/glyph-white.png') -266px -24px no-repeat;
 }
-cms-pane .buttons input,
-[cms-pane] .buttons input {
+cms-pane > cms-pane > * {
+  padding-left: 12px;
+}
+cms-pane > cms-pane > * > cms-pane > * {
+  padding-left: 12px;
+}
+cms-pane .buttons input {
   font-size: 0px;
   min-height: 14px;
   float: left;
@@ -140,21 +131,16 @@ cms-pane .buttons input,
   -webkit-border-radius: 0;
 }
 cms-pane cms-header,
-[cms-pane] cms-header,
-cms-pane [cms-header],
-[cms-pane] [cms-header] {
+cms-pane [cms-header] {
   float: left;
   width: 100%;
   margin-bottom: 2px;
-  padding: 0px;
   background: #6aa3c8;
   font-family: Helvetica;
   font-size: 0.9em;
 }
 cms-pane cms-header div:first-child,
-[cms-pane] cms-header div:first-child,
-cms-pane [cms-header] div:first-child,
-[cms-pane] [cms-header] div:first-child {
+cms-pane [cms-header] div:first-child {
   font-style: italic;
   font-weight: bold;
   margin: 0;
@@ -162,18 +148,14 @@ cms-pane [cms-header] div:first-child,
   border-radius: 2px;
 }
 cms-pane cms-header div,
-[cms-pane] cms-header div,
-cms-pane [cms-header] div,
-[cms-pane] [cms-header] div {
+cms-pane [cms-header] div {
   padding: 3px 0;
   position: relative;
   float: left;
   margin-left: 3px;
 }
 cms-pane cms-header .button,
-[cms-pane] cms-header .button,
-cms-pane [cms-header] .button,
-[cms-pane] [cms-header] .button {
+cms-pane [cms-header] .button {
   float: right;
   margin: 3px 2px 0px 1px;
   padding: 0px 1px 6px 0px;
@@ -181,33 +163,23 @@ cms-pane [cms-header] .button,
   border-radius: 2px;
 }
 cms-pane cms-header input.reloadButton,
-[cms-pane] cms-header input.reloadButton,
-cms-pane [cms-header] input.reloadButton,
-[cms-pane] [cms-header] input.reloadButton {
+cms-pane [cms-header] input.reloadButton {
   background: transparent url('../image/glyph.png') -218px -24px no-repeat;
 }
 cms-pane cms-header input.restoreTable,
-[cms-pane] cms-header input.restoreTable,
-cms-pane [cms-header] input.restoreTable,
-[cms-pane] [cms-header] input.restoreTable {
+cms-pane [cms-header] input.restoreTable {
   background: transparent url('../image/glyph.png') -266px -24px no-repeat;
 }
 cms-pane cms-header input.peekTable,
-[cms-pane] cms-header input.peekTable,
-cms-pane [cms-header] input.peekTable,
-[cms-pane] [cms-header] input.peekTable {
+cms-pane [cms-header] input.peekTable {
   background: transparent url('../image/glyph-white.png') -266px -24px no-repeat;
 }
 cms-pane cms-header input.peekTable.hidden,
-[cms-pane] cms-header input.peekTable.hidden,
-cms-pane [cms-header] input.peekTable.hidden,
-[cms-pane] [cms-header] input.peekTable.hidden {
+cms-pane [cms-header] input.peekTable.hidden {
   background: transparent url('../image/glyph.png') -266px -24px no-repeat;
 }
 cms-pane cms-header div.spaces,
-[cms-pane] cms-header div.spaces,
-cms-pane [cms-header] div.spaces,
-[cms-pane] [cms-header] div.spaces {
+cms-pane [cms-header] div.spaces {
   position: relative;
   float: left;
   height: 22px;
@@ -216,18 +188,14 @@ cms-pane [cms-header] div.spaces,
   background-color: #c7d2d8;
 }
 cms-pane cms-header div.spaces div.space,
-[cms-pane] cms-header div.spaces div.space,
-cms-pane [cms-header] div.spaces div.space,
-[cms-pane] [cms-header] div.spaces div.space {
+cms-pane [cms-header] div.spaces div.space {
   float: left;
   width: 22px;
   height: 22px;
   border-right: 1px dashed #6aa3c8;
 }
 cms-pane cms-header span,
-[cms-pane] cms-header span,
-cms-pane [cms-header] span,
-[cms-pane] [cms-header] span {
+cms-pane [cms-header] span {
   display: none;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
@@ -244,68 +212,52 @@ cms-pane [cms-header] span,
   background: #d0e5f2;
 }
 cms-pane cms-header span.success,
-[cms-pane] cms-header span.success,
-cms-pane [cms-header] span.success,
-[cms-pane] [cms-header] span.success {
+cms-pane [cms-header] span.success {
   color: #008000;
 }
 cms-pane cms-header span.info,
-[cms-pane] cms-header span.info,
-cms-pane [cms-header] span.info,
-[cms-pane] [cms-header] span.info {
+cms-pane [cms-header] span.info {
   color: #0000ff;
 }
 cms-pane cms-header span.warning,
-[cms-pane] cms-header span.warning,
-cms-pane [cms-header] span.warning,
-[cms-pane] [cms-header] span.warning {
+cms-pane [cms-header] span.warning {
   color: #ffff00;
 }
 cms-pane cms-header span.error,
-[cms-pane] cms-header span.error,
-cms-pane [cms-header] span.error,
-[cms-pane] [cms-header] span.error {
+cms-pane [cms-header] span.error {
   color: #a03a5e;
 }
-cms-pane ul,
-[cms-pane] ul {
+cms-pane ul {
   margin-top: 0;
 }
-cms-pane ul li,
-[cms-pane] ul li {
+cms-pane ul li {
   position: relative;
   float: left;
   width: 100%;
 }
-cms-pane ul li div[p-img],
-[cms-pane] ul li div[p-img] {
+cms-pane ul li div[p-img] {
   margin: 5px;
   padding: 5px;
 }
-cms-pane ul li div[p-img] img,
-[cms-pane] ul li div[p-img] img {
+cms-pane ul li div[p-img] img {
   width: 40px;
   margin: 0 8px 0 0;
 }
-cms-pane ul li div[p-img] p,
-[cms-pane] ul li div[p-img] p {
+cms-pane ul li div[p-img] p {
   margin: 0;
   padding: 0;
   width: 100%;
 }
-cms-pane ul li div[p-img] [row-buttons],
-[cms-pane] ul li div[p-img] [row-buttons] {
+cms-pane ul li div[p-img] [row-buttons] {
   position: absolute;
   height: 16px;
   width: 85%;
 }
-cms-pane ul li div,
-[cms-pane] ul li div {
+cms-pane ul li div {
   overflow: auto;
   float: left;
 }
-cms-pane ul li div[div-img],
-[cms-pane] ul li div[div-img] {
+cms-pane ul li div[div-img] {
   margin: 5px;
   border: 1px solid #aaa;
   padding: 5px;
@@ -315,8 +267,7 @@ cms-pane ul li div[div-img],
   -o-border-radius: 5px;
   border-radius: 5px;
 }
-cms-pane ul li div[div-img] img,
-[cms-pane] ul li div[div-img] img {
+cms-pane ul li div[div-img] img {
   height: 80px;
   width: auto;
   margin: 0 0px 0 12px;
@@ -327,32 +278,27 @@ cms-pane ul li div[div-img] img,
   -o-border-radius: 3px;
   border-radius: 3px;
 }
-cms-pane ul li div[div-img] [row-buttons],
-[cms-pane] ul li div[div-img] [row-buttons] {
+cms-pane ul li div[div-img] [row-buttons] {
   position: relative;
   float: left;
   height: 16px;
   display: block;
   clear: left;
 }
-cms-pane ul li .buttons,
-[cms-pane] ul li .buttons {
+cms-pane ul li .buttons {
   position: absolute;
   float: none;
   width: 94%;
   top: 8px;
   display: none;
 }
-cms-pane ul li .buttons > input,
-[cms-pane] ul li .buttons > input {
+cms-pane ul li .buttons > input {
   float: right;
 }
-cms-pane ul li:hover div.buttons,
-[cms-pane] ul li:hover div.buttons {
+cms-pane ul li:hover div.buttons {
   display: block;
 }
-cms-pane ul.dataContent,
-[cms-pane] ul.dataContent {
+cms-pane ul.dataContent {
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   -ms-border-radius: 5px;
@@ -366,60 +312,47 @@ cms-pane ul.dataContent,
   width: 100%;
   overflow: hidden;
 }
-cms-pane ul.dataContent li.row,
-[cms-pane] ul.dataContent li.row {
+cms-pane ul.dataContent li.row {
   background: #d0e5f2;
   border-bottom: 1px solid #aaa;
   margin: 0 0 4px 0;
 }
-cms-pane ul.dataContent li.row.editable .active,
-[cms-pane] ul.dataContent li.row.editable .active {
+cms-pane ul.dataContent li.row.editable .active {
   display: block;
 }
 cms-pane ul.dataContent li.row.editable .active textarea,
-[cms-pane] ul.dataContent li.row.editable .active textarea,
-cms-pane ul.dataContent li.row.editable .active input,
-[cms-pane] ul.dataContent li.row.editable .active input {
+cms-pane ul.dataContent li.row.editable .active input {
   max-width: 95%;
 }
-cms-pane ul.dataContent li.row.editable .text,
-[cms-pane] ul.dataContent li.row.editable .text {
+cms-pane ul.dataContent li.row.editable .text {
   display: none;
 }
 cms-pane ul.dataContent li.row:hover,
-[cms-pane] ul.dataContent li.row:hover,
-cms-pane ul.dataContent li.row.selected,
-[cms-pane] ul.dataContent li.row.selected {
+cms-pane ul.dataContent li.row.selected {
   background: #a8cfe7;
 }
-cms-pane ul.dataContent li,
-[cms-pane] ul.dataContent li {
+cms-pane ul.dataContent li {
   float: left;
 }
-cms-pane ul.dataContent li.button,
-[cms-pane] ul.dataContent li.button {
+cms-pane ul.dataContent li.button {
   height: 16px;
   margin-top: 2px;
   float: right;
   width: auto;
   white-space: nowrap;
 }
-cms-pane ul.dataContent ul,
-[cms-pane] ul.dataContent ul {
+cms-pane ul.dataContent ul {
   margin: 0;
   padding: 0;
 }
-cms-pane[rel="m-1-m"] ul.dataContent li.row,
-[cms-pane][rel="m-1-m"] ul.dataContent li.row {
+cms-pane[rel="m-1-m"] ul.dataContent li.row {
   float: left;
   width: auto;
 }
-cms-pane[rel="m-1-m"] ul.dataContent li.row div[p-img],
-[cms-pane][rel="m-1-m"] ul.dataContent li.row div[p-img] {
+cms-pane[rel="m-1-m"] ul.dataContent li.row div[p-img] {
   height: 85px;
 }
-cms-pane[rel="m-1-m"] ul.dataContent li.row div[p-img] img,
-[cms-pane][rel="m-1-m"] ul.dataContent li.row div[p-img] img {
+cms-pane[rel="m-1-m"] ul.dataContent li.row div[p-img] img {
   height: 80px;
   width: auto;
 }
