@@ -36,7 +36,15 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                             $scope.relData = _.isEmpty(data) ? {} : data;
                         });
                     },
-                    'm-p-m'  :function($scope, $element) {
+                    'm-a' : function( $scope, $element) {
+                        $scope.saveRelData = function() {
+                            $scope.relDataKey = $scope.expose({data: 'meta'}).key + 
+                                                '/' + $scope.rowId + '/' + $scope.meta.key;
+
+                            gridDataSrv.save($scope.relDataKey, $scope.relData);
+                        };
+                    },
+                    'm-p-out'  :function($scope, $element) {
                         var saveRelData = $scope.expose({data:'saveRelData'});
 
                         $scope.updateList = function() {
@@ -102,12 +110,14 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                 'row' : { // LINK
                     '1-m' : function($scope, $element) {
                         $scope.attachAfterRow = function() {
-                            $element.parent().after($scope.inline);
+                            for (var i=$scope.meta.inline.length - 1; i>=0; i-- ) {
+                                $element.parent().after($scope.meta.inline[i]);
+                            }
                         }
                     },
                     'm-p' : function($scope) {
                     },
-                    'm-p-m' : function($scope) {
+                    'm-p-out' : function($scope) {
                         $scope.buttonsOnOff('close', 'add,save,sub,del,save,edit');
                     },
                     'default' : function($scope, $element) {
@@ -259,7 +269,7 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                         $scope.clk = function(){
                             $scope.$parent.rowId = $scope.id;
                             parentClk();
-                            if ($scope.meta.relContainer === 'inline') {
+                            if ($scope.meta.inline.length) {
                                 $scope.attachAfterRow();
                             }
                         };
@@ -306,7 +316,7 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                             parentDel();
                         };
                     },
-                    'm-p-m' : function($scope) {
+                    'm-p-out' : function($scope) {
                         $scope.close = function() { // Remove related item
                             delete $scope.expose({data:'relData'})[$scope.rowId][$scope.list[$scope.id].id];
                             $scope.updateList();

@@ -1,6 +1,11 @@
 angular.module('app.services', ['app.gridConf'])
-    .factory('dom', function($compile) {
+    .factory('dom', function($compile, $http) {
         return {
+            'getItem' : function($scope, item, cb) {
+                $http.get('partials/' + item + '.html').success(function(html) {
+                    cb($compile(html)($scope));
+                });
+            },
             'makeMain' : function(el) {
                 $scope = el.data().$scope;
 
@@ -20,7 +25,7 @@ angular.module('app.services', ['app.gridConf'])
             'injectInlines' : function(el) {
                 $scope = el.data().$scope;
                 for (var i=0; i<$scope.meta.inline.length; i++){
-                    el.append($compile($scope.meta.inline[i])($scope));
+                    $scope.meta.inline[i] = $compile($scope.meta.inline[i])($scope);
                 }
             },
             'replaceExternals' : function($scope) {
@@ -70,7 +75,6 @@ angular.module('app.services', ['app.gridConf'])
                 }
                 
                 meta.children = _.isEmpty(el.get()[0].innerHTML) ? "{{ITERATION}}" : el.get()[0].innerHTML;
-                LG( attrs.key , meta.children );
 
                 el.get()[0].innerHTML = '';
                 return _.extend(meta, this.attrsToMeta(attrs));

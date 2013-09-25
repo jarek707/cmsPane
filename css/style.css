@@ -113,13 +113,17 @@ cms-pane .restoreTable {
 cms-pane .peekTable {
   background: transparent url('../image/glyph-white.png') -266px -24px no-repeat;
 }
-cms-pane > cms-pane > * {
-  padding-left: 12px;
+cms-pane cms-pane {
+  position: relative;
+  float: left;
+  padding: 0 2px 0 16px;
+  background: #fff;
 }
-cms-pane > cms-pane > * > cms-pane > * {
-  padding-left: 12px;
+cms-pane .buttons div {
+  float: right;
+  margin-right: 4px;
 }
-cms-pane .buttons input {
+cms-pane .buttons div input {
   font-size: 0px;
   min-height: 14px;
   float: left;
@@ -285,15 +289,24 @@ cms-pane ul li div[div-img] [row-buttons] {
   display: block;
   clear: left;
 }
+cms-pane ul li div.item p {
+  margin: 0;
+  padding: 0;
+  overflow-x: auto;
+}
+cms-pane ul li div.item .active {
+  width: 80%;
+}
 cms-pane ul li .buttons {
   position: absolute;
   float: none;
-  width: 94%;
-  top: 8px;
+  width: 100%;
+  top: 0px;
   display: none;
 }
 cms-pane ul li .buttons > input {
-  float: right;
+  float: left;
+  padding-right: 4px;
 }
 cms-pane ul li:hover div.buttons {
   display: block;
@@ -310,12 +323,11 @@ cms-pane ul.dataContent {
   margin: 0;
   padding: 0;
   width: 100%;
-  overflow: hidden;
+  overflow: auto;
 }
 cms-pane ul.dataContent li.row {
-  background: #d0e5f2;
-  border-bottom: 1px solid #aaa;
-  margin: 0 0 4px 0;
+  border: 0;
+  margin: 0;
 }
 cms-pane ul.dataContent li.row.editable .active {
   display: block;
@@ -331,6 +343,10 @@ cms-pane ul.dataContent li.row:hover,
 cms-pane ul.dataContent li.row.selected {
   background: #a8cfe7;
 }
+cms-pane ul.dataContent li.row > .item {
+  border-bottom: 1px solid #aaa;
+  width: 97%;
+}
 cms-pane ul.dataContent li {
   float: left;
 }
@@ -345,14 +361,14 @@ cms-pane ul.dataContent ul {
   margin: 0;
   padding: 0;
 }
-cms-pane[rel="m-1-m"] ul.dataContent li.row {
+cms-pane[rel="m-1-out"] ul.dataContent li.row {
   float: left;
   width: auto;
 }
-cms-pane[rel="m-1-m"] ul.dataContent li.row div[p-img] {
+cms-pane[rel="m-1-out"] ul.dataContent li.row div[p-img] {
   height: 85px;
 }
-cms-pane[rel="m-1-m"] ul.dataContent li.row div[p-img] img {
+cms-pane[rel="m-1-out"] ul.dataContent li.row div[p-img] img {
   height: 80px;
   width: auto;
 }

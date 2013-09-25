@@ -127,23 +127,29 @@ cms-pane {
     .restoreTable   { .glyphBg(-266px,  -24px); }
     .peekTable      { .glyphBgWhite(-266px,  -24px); }
 
-    &>cms-pane >* {
-        padding-left:12px;
-        &>cms-pane >* {
-            padding-left:12px;
-        }
+    & cms-pane {
+        position:relative;
+        float:left;
+        padding:0 2px 0 16px;
+        background:#fff;
     }
 
-    .buttons input {
-        font-size:0px;
-        min-height:14px;
-        float:left;
-        cursor:pointer;
-        border: 1px solid transparent;
-        padding:0;
-        width:12px;
-        margin-left:2px;
-        -webkit-border-radius:0;
+    .buttons {
+        & div {
+            float:right;
+            margin-right:4px;
+            input {
+                font-size:0px;
+                min-height:14px;
+                float:left;
+                cursor:pointer;
+                border: 1px solid transparent;
+                padding:0;
+                width:12px;
+                margin-left:2px;
+                -webkit-border-radius:0;
+            }
+        }
     }
     cms-header,
     [cms-header] {
@@ -259,15 +265,26 @@ cms-pane {
                        clear:left;
                     }
                 }
+                &.item {
+                    p {
+                        margin:0;
+                        padding:0;
+                        overflow-x:auto;
+                    }
+                    & .active {
+                        width:80%;
+                    }
+                }
             }
             .buttons {
                 //display:none;
                 position:absolute;
                 float:none;
-                width:94%;
-                top:8px;
+                width:100%;
+                top:0px;
                 &>input {
-                    float:right;
+                    float:left;
+                    padding-right:4px;
                 }
                 display:none;
             }
@@ -287,11 +304,10 @@ cms-pane {
         margin:0;
         padding:0;
         width:100%;
-        overflow:hidden;
+        overflow:auto;
         li.row {
-            background:@mainPaneBg;
-            border-bottom:1px solid #aaa;
-            margin: 0 0 4px 0;
+            border:0;
+            margin: 0;
             &.editable .active {
                 display:block;
                 textarea,
@@ -305,6 +321,10 @@ cms-pane {
             &:hover,
             &.selected {
                 background:darken(@mainPaneBg, 10%);
+            }
+            >.item {
+                border-bottom:1px solid #aaa;
+                width:97%;
             }
         }
         li {
@@ -322,7 +342,7 @@ cms-pane {
             padding:0;
         }
     }
-    &[rel="m-1-m"] {
+    &[rel="m-1-out"] {
         ul.dataContent {
             li.row {
                 float:left;

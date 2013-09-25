@@ -1,4 +1,20 @@
 angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
+    .directive('cmsItem', ['config', 'dom', function(config, dom) {
+        return {
+            restrict    : 'A',
+            replace     : true,
+            transclude  : true,
+            template    : '',
+            link        : function($scope, $element, $attrs) { 
+                dom.getItem($scope, $attrs.cmsItem, function(compiled) {
+                    $element.replaceWith(compiled);
+                });
+            },
+            controller: function($scope, $element) {
+                $scope.trClass = false;
+            }
+        };
+    }])
     .directive('pImg', ['config', function(config) {
         return {
             restrict    : 'A',
@@ -158,7 +174,6 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
 
                         $scope.meta = _.isUndefined(parentMeta) ? {} : parentMeta;
                         $scope.meta = _($scope.meta).extend( config.setParams(domMeta) );
-                        LG("LIN",  $attrs.key, $scope.meta.children);
 
                         linkers.set('main', $scope, $element);
 

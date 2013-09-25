@@ -63,7 +63,7 @@
                     <button onclick='LG(localStorage)'>To Console</button>
                     <div style='float:right; height:16px; width:14px; margin-top:3px;' class='savButton' ng-show="saved" is-success='{{saved}}'></div>
 
-                    <loosers cms-pane key="users" rel='m-p-m' jquery-ui='{"sortable":""}'>
+                    <loosers cms-pane key="users" rel='m-p-out' jquery-ui='{"sortable":""}'>
                         <div cms-header></div>
                         <iterate><div div-img></div></iterate>
                         <cms-pane key='stuff' cols='[["one", "One"], ["two", "Two"]]'>
@@ -78,17 +78,25 @@
                         <iterate><div p-img></div></iterate>
 
                         <cms-pane key="salons" rel='m-p' rel-child='loosers' jquery-ui='{"sortable":""}'>
-                            <div cms-header></div>
-                            <iterate><div p-img></div></iterate>
+                            <div style='font-style:italic; background:#888; color:white;width:100%;'>Salons</div>
+                            <iterate><div cms-item='oneLabel'></div></iterate>
                         </cms-pane>
                         <cms-pane key="clients" rel='m-p' rel-child='chumps'>
-                            <div cms-header></div>
+                            <div style='font-style:italic; background:#888; color:white;width:100%;'>
+                                <span>Clients</span>
+                                <div class='buttons'>
+                                    <input type='button' class='addButton' ng-click='add()' ng-show='buttons.add'>
+                                    </input>
+                                </div>
+                            </div>
+                            <iterate><div cms-item='oneLabel'></div></iterate>
                         </cms-pane>
                     </cms-pane>
                 </div>
                 <div class='right'>
-                    <chumps cms-pane key="chumps"  rel='m-p-m'>
+                    <chumps cms-pane key="chumps"  rel='m-p-out'>
                             <div>HEADER</div>
+                            <iterate><div p-img></div></iterate>
                     </chumps>
                 </div>
             </div> <!-- contentWrap -->
