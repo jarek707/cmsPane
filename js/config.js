@@ -14,17 +14,13 @@ angular.module('app.gridConf', ['app.directives'])
                             $ret[arg] = defaultVal;
                         } // else keep the value from PaneConfig
                     } else {
-                        if (attrs[arg].trim().substr(0,1) === '[' || attrs[arg].trim().substr(0,1) === '{') {
-                            $ret[arg] = JSON.parse(attrs[arg]);
-                        } else {
-                            $ret[arg] = attrs[arg];
-                        }
+                        $ret[arg] = attrs[arg];
                     }
                 }
 
                 this.setConfigObject(_.isUndefined(attrs.PaneConfig) ? 'PaneConfig' : attrs.PaneConfig);
 
-                var $ret = this.getMeta(attrs.key);;
+                var $ret = _(this.getMeta(attrs.key)).extend(attrs);
 
                 setDefault('paneConfig',     'PaneConfig');
                 setDefault('tplDir',         'partials');
@@ -34,7 +30,7 @@ angular.module('app.gridConf', ['app.directives'])
                 setDefault('relKey',         '');
                 setDefault('key',            false);
                 setDefault('jqueryUi',       false);
-                setDefault('cols',           []);
+                //setDefault('cols',           []);
 
                 $ret.autoClose = $ret['auto-close'] || !_.isUndefined(attrs['auto-close']);
 

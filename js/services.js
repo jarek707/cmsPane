@@ -1,109 +1,79 @@
 angular.module('app.services', ['app.gridConf'])
     .factory('dom', function($compile) {
         return {
-            'genMeta' : function(el) {
-                function propagate(el, parentMeta) {
-                    el.data().meta = parentMeta;
+            'makeMain' : function(el) {
+                $scope = el.data().$scope;
 
-                    _(el.get()[0].attributes).each(function(v,k) {
-                        _(['params', 'class', 'expose', 'row-id', 'parent-list']).contains(v.nodeName) 
-                        || (el.data().meta[v.nodeName] = v.nodeValue);
-                    });
+                var html = $scope.templates.cmsPane;
 
-                    var iterate =   el.find('>iterate');
-                    if ( iterate.length ) {
-                        el.data().meta.iterate = iterate.get()[0].innerHTML;
-                        //iterate.get()[0].outerHTML = '{{ITERATION}}';
-                    } else {
-                        //el.prepend('{{ITERATION}}');
-                    }
+                if (html.indexOf('<inject-iterator-here />') > -1)
+                    html = html.replace('<inject-iterator-here />', $scope.meta.iterate);
 
-                    _(el.find('>inline')).each(function(v,k){ 
-                        propagate(angular.element(v), _(el.data().meta).omit(
-                            'rel', 'jquery-ui', 'rel-container', 'class'
-                        ));
-                    });
+                if ($scope.meta.children.indexOf('{{ITERATION}}') > -1) {
+                    html = $scope.meta.children.replace('{{ITERATION}}',html); 
+                } else {
+                    html = $scope.meta.children + html;  // Put iterator at the bottom if not located
                 }
 
-                propagate(el, {});
+                el.append($compile(html)($scope));
             },
-            'paramTransclude' : function(el, attrs, keepAttributes) {
-                var params = {};
+            'injectInlines' : function(el) {
+                $scope = el.data().$scope;
+                for (var i=0; i<$scope.meta.inline.length; i++){
+                    el.append($compile($scope.meta.inline[i])($scope));
+                }
+            },
+            'replaceExternals' : function($scope) {
+                var el = angular.element($scope.meta.relChild);
+                var replacement = angular.element(
+                    '<cms-pane key="' + el.attr('key') + '"' + 'rel="' + el.attr('rel') + '"' +
+                    ' row-id="{{rowId}}" parent-list="list" expose="exposing(data)">' +
+                    el.data().inner + '</cms-pane>'
+                ).data({"meta" : el.data().meta});
 
-                if (!_.isUndefined(attrs.params)) {
-                    _.extend(params, JSON.parse(decodeURIComponent(attrs.params)));
+                el.replaceWith($compile(replacement)($scope));
+            },
+            // Convert all JSON strings to objects and pass on remaining string attributes
+            'attrsToMeta' : function($attrs) {
+                $ret = {};
+                _($attrs).each(function(v,k) {
+                    if (_.isString(v)) {
+                        try { // Invalid JSON string will be considered a valid argument string
+                            $ret[k] = _(['[', '{']).contains(v.substr(0,1)) ? JSON.parse(v) : v;
+                        } catch (e) { }
+                    }
+                });
+                return $ret;
+            },
+            'paramTransclude' : function(el, attrs) {
+                var meta = _.isUndefined(el.data().meta) ? {} : el.data().meta;
+
+                if (!_.isUndefined(attrs.cmsPane)) {
+                    el.data().meta  = this.attrsToMeta(attrs);
+                    el.data().inner = el.get()[0].innerHTML;
                 }
 
-                var iterate =   el.find('iterate'); 
+                var iterate =   el.find('>iterate'); 
                 if ( iterate.length ) {
-                    params.iterate             = iterate.get()[0].innerHTML;
+                    meta.iterate             = iterate.get()[0].innerHTML;
                     iterate.get()[0].outerHTML = '{{ITERATION}}';
                 }
 
-                _.isEmpty(el.get()[0].innerHTML) || (params.children = el.get()[0].innerHTML);
-
-                // Attributes of the wrapper element override ones in <cms-pane-content><params>
-                _(attrs).each(function(v,k) { 
-                    if (typeof v === 'string' && k !== 'params') params[k] = v;
-                    // Remove ones with JSON
-                    _(['jqueryUi','cols']).contains(k) && el.removeAttr(k);
-                });
-                
-                // Intercept all JSON param strings and convert them to an object
-                _(params).each(function(v,k) {
-                    if ( _.isString(v)) {
-                        var firstChar = v.substr(0,1);
-                        if (firstChar == '[' || firstChar == '{') {
-                            try {
-                                params[k] = JSON.parse(v);
-                            } catch (e) { /* ignore exception, value will not change */}
-                        }
+                meta.inline = [];
+                var cmsPane =   el.find('>cms-pane'); 
+                if ( cmsPane.length ) {
+                    for( var i=0; i<cmsPane.length; i++){
+                        meta.inline[i] = cmsPane[i].outerHTML.replace('<cms-pane',
+                            '<cms-pane row-id="{{rowId}}" parent-list="list" expose="exposing(data)" ');
                     }
-                });
-
-                el.attr('params', encodeURIComponent(JSON.stringify(params)));
+                    cmsPane.remove();
+                }
+                
+                meta.children = _.isEmpty(el.get()[0].innerHTML) ? "{{ITERATION}}" : el.get()[0].innerHTML;
+                LG( attrs.key , meta.children );
 
                 el.get()[0].innerHTML = '';
-                return params;
-            },
-            'injectRelChild' : function($scope, $element) {
-                
-                var elm = $scope.meta.relContainer !== 'inline'
-                         ? angular.element($scope.meta.relContainer)
-                         : $element.find('inline');
-
-                if ( elm.length === 0 ) return; // safety
-
-                var html = '';
-                for (var i=0; i<elm.length; i++) {
-                    el = angular.element(elm[i]);
-
-                    var params = JSON.parse(decodeURIComponent(el.attr('params')));
-
-                    var meta = _(angular.copy($scope.meta)).omit('relContainer','jqueryUi')
-                    meta = _(meta).extend(params);
-
-                    if (typeof meta.cols === 'string') 
-                        meta.cols = JSON.parse(meta.cols);
-
-                    html += '<div cms-pane' + 
-                        ' class="' + $scope.meta.relContainer + '"' +
-                        ' key="' + meta.key + '"' +
-                        ' rel="' + meta.rel + '"' +
-                        ' row-id="{{rowId}}"' +
-                        ' expose="exposing(data)"' +
-                        ' parent-list="list"' +
-                        ' params=\'' + JSON.stringify(meta) + '\'' +
-                        ' ></div>';
-                }
-                    
-                if ( $scope.meta.relContainer === 'inline' ) {
-                    $scope.inlineHtml = '<li>' + html + '</li>';
-                    $scope.compiled = $compile($scope.inlineHtml)($scope);
-                } else {
-                    var compiled = $compile(html)($scope);
-                    angular.element($scope.meta.relContainer).replaceWith(compiled);
-                }
+                return _.extend(meta, this.attrsToMeta(attrs));
             }
         }
     })

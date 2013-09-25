@@ -144,18 +144,6 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
             };
         }
     ])
-    .directive('replaceWithCmsPane', ['config', 'dom', function(config, dom) {
-        return {
-            restrict    : 'EA',
-            replace     : true,
-            transclude  : false,
-            template    : '',
-            compile     : function(el, attrs) { 
-                dom.genMeta(el);
-                dom.paramTransclude(el, attrs);
-            }
-        };
-    }])
     .directive('cmsPane', ['$compile',  'config', 'controllers','linkers','dom',
         function ($compile, config, controllers, linkers, dom) {
             return {
@@ -165,44 +153,31 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                 transclude  : false,
                 template    : "",
                 compile     : function(el, attrs, trans) {
-                    dom.genMeta(el);
-                    LG( SER(el.data().meta) );
-                    var params = dom.paramTransclude(el, attrs, true);
+                    function link($scope, $element, $attrs) {
+                        var parentMeta = _.clone($scope.expose({data:'meta'}));
 
-                    return  function($scope, $element, $attrs) {
-                        $scope.meta = _(config.setParams($attrs)).extend(params);
+                        $scope.meta = _.isUndefined(parentMeta) ? {} : parentMeta;
+                        $scope.meta = _($scope.meta).extend( config.setParams(domMeta) );
+                        LG("LIN",  $attrs.key, $scope.meta.children);
 
                         linkers.set('main', $scope, $element);
 
                         config.getAllTemplates($scope, [], function() {
-
-                            html = $scope.templates.cmsPane;
-
-                            if (html.indexOf('<inject-iterator-here />') > -1)
-                                html = html.replace('<inject-iterator-here />', $scope.meta.iterate);
-
-                            if ($scope.meta.children.indexOf('{{ITERATION}}') > -1)
-                                html = $scope.meta.children.replace('{{ITERATION}}',html); 
-
-                            var compiled = $compile(html)($scope);
-                            $element.append(compiled);
-
-                            if (!_.isUndefined($scope.meta.relContainer)) {
-                                setTimeout( function() {
-                                    dom.injectRelChild($scope, $element);
-                                }, 0);
-                            }
+                            dom.makeMain($element);
+                            _.isEmpty($scope.meta.inline ) || dom.injectInlines($element);
+                            _.isUndefined($attrs.relChild) || dom.replaceExternals($scope);
                         });
                     };
+
+                    var domMeta = dom.paramTransclude(el, attrs);
+                    return _.isUndefined(attrs.cmsPane) ? link : null;
                 },
                 controller  :  function($scope, $element, $attrs) {
-                    $scope.meta = _.isUndefined($attrs.params) ? {} 
-                                : JSON.parse($attrs.params);
-
                     $scope.exposing = function(dataItem) {
                         return $scope[dataItem];
                     };
 
+                    $scope.meta = {"rel" : $attrs.rel};
                     controllers.set('main', $scope);
                 }
             };

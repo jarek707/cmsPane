@@ -19,11 +19,15 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                 },
                 // Main grid scope LINK
                 'main' : {
-                    '1-m'  :function($scope) {
+                    '1-m'  :function($scope, $element) {
+                            setTimeout( function() {
+                                $scope.inline = $element.find('inline');
+                                $scope.inline.show();
+                            }, 300);
                     },
                     'm-p'  :function($scope, $element) {
                         $scope.relDataKey = $scope.expose({data: 'meta'}).key + '/' + $scope.meta.key;
-                        
+
                         $scope.saveRelData = function() {
                             gridDataSrv.save($scope.relDataKey, $scope.relData);
                         };
@@ -98,7 +102,7 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                 'row' : { // LINK
                     '1-m' : function($scope, $element) {
                         $scope.attachAfterRow = function() {
-                            $element.parent().after($scope.compiled);
+                            $element.parent().after($scope.inline);
                         }
                     },
                     'm-p' : function($scope) {
@@ -147,9 +151,7 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                 'set' : function(type, $scope) {
                     this[type]['default']($scope);
                     
-                    if (!_.isUndefined($scope.meta.rel) && _.isFunction(this[type][$scope.meta.rel])) {
-                        this[type][$scope.meta.rel]($scope);
-                    }
+                    _.isFunction(this[type][$scope.meta.rel]) && this[type][$scope.meta.rel]($scope);
                 },
                 'head' : {
                     'default' : function($scope) {
