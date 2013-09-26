@@ -1,5 +1,5 @@
 angular.module('app.customDirectives', ['app.gridConf'])
-    .directive('detail', function factory($compile, gridDataSrv, config) { // head scope
+    .directive('detail', function factory($compile, lData, config) { // head scope
         return {
             restrict    : 'A',
             replace     : true,

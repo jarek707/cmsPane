@@ -9,9 +9,6 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                 dom.getItem($scope, $attrs.cmsItem, function(compiled) {
                     $element.replaceWith(compiled);
                 });
-            },
-            controller: function($scope, $element) {
-                $scope.trClass = false;
             }
         };
     }])
@@ -140,13 +137,14 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
             };
         }
     ])
-    .directive('rowButtons', ['config', 'controllers', 'linkers',
+    .directive('buttons', ['config', 'controllers', 'linkers',
         function(config, controllers, linkers) {
             return {
                 replace     : true,
-                restrict    : 'AE',
-                templateUrl : 'partials/rowButtons.html',
+                restrict    : 'E',
+                templateUrl : 'partials/buttons.html',
                 compile     : function(el, attrs) {
+                    LG( attrs.buttons );
                     return function($scope, $element) { 
                         linkers.set('row', $scope, $element); 
 

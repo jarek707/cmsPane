@@ -63,12 +63,12 @@
                     <button onclick='LG(localStorage)'>To Console</button>
                     <div style='float:right; height:16px; width:14px; margin-top:3px;' class='savButton' ng-show="saved" is-success='{{saved}}'></div>
 
-                    <loosers cms-pane key="users" rel='m-p-out' jquery-ui='{"sortable":""}'>
-                        <div cms-header></div>
+                    <loosers cms-pane key="Stylist's Salons" rel='m-p-out' jquery-ui='{"sortable":""}'>
+                        <div>Stylist's Salons</div>
                         <iterate><div div-img></div></iterate>
                         <cms-pane key='stuff' cols='[["one", "One"], ["two", "Two"]]'>
                             <div cms-header></div>
-                            <iterate><div p-img></div></iterate>
+                            <iterate buttons=''><div p-img></div></iterate>
                         </cms-pane>
                     </loosers>
                 </div>
@@ -78,14 +78,21 @@
                         <iterate><div p-img></div></iterate>
 
                         <cms-pane key="salons" rel='m-p' rel-child='loosers' jquery-ui='{"sortable":""}'>
-                            <div style='font-style:italic; background:#888; color:white;width:100%;'>Salons</div>
+                            <div style='font-style:italic; background:#fff; color:#888;width:100%;'>
+                                <span>Salons</span>
+                                <div class='buttons' style='float:right'>
+                                    <input style='display:block;' type='button' class='addButton' ng-click='add()'>
+                                    </input>
+                                </div>
+                            </div>
+
                             <iterate><div cms-item='oneLabel'></div></iterate>
                         </cms-pane>
                         <cms-pane key="clients" rel='m-p' rel-child='chumps'>
-                            <div style='font-style:italic; background:#888; color:white;width:100%;'>
+                            <div style='font-style:italic; background:#fff; color:#888;width:100%;'>
                                 <span>Clients</span>
-                                <div class='buttons'>
-                                    <input type='button' class='addButton' ng-click='add()' ng-show='buttons.add'>
+                                <div class='buttons' style='float:right'>
+                                    <input style='display:block;' type='button' class='addButton' ng-click='add()'>
                                     </input>
                                 </div>
                             </div>
@@ -94,8 +101,8 @@
                     </cms-pane>
                 </div>
                 <div class='right'>
-                    <chumps cms-pane key="chumps"  rel='m-p-out'>
-                            <div>HEADER</div>
+                    <chumps cms-pane key="chumps"  rel='m-p-out' jquery-ui='{"sortable":""}' buttons='close'>
+                            <div>Stylist's Clients</div>
                             <iterate><div p-img></div></iterate>
                     </chumps>
                 </div>

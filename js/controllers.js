@@ -4,8 +4,8 @@ angular.module('app.directiveScopes', ['app.gridConf'])
      *          LINKERS
      *
     */
-    .service('linkers', ['$http', 'config', '$compile', 'gridDataSrv','jquery_ui',
-        function($http, config, $compile, gridDataSrv, jquery_ui) {
+    .service('linkers', ['$http', 'config', '$compile', 'lData','jquery_ui',
+        function($http, config, $compile, lData, jquery_ui) {
             'use strict';
 
             return {
@@ -19,20 +19,15 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                 },
                 // Main grid scope LINK
                 'main' : {
-                    '1-m'  :function($scope, $element) {
-                            setTimeout( function() {
-                                $scope.inline = $element.find('inline');
-                                $scope.inline.show();
-                            }, 300);
-                    },
+                    '1-m'  :function($scope, $element) {},
                     'm-p'  :function($scope, $element) {
                         $scope.relDataKey = $scope.expose({data: 'meta'}).key + '/' + $scope.meta.key;
 
                         $scope.saveRelData = function() {
-                            gridDataSrv.save($scope.relDataKey, $scope.relData);
+                            lData.save($scope.relDataKey, $scope.relData);
                         };
 
-                        gridDataSrv.getData($scope.relDataKey, function(data) {
+                        lData.getData($scope.relDataKey, function(data) {
                             $scope.relData = _.isEmpty(data) ? {} : data;
                         });
                     },
@@ -41,7 +36,7 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                             $scope.relDataKey = $scope.expose({data: 'meta'}).key + 
                                                 '/' + $scope.rowId + '/' + $scope.meta.key;
 
-                            gridDataSrv.save($scope.relDataKey, $scope.relData);
+                            lData.save($scope.relDataKey, $scope.relData);
                         };
                     },
                     'm-p-out'  :function($scope, $element) {
@@ -82,7 +77,7 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                         $scope.relScope     = null;
 
                         if (!_.isUndefined($scope.meta.key)) {
-                            gridDataSrv.getData($scope.meta.key, function(data) {
+                            lData.getData($scope.meta.key, function(data) {
                                 $scope.list  = data;
                                 $scope.listW = angular.copy(data);
                                 setTimeout( function() { 
@@ -116,6 +111,7 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                         }
                     },
                     'm-p' : function($scope) {
+                        $scope.buttonsOnOff('edit,del,add', 'save,sub,close');
                     },
                     'm-p-out' : function($scope) {
                         $scope.buttonsOnOff('close', 'add,save,sub,del,save,edit');
@@ -154,8 +150,8 @@ angular.module('app.directiveScopes', ['app.gridConf'])
      *          CONTROLLERS
      *
     */
-    .service('controllers', ['$http', 'config', '$compile', 'gridDataSrv', 
-        function($http, config, $compile, gridDataSrv) {
+    .service('controllers', ['$http', 'config', '$compile', 'lData', 
+        function($http, config, $compile, lData) {
             'use strict';
             return {
                 'set' : function(type, $scope) {
@@ -206,18 +202,16 @@ angular.module('app.directiveScopes', ['app.gridConf'])
 
                         $scope.save = function(row, id) {
                             $scope.list[id] = _.clone(row);
-                            $scope.notify('sav', gridDataSrv.save($scope.meta.key, $scope.list, id));
+                            $scope.notify('sav', lData.save($scope.meta.key, $scope.list, id));
 
-                            if ($scope.meta.autoAdd) { //autoAdd
-                                $scope.add();
-                            }
+                            $scope.meta.autoAdd && $scope.add();  //autoAdd
                         };
 
                         $scope.del = function(id)  { 
                             var firstField = _($scope.list[id]).values().pop();
                             delete $scope.list[id];
                             $scope.notify(  'del', 
-                                            gridDataSrv.save($scope.meta.key, $scope.list), 
+                                            lData.save($scope.meta.key, $scope.list), 
                                             ' <b>"' + firstField + '"</b>'
                                          );
                         };
@@ -269,9 +263,8 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                         $scope.clk = function(){
                             $scope.$parent.rowId = $scope.id;
                             parentClk();
-                            if ($scope.meta.inline.length) {
-                                $scope.attachAfterRow();
-                            }
+
+                            $scope.meta.inline.length && $scope.attachAfterRow();
                         };
                     },
                     'm-p' : function($scope) {

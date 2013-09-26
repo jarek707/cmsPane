@@ -114,7 +114,16 @@ div.gridBox {
 }
 
 .savButton      { .glyphBg(-290px,    0px); }
-
+.contentPane {
+    cms-pane {
+        ul.dataContent {
+            li.row {
+                float:left;
+                width:auto;
+            }
+        }
+    }
+}
 cms-pane {
     margin:0;
     .delButton      { .glyphBg(-458px,    0px); }
@@ -127,11 +136,24 @@ cms-pane {
     .restoreTable   { .glyphBg(-266px,  -24px); }
     .peekTable      { .glyphBgWhite(-266px,  -24px); }
 
-    & cms-pane {
-        position:relative;
-        float:left;
-        padding:0 2px 0 16px;
+    & .inlineWrapper { 
+        width:100%;
+        margin:5px 0;
+        padding:0;
         background:#fff;
+        cms-pane {
+            padding:0;
+            ul.dataContent {
+                width:90%;
+                border:4px solid #abc;
+                margin:3px 0;
+                float:right;
+                li {
+                    border-top:2px solid #eee;
+                    background:#fff;
+                }
+            }
+        }
     }
 
     .buttons {
@@ -218,53 +240,29 @@ cms-pane {
         span.warning {color:@warningColor;}
         span.error   {color:@errorColor;  }
     }
-    ul {
-       margin-top:0;
-        li {
+
+    ul.dataContent {
+        .rounded-corners(5px);
+        box-shadow: 1px 1px 11px #aaa;
+        float:left;
+        font-size:0.9em;
+        margin:0;
+        padding:0;
+        width:100%;
+        li.row {
             position:relative;
             float:left;
             width:100%;
-            div[p-img] {
-                margin:5px;
-                padding:5px;
-                img {
-                    width: 40px;
-                    margin:0 8px 0 0;
-                }
-                p {
-                    margin:0;
-                    padding:0;
-                    width:100%;
-                }
-                [row-buttons] {
-                   position:absolute;
-                   height:16px;
-                   width:85%;
+            border:0;
+            margin: 0;
+            &:hover {
+                div.buttons {
+                    display:block;
                 }
             }
             div {
                 overflow:auto;
                 float:left;
-                &[div-img] {
-                    margin:5px;
-                    border:1px solid #aaa;
-                    padding:5px;
-                    .rounded-corners; 
-                    img {
-                        height: 80px;
-                        width:auto;
-                        margin:0 0px 0 12px;
-                        float:right;
-                        .rounded-corners(3px);
-                    }
-                    [row-buttons] {
-                       position:relative;
-                       float:left;
-                       height:16px;
-                       display:block;
-                       clear:left;
-                    }
-                }
                 &.item {
                     p {
                         margin:0;
@@ -282,32 +280,60 @@ cms-pane {
                 float:none;
                 width:100%;
                 top:0px;
+                &>div {
+                    padding:1px 5px 2px 1px;
+                    background:white;
+                    opacity:0.80;
+                    float:right;
+                    .rounded-corners(3px); 
+                }
                 &>input {
                     float:left;
                     padding-right:4px;
                 }
                 display:none;
             }
-        }
-        li:hover {
-            div.buttons {
-                display:block;
+            div[p-img] {
+                margin:0;
+                padding:0;
+                div {
+                    padding:5px;
+                }
+                img {
+                    width: 40px;
+                    margin:0 8px 0 0;
+                }
+                p {
+                    margin:0;
+                    padding:0;
+                    width:100%;
+                }
+                [row-buttons] {
+                   position:absolute;
+                   height:16px;
+                   width:85%;
+                }
             }
-        }
-    }
-
-    ul.dataContent {
-        .rounded-corners(5px);
-        box-shadow: 1px 1px 11px #aaa;
-        float:left;
-        font-size:0.9em;
-        margin:0;
-        padding:0;
-        width:100%;
-        overflow:auto;
-        li.row {
-            border:0;
-            margin: 0;
+            [div-img] {
+               margin:5px;
+               border:1px solid #aaa;
+               padding:5px;
+               .rounded-corners; 
+               img {
+                   height: 80px;
+                   width:auto;
+                   margin:0 0px 0 12px;
+                   float:right;
+                   .rounded-corners(3px);
+               }
+               [row-buttons] {
+                  position:relative;
+                  float:left;
+                  height:16px;
+                  display:block;
+                  clear:left;
+               }
+            }
             &.editable .active {
                 display:block;
                 textarea,
@@ -323,7 +349,7 @@ cms-pane {
                 background:darken(@mainPaneBg, 10%);
             }
             >.item {
-                border-bottom:1px solid #aaa;
+                border-bottom:1px dotted #ccc;
                 width:97%;
             }
         }

@@ -70,6 +70,7 @@ angular.module('app.services', ['app.gridConf'])
                     for( var i=0; i<cmsPane.length; i++){
                         meta.inline[i] = cmsPane[i].outerHTML.replace('<cms-pane',
                             '<cms-pane row-id="{{rowId}}" parent-list="list" expose="exposing(data)" ');
+                        meta.inline[i] = '<div class="inlineWrapper">' + meta.inline[i] + '</div>';
                     }
                     cmsPane.remove();
                 }
@@ -119,7 +120,7 @@ angular.module('app.services', ['app.gridConf'])
             }
         }
     })
-    .factory('gridDataSrv', function($http, config) {
+    .factory('lData', function($http, config) {
         return  {
             prefix: 'GRID:',
             useLocal : true,

@@ -22,11 +22,11 @@ function LGT()    {
     setTimeout(function() {if (window.console) console.log(args);}, args.pop()); 
 }
 
-function contentPane($scope, $routeParams, $http, gridDataSrv, config) {
+function contentPane($scope, $routeParams, $http, lData, config) {
     $scope.saved = false;
 
     $scope.clearLocalStorage = function() {
-        gridDataSrv.clear();
+        lData.clear();
         document.location = document.location;
     };
 
