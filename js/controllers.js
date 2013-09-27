@@ -43,14 +43,18 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                         var saveRelData = $scope.expose({data:'saveRelData'});
 
                         $scope.updateList = function() {
-                            if ($scope.rowId) {
+                            if (!_.isEmpty($scope.rowId)) {
                                 $scope.list = {};
                                 var relData = $scope.expose({data:'relData'})[$scope.rowId];
 
                                 if (!_.isUndefined(relData)) {
                                     for (var i in relData) {
                                         $scope.list[relData[i].ord] = $scope.parentList[i];
-                                        $scope.list[relData[i].ord].id = i;
+                                        if (_.isUndefined($scope.list[relData[i].ord])) {
+                                            delete relData[i]; // SAFETY orphaned relation
+                                        } else {
+                                            $scope.list[relData[i].ord].id = i;
+                                        }
                                     }
                                 }
 
@@ -67,8 +71,8 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                             }
                         };
 
-                        $scope.$on('relDataChanged', function() { $scope.updateList(); });
-                        $scope.$watch('rowId',       function() { $scope.updateList(); });
+                        $scope.$on('relDataChanged', $scope.updateList);
+                        $scope.$watch('rowId',       $scope.updateList);
                     },
                     'default' : function($scope, $element) {
                         jquery_ui.setUp($scope);
@@ -202,7 +206,8 @@ angular.module('app.directiveScopes', ['app.gridConf'])
 
                         $scope.save = function(row, id) {
                             $scope.list[id] = _.clone(row);
-                            $scope.notify('sav', lData.save($scope.meta.key, $scope.list, id));
+                            var result = lData.save($scope.meta.key, $scope.list, id);
+                            _.isFunction($scope.notify) && $scope.notify('sav', result);
 
                             $scope.meta.autoAdd && $scope.add();  //autoAdd
                         };
@@ -255,6 +260,12 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                             $scope.openSub(rowText);
                         };
                         // Sub panes END
+                    },
+                    'm-p' : function($scope) {
+                        var parentSave = $scope.save;
+                        $scope.save = function(row, id) {
+                            parentSave(row, id);
+                        }
                     }
                 },
                 'row' : { // CONTROLLER

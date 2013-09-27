@@ -100,15 +100,13 @@ angular.module('app.services', ['app.gridConf'])
                                 $scope.meta.jqueryUi             :
                                 JSON.parse($scope.meta.jqueryUi);
 
-                    if (!_.isFunction(cb)) cb = function() {};
-
                     var params = {
                         'tolerance' : 'pointer',
                         'helper'    : 'clone',
                         'cursor'    : 'move',
                         'distance'  : 1,
                         'cursorAt'  : {left: 5},
-                        'update'    : cb
+                        'update'    : _.isFunction(cb) ? cb : function() {}
                     };
 
                     if (!_.isEmpty(jqObj.sortable)) {

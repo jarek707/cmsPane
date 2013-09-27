@@ -114,26 +114,8 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                 restrict : 'EA',
                 templateUrl: 'partials/cmsHead.html',
                 link        : function($scope, $element, $attrs) {
-                    //($scope.spaces = UT.gridKey($scope.$attrs.key).split('/')).pop();
                 },
                 controller  : function($scope) { controllers.head['default']($scope); }
-            };
-        }
-    ])
-    .directive('cmsRow', ['config', 'controllers', 'linkers',
-        function(config, controllers, linkers) {
-            return {
-                replace     : true,
-                restrict    : 'AE',
-                template : '<li ng-repeat="(id,row) in list" ng-class="rowClass" class="row" ord-id="{{row.id}}">',
-                compile     : function(el, attrs) {
-                    return function($scope, $element) { 
-                        linkers.set('row', $scope, $element); 
-                    };
-                },
-                controller  : function($scope) { 
-                    controllers.set('row', $scope); 
-                }
             };
         }
     ])
@@ -144,12 +126,8 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                 restrict    : 'E',
                 templateUrl : 'partials/buttons.html',
                 compile     : function(el, attrs) {
-                    LG( attrs.buttons );
                     return function($scope, $element) { 
                         linkers.set('row', $scope, $element); 
-
-                        //if ( !_.isUndefined($scope.$parent.meta) )
-                            //$scope.meta = $scope.$parent.meta.columns;
                     };
                 },
                 controller  : function($scope) { 

@@ -39,7 +39,7 @@ angular.module('app.gridConf', ['app.directives'])
             getAllTemplates: function($scope, extras, cb) {
                 var standardTemplates = [
                     'cmsPane',   'cmsCheckbox', 'cmsFooter', 'cmsPane', 'cmsRadio', 
-                    'cmsSelect', 'cmsText',     'pImg',      'rowButtons'
+                    'cmsSelect', 'cmsText',     'pImg',      'buttons'
                 ];
                 $scope.templates = {};
                 var tpls = _.isEmpty(extras) ? standardTemplates

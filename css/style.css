@@ -107,7 +107,9 @@ cms-pane .savButton {
 cms-pane .addButton {
   background: transparent url('../image/glyph.png') -408px -96px no-repeat;
 }
-cms-pane .closeButton,
+cms-pane .closeButton {
+  background: transparent url('../image/glyph.png') -218px -96px no-repeat;
+}
 cms-pane .removeButton {
   background: transparent url('../image/glyph.png') -312px 0px no-repeat;
 }
@@ -138,17 +140,16 @@ cms-pane .inlineWrapper cms-pane ul.dataContent li {
 }
 cms-pane .buttons div {
   float: right;
-  margin-right: 4px;
+  margin: 0;
 }
 cms-pane .buttons div input {
   font-size: 0px;
   min-height: 14px;
   float: left;
   cursor: pointer;
-  border: 1px solid transparent;
   padding: 0;
-  width: 12px;
-  margin-left: 2px;
+  width: 14px;
+  margin-left: 1px;
   -webkit-border-radius: 0;
 }
 cms-pane cms-header,
@@ -272,7 +273,6 @@ cms-pane ul.dataContent li.row:hover div.buttons {
   display: block;
 }
 cms-pane ul.dataContent li.row div {
-  overflow: auto;
   float: left;
 }
 cms-pane ul.dataContent li.row div.item p {
@@ -291,7 +291,7 @@ cms-pane ul.dataContent li.row .buttons {
   display: none;
 }
 cms-pane ul.dataContent li.row .buttons > div {
-  padding: 1px 5px 2px 1px;
+  padding: 2px;
   background: white;
   opacity: 0.80;
   float: right;
@@ -300,6 +300,7 @@ cms-pane ul.dataContent li.row .buttons > div {
   -ms-border-radius: 3px;
   -o-border-radius: 3px;
   border-radius: 3px;
+  box-shadow: -1px 2px 8px #778899;
 }
 cms-pane ul.dataContent li.row .buttons > input {
   float: left;
