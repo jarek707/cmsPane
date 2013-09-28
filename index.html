@@ -63,21 +63,17 @@
                     <button onclick='LG(localStorage)'>To Console</button>
                     <div style='float:right; height:16px; width:14px; margin-top:3px;' class='savButton' ng-show="saved" is-success='{{saved}}'></div>
 
-                    <loosers cms-pane key="Stylist's Salons" rel='m-p-out' jquery-ui='{"sortable":""}'>
+                    <salons_stylists cms-pane key="stylist-salons" rel='m-p-out' jquery-ui='{"sortable":""}'>
                         <div>Stylist's Salons</div>
-                        <iterate><div div-img></div></iterate>
-                        <cms-pane key='stuff' cols='[["one", "One"], ["two", "Two"]]'>
-                            <div cms-header></div>
-                            <iterate buttons=''><div p-img></div></iterate>
-                        </cms-pane>
-                    </loosers>
+                        <iterate><div div-img></div><buttons></buttons></iterate>
+                    </salons_stylists>
                 </div>
                 <div class='left'>
                     <cms-pane key='stylists' cols='[["left", "Left"], ["right", "Right"]]' jquery-ui='{"sortable" :""}' rel='1-m'>
                         <div cms-header></div>
-                        <iterate><div p-img></div></iterate>
+                        <iterate><buttons use='delete,edit'></buttons><div p-img></div></iterate>
 
-                        <cms-pane key="salons" rel='m-p' rel-child='loosers' jquery-ui='{"sortable":""}'>
+                        <cms-pane key="salons" rel='m-p' rel-child='salons_stylists' jquery-ui='{"sortable":""}'>
                             <div style='font-style:italic; background:#fff; color:#888;width:100%;'>
                                 <span>Salons</span>
                                 <div class='buttons' style='float:right'>
@@ -86,9 +82,9 @@
                                 </div>
                             </div>
 
-                            <iterate><div cms-item='oneLabel'></div></iterate>
+                            <iterate><buttons></buttons><div cms-item='oneLabel'></div></iterate>
                         </cms-pane>
-                        <cms-pane key="clients" rel='m-p' rel-child='chumps'>
+                        <cms-pane key="clients" rel='m-p' rel-child='stylists_clients'>
                             <div style='font-style:italic; background:#fff; color:#888;width:100%;'>
                                 <span>Clients</span>
                                 <div class='buttons' style='float:right'>
@@ -96,15 +92,15 @@
                                     </input>
                                 </div>
                             </div>
-                            <iterate><div cms-item='oneLabel'></div></iterate>
+                            <iterate><buttons></buttons><div cms-item='oneLabel'></div></iterate>
                         </cms-pane>
                     </cms-pane>
                 </div>
                 <div class='right'>
-                    <chumps cms-pane key="chumps"  rel='m-p-out' jquery-ui='{"sortable":""}' buttons='close'>
+                    <stylists_clients chumps cms-pane key="stylists-clients"  rel='m-p-out' jquery-ui='{"sortable":""}' buttons='close'>
                             <div>Stylist's Clients</div>
-                            <iterate><div p-img></div></iterate>
-                    </chumps>
+                            <iterate><div p-img></div><buttons></buttons></iterate>
+                    </stylists_clients>
                 </div>
             </div> <!-- contentWrap -->
         </div> <!-- page -->

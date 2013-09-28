@@ -1,6 +1,12 @@
 angular.module('app.services', ['app.gridConf'])
     .factory('dom', function($compile, $http) {
         return {
+            'setupButtons' : function(el, attrs) {
+                var buttons = el.find('input');
+                for (var i=0; i<buttons.length; i++) {
+                    LG( buttons[i] );    
+                }
+            },
             'getItem' : function($scope, item, cb) {
                 $http.get('partials/' + item + '.html').success(function(html) {
                     cb($compile(html)($scope));
@@ -14,6 +20,7 @@ angular.module('app.services', ['app.gridConf'])
                 if (html.indexOf('<inject-iterator-here />') > -1)
                     html = html.replace('<inject-iterator-here />', $scope.meta.iterate);
 
+LG( $scope.meta.key, html);
                 if ($scope.meta.children.indexOf('{{ITERATION}}') > -1) {
                     html = $scope.meta.children.replace('{{ITERATION}}',html); 
                 } else {

@@ -267,9 +267,6 @@ cms-pane {
                         padding:0;
                         overflow-x:auto;
                     }
-                    & .active {
-                        width:80%;
-                    }
                 }
             }
             .buttons {
@@ -335,9 +332,16 @@ cms-pane {
             }
             &.editable .active {
                 display:block;
+                border:1px solid #aaa;
+                padding:8px;
+                background:#def;
+                .rounded-corners;
                 textarea,
                 input { 
-                    max-width:95%;
+                    width:100%;
+                }
+                label {
+                    background:transparent;
                 }
             }
             &.editable .text {

@@ -119,13 +119,14 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
             };
         }
     ])
-    .directive('buttons', ['config', 'controllers', 'linkers',
-        function(config, controllers, linkers) {
+    .directive('buttons', ['config', 'controllers', 'linkers', 'dom',
+        function(config, controllers, linkers, dom) {
             return {
                 replace     : true,
                 restrict    : 'E',
                 templateUrl : 'partials/buttons.html',
                 compile     : function(el, attrs) {
+                    dom.setupButtons(el, attrs);
                     return function($scope, $element) { 
                         linkers.set('row', $scope, $element); 
                     };
@@ -136,8 +137,8 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
             };
         }
     ])
-    .directive('cmsPane', ['$compile',  'config', 'controllers','linkers','dom',
-        function ($compile, config, controllers, linkers, dom) {
+    .directive('cmsPane', ['config', 'controllers','linkers','dom',
+        function (config, controllers, linkers, dom) {
             return {
                 replace     : false,
                 restrict    : 'EA',

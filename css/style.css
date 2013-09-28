@@ -280,9 +280,6 @@ cms-pane ul.dataContent li.row div.item p {
   padding: 0;
   overflow-x: auto;
 }
-cms-pane ul.dataContent li.row div.item .active {
-  width: 80%;
-}
 cms-pane ul.dataContent li.row .buttons {
   position: absolute;
   float: none;
@@ -357,10 +354,21 @@ cms-pane ul.dataContent li.row [div-img] [row-buttons] {
 }
 cms-pane ul.dataContent li.row.editable .active {
   display: block;
+  border: 1px solid #aaa;
+  padding: 8px;
+  background: #def;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
 }
 cms-pane ul.dataContent li.row.editable .active textarea,
 cms-pane ul.dataContent li.row.editable .active input {
-  max-width: 95%;
+  width: 100%;
+}
+cms-pane ul.dataContent li.row.editable .active label {
+  background: transparent;
 }
 cms-pane ul.dataContent li.row.editable .text {
   display: none;
