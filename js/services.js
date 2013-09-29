@@ -2,9 +2,14 @@ angular.module('app.services', ['app.gridConf'])
     .factory('dom', function($compile, $http) {
         return {
             'setupButtons' : function(el, attrs) {
-                var buttons = el.find('input');
-                for (var i=0; i<buttons.length; i++) {
-                    LG( buttons[i] );    
+                if ( !_.isUndefined(attrs.use)) {
+                    var buttons = el.find('input');
+                    var toUse = attrs.use.split(',');
+                    for (var i=0; i<buttons.length; i++) {
+                        if (!_(toUse).contains(buttons[i].className.replace('Button',''))) {
+                            buttons[i].remove();
+                        }
+                    }
                 }
             },
             'getItem' : function($scope, item, cb) {
@@ -20,7 +25,6 @@ angular.module('app.services', ['app.gridConf'])
                 if (html.indexOf('<inject-iterator-here />') > -1)
                     html = html.replace('<inject-iterator-here />', $scope.meta.iterate);
 
-LG( $scope.meta.key, html);
                 if ($scope.meta.children.indexOf('{{ITERATION}}') > -1) {
                     html = $scope.meta.children.replace('{{ITERATION}}',html); 
                 } else {

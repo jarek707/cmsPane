@@ -65,13 +65,14 @@
 
                     <salons_stylists cms-pane key="stylist-salons" rel='m-p-out' jquery-ui='{"sortable":""}'>
                         <div>Stylist's Salons</div>
-                        <iterate><div div-img></div><buttons></buttons></iterate>
+                        <iterate><div div-img></div><buttons use='remove'></buttons></iterate>
+                        <img-pane><img /></img-pane>
                     </salons_stylists>
                 </div>
                 <div class='left'>
-                    <cms-pane key='stylists' cols='[["left", "Left"], ["right", "Right"]]' jquery-ui='{"sortable" :""}' rel='1-m'>
+                    <cms-pane key='stylists' cols='[["left", "Left"], ["right", "Right"]]' jquery-ui='{"sortable" :""}' rel='1-m' selected='Vidal'>
                         <div cms-header></div>
-                        <iterate><buttons use='delete,edit'></buttons><div p-img></div></iterate>
+                        <iterate><buttons use='sav,del,edit'></buttons><div p-img></div></iterate>
 
                         <cms-pane key="salons" rel='m-p' rel-child='salons_stylists' jquery-ui='{"sortable":""}'>
                             <div style='font-style:italic; background:#fff; color:#888;width:100%;'>
@@ -82,7 +83,7 @@
                                 </div>
                             </div>
 
-                            <iterate><buttons></buttons><div cms-item='oneLabel'></div></iterate>
+                            <iterate><buttons use='sav,close,edit,del'></buttons><div cms-item='oneLabel'></div></iterate>
                         </cms-pane>
                         <cms-pane key="clients" rel='m-p' rel-child='stylists_clients'>
                             <div style='font-style:italic; background:#fff; color:#888;width:100%;'>
@@ -92,14 +93,18 @@
                                     </input>
                                 </div>
                             </div>
-                            <iterate><buttons></buttons><div cms-item='oneLabel'></div></iterate>
+                            <iterate>
+                                <buttons use='sav,close,edit,del'></buttons>
+                                <div cms-item='oneLabel'></div>
+                            </iterate>
                         </cms-pane>
                     </cms-pane>
                 </div>
                 <div class='right'>
-                    <stylists_clients chumps cms-pane key="stylists-clients"  rel='m-p-out' jquery-ui='{"sortable":""}' buttons='close'>
+                    <stylists_clients cms-pane key="stylists-clients"  rel='m-p-out' jquery-ui='{"sortable":""}' buttons='remove'>
                             <div>Stylist's Clients</div>
-                            <iterate><div p-img></div><buttons></buttons></iterate>
+                            <iterate><div p-img></div><buttons use='remove'></buttons></iterate>
+                            <img-pane><img /></img-pane>
                     </stylists_clients>
                 </div>
             </div> <!-- contentWrap -->

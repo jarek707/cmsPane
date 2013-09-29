@@ -131,8 +131,8 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                         linkers.set('row', $scope, $element); 
                     };
                 },
-                controller  : function($scope) { 
-                    controllers.set('row', $scope); 
+                controller  : function($scope, $element) { 
+                    controllers.set('row', $scope, $element); 
                 }
             };
         }

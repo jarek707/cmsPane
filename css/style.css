@@ -46,7 +46,7 @@ div.topMenu {
 }
 div.contentWrap {
   border-left: 180px solid #d3dce0;
-  border-right: 180px solid #d3dce0;
+  border-right: 280px solid #d3dce0;
   height: 100%;
 }
 div.contentPane,
@@ -63,8 +63,8 @@ div.contentPane {
   background: #d0e5f2;
 }
 div.right {
-  width: 180px;
-  margin-right: -180px;
+  width: 280px;
+  margin-right: -280px;
 }
 div.left {
   width: 180px;

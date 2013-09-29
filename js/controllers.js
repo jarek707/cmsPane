@@ -19,7 +19,10 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                 },
                 // Main grid scope LINK
                 'main' : {
-                    '1-m'  :function($scope, $element) {},
+                    '1-m'  :function($scope, $element) {
+                        if (!_.isUndefined($scope.meta.selected)) // autoInit - simulate click of the first data row
+                            setTimeout( function() { $scope.$broadcast('init',$scope.meta.selected); },500);
+                    },
                     'm-p'  :function($scope, $element) {
                         $scope.relDataKey = $scope.expose({data: 'meta'}).key + '/' + $scope.meta.key;
 
@@ -43,19 +46,23 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                         var saveRelData = $scope.expose({data:'saveRelData'});
 
                         $scope.updateList = function() {
+                            LG( 'upd', $scope.rowId );
                             if (!_.isEmpty($scope.rowId)) {
                                 $scope.list = {};
                                 var relData = $scope.expose({data:'relData'})[$scope.rowId];
 
                                 if (!_.isUndefined(relData)) {
+                                    var list = {};
                                     for (var i in relData) {
-                                        $scope.list[relData[i].ord] = $scope.parentList[i];
-                                        if (_.isUndefined($scope.list[relData[i].ord])) {
+                                        list[relData[i].ord] = $scope.parentList[i];
+                                        if (_.isUndefined(list[relData[i].ord])) {
                                             delete relData[i]; // SAFETY orphaned relation
                                         } else {
-                                            $scope.list[relData[i].ord].id = i;
+                                            list[relData[i].ord].id = i;
                                         }
                                     }
+
+                                    setTimeout(function() { $scope.list = list; $scope.$digest(); }, 0);
                                 }
 
                                 jquery_ui.mkSortable($scope, $element, function(evt) {
@@ -112,13 +119,14 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                             for (var i=$scope.meta.inline.length - 1; i>=0; i-- ) {
                                 $element.parent().after($scope.meta.inline[i]);
                             }
-                        }
+                        };
+
                     },
                     'm-p' : function($scope) {
                         $scope.buttonsOnOff('edit,del,add', 'save,sub,close');
                     },
                     'm-p-out' : function($scope) {
-                        $scope.buttonsOnOff('close', 'add,save,sub,del,save,edit');
+                        $scope.buttonsOnOff('remove', '');
                     },
                     'default' : function($scope, $element) {
                         $scope.buttons = {};
@@ -136,7 +144,7 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                         }
 
                         if (joinVals) {
-                            $scope.rowClass = false; 
+                            $scope.rowClass = ''; 
                         } else {
                             $scope.rowClass = 'editable'; 
                         }
@@ -158,10 +166,10 @@ angular.module('app.directiveScopes', ['app.gridConf'])
         function($http, config, $compile, lData) {
             'use strict';
             return {
-                'set' : function(type, $scope) {
+                'set' : function(type, $scope, $element) {
                     this[type]['default']($scope);
                     
-                    _.isFunction(this[type][$scope.meta.rel]) && this[type][$scope.meta.rel]($scope);
+                    _.isFunction(this[type][$scope.meta.rel]) && this[type][$scope.meta.rel]($scope, $element);
                 },
                 'head' : {
                     'default' : function($scope) {
@@ -215,10 +223,10 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                         $scope.del = function(id)  { 
                             var firstField = _($scope.list[id]).values().pop();
                             delete $scope.list[id];
-                            $scope.notify(  'del', 
-                                            lData.save($scope.meta.key, $scope.list), 
-                                            ' <b>"' + firstField + '"</b>'
-                                         );
+
+                            var result = lData.save($scope.meta.key, $scope.list); 
+                            _.isFunction($scope.notify) && 
+                                $scope.notify('del', result, ' <b>"' + firstField + '"</b>');
                         };
 
                         $scope.add = function() {
@@ -270,61 +278,101 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                 },
                 'row' : { // CONTROLLER
                     '1-m' : function($scope) {
+                        $scope.$on('init', function(evt, data) {
+                            // Simulate click on the first row for autoInit
+                            if ( _.isEmpty(data) ) {
+                                if ($scope.id === _.keys($scope.list)[0]) {
+                                    $scope.clk();
+                                    $scope.$parent.$digest();
+                                }
+                            } else {
+                                if ( $scope.list[$scope.id][$scope.meta.cols[0][0]] === data ) {
+                                    $scope.clk();
+                                    $scope.$parent.$digest();
+                                }
+                            }
+                        });
+
                         var parentClk = $scope.clk;
-                        $scope.clk = function(){
+                        $scope.clk = function(noAttach){
                             $scope.$parent.rowId = $scope.id;
                             parentClk();
 
-                            $scope.meta.inline.length && $scope.attachAfterRow();
+                            _.isUndefined(noAttach) && $scope.meta.inline.length && $scope.attachAfterRow();
                         };
                     },
                     'm-p' : function($scope) {
-                        $scope.clk = function(){ // We are adding on click in this one
-                            /// TODO see if contains does anything here
-                            if (!_.contains($scope.relData[$scope.rowId], $scope.id)) {
-                                var relData = $scope.relData[$scope.rowId];
+                        $scope.dblClk = function(){ // We are adding on click in this one
+                            if ( $scope.rowClass.indexOf('editable') === -1 ) {
+                                /// TODO see if contains does anything here
+                                if (!_.contains($scope.relData[$scope.rowId], $scope.id)) {
+                                    var relData = $scope.relData[$scope.rowId];
 
-                                if ( _.isUndefined(relData)) {
-                                    $scope.relData[$scope.rowId] = relData = {};
-                                }
+                                    _.isUndefined(relData) && 
+                                        ($scope.relData[$scope.rowId] = relData = {});
 
-                                var maxId = 0;
-                                // Get max id of all related items 
-                                for ( var i in relData) {
-                                    if (relData[i].ord >= maxId ) {
-                                       maxId = parseInt(relData[i].ord) + 1;
+                                    var maxId = 0;
+                                    // Get max id of all related items 
+                                    for (var i in relData) {
+                                        if (relData[i].ord >= maxId ) {
+                                           maxId = parseInt(relData[i].ord) + 1;
+                                        }
+                                    }
+
+                                    if (_.isUndefined(relData[$scope.id])) {
+                                        $scope.relData[$scope.rowId][$scope.id] = ({'ord' : maxId});
                                     }
                                 }
 
-                                if (_.isUndefined(relData[$scope.id])) {
-                                    $scope.relData[$scope.rowId][$scope.id] = ({'ord' : maxId});
-                                }
+                                $scope.saveRelData();
+                                $scope.$parent.$broadcast('relDataChanged'); // update rel pane
                             }
-
-                            $scope.saveRelData();
-                            $scope.$parent.$broadcast('relDataChanged'); // update rel pane
                         };
 
-                        var parentDel = $scope.del;
-                        $scope.del = function() {
-                            // TODO add sorting 'ord' for relData
+                        function updateRelData() {
                             if ( $scope.relData ) {
                                 for (var i in $scope.relData ) {
                                     if (!_.has($scope.relData[i], $scope.id))
                                         $scope.relData[i] = _($scope.relData[i]).omit($scope.id);
                                 }
                             }
+                        };
+
+                        var parentDel = $scope.del;
+                        $scope.del = function() {
+                            // TODO add sorting 'ord' for relData
+                            updateRelData();
 
                             $scope.saveRelData();
+                            LG( 'call rel data ');
+                            updateRelData();
                             $scope.$parent.$broadcast('relDataChanged'); // update rel pane
                             parentDel();
                         };
+                        
+                        var parentSave = $scope.save;
+                        $scope.save = function() {
+                            LG( 'call rel data ');
+                            parentSave();
+                            LG( 'call rel data 2');
+                            updateRelData();
+                            $scope.$parent.$broadcast('relDataChanged'); // update rel pane
+                        };
                     },
-                    'm-p-out' : function($scope) {
-                        $scope.close = function() { // Remove related item
+                    'm-p-out' : function($scope, $element) {
+                        $scope.remove = function() { // Remove related item
                             delete $scope.expose({data:'relData'})[$scope.rowId][$scope.list[$scope.id].id];
                             $scope.updateList();
                         };
+                        $scope.dblClk = function() {
+                            $element.parent().parent().parent().find('img-pane img').replaceWith(
+                                '<img src="' + $scope.workRow.right + '"></img>'
+                            ).show();
+                            setTimeout(function() {
+                                $($element.parent().parent().parent().find('img-pane img')).fadeOut(1000);
+                                
+                            }, 5000);
+                        }
                     },
                     'default' : function($scope) {
                         function isDirty() { 
