@@ -107,6 +107,9 @@ cms-pane .savButton {
 cms-pane .addButton {
   background: transparent url('../image/glyph.png') -408px -96px no-repeat;
 }
+cms-pane .outButton {
+  background: transparent url('../image/glyph.png') -120px -72px no-repeat;
+}
 cms-pane .closeButton {
   background: transparent url('../image/glyph.png') -218px -96px no-repeat;
 }

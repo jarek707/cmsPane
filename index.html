@@ -70,31 +70,18 @@
                     </salons_stylists>
                 </div>
                 <div class='left'>
-                    <cms-pane key='stylists' cols='[["left", "Left"], ["right", "Right"]]' jquery-ui='{"sortable" :""}' rel='1-m' selected='Vidal'>
+                    <cms-pane key='stylists' cols='[["left", "Left"], ["right", "Right"]]' jquery-ui='{"sortable" :""}' rel='1-m' selected='Philippe'>
                         <div cms-header></div>
                         <iterate><buttons use='sav,del,edit'></buttons><div p-img></div></iterate>
 
                         <cms-pane key="salons" rel='m-p' rel-child='salons_stylists' jquery-ui='{"sortable":""}'>
-                            <div style='font-style:italic; background:#fff; color:#888;width:100%;'>
-                                <span>Salons</span>
-                                <div class='buttons' style='float:right'>
-                                    <input style='display:block;' type='button' class='addButton' ng-click='add()'>
-                                    </input>
-                                </div>
-                            </div>
-
-                            <iterate><buttons use='sav,close,edit,del'></buttons><div cms-item='oneLabel'></div></iterate>
+                            <div cms-header></div>
+                            <iterate><buttons use='sav,close,edit,del,out'></buttons><div cms-item='oneLabel'></div></iterate>
                         </cms-pane>
                         <cms-pane key="clients" rel='m-p' rel-child='stylists_clients'>
-                            <div style='font-style:italic; background:#fff; color:#888;width:100%;'>
-                                <span>Clients</span>
-                                <div class='buttons' style='float:right'>
-                                    <input style='display:block;' type='button' class='addButton' ng-click='add()'>
-                                    </input>
-                                </div>
-                            </div>
+                            <div cms-header></div>
                             <iterate>
-                                <buttons use='sav,close,edit,del'></buttons>
+                                <buttons use='sav,close,edit,del,out'></buttons>
                                 <div cms-item='oneLabel'></div>
                             </iterate>
                         </cms-pane>

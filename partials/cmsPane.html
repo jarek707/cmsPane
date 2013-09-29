@@ -1,5 +1,5 @@
 <ul class="dataContent" ng-class='sortable' ng-hide='hideContent'>
-     <li ng-repeat="(id,row) in list" ng-class='rowClass' class='row' ord-id="{{row.id}}" 
+     <li ng-repeat="(id,row) in list|trimList:listFilter" ng-class='rowClass' class='row' ord-id="{{row.id}}" 
         ng-dblclick="dblClk()" ng-click="clk()"
      >
         <inject-iterator-here />

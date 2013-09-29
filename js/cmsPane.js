@@ -215,6 +215,11 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
             replace:    true
         };
     })
+    .filter('trimList', function() {
+        return function(input, cb) {
+            return _.isFunction(cb) ? cb(input) : input;
+        };
+    })
     .filter('last', function() {
         return function(input, delim) {
             return input.split(_.isUndefined(delim) ? '/' : delim).pop();
