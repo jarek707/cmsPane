@@ -126,12 +126,6 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                 },
                 'row' : { // LINK
                     '1-m' : function($scope, $element) {
-                        $scope.attachAfterRow = function() {
-                            for (var i=$scope.meta.inline.length - 1; i>=0; i-- ) {
-                                $element.parent().after($scope.meta.inline[i]);
-                            }
-                        };
-
                     },
                     'm-p' : function($scope) {
                         $scope.buttonsOnOff('edit,del,add,out', 'save,sub,close');
@@ -140,6 +134,10 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                         $scope.buttonsOnOff('remove', '');
                     },
                     'default' : function($scope, $element) {
+                        $scope.attachAfterRow = function() {
+                            $element.parent().after($element.parent().parent().parent().find('>inline').show());
+                        };
+
                         $scope.buttons = {};
                         $scope.buttonsOnOff = function (on, off) {
                             _(on.split(',')).each(function(v,k)  { $scope.buttons[v] = true; });
@@ -305,14 +303,15 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                         });
 
                         var parentClk = $scope.clk;
-                        $scope.clk = function(noAttach){
+                        $scope.clk = function() {
                             $scope.$parent.rowId = $scope.id;
+                            $scope.attachAfterRow();
                             parentClk();
-
-                            _.isUndefined(noAttach) && $scope.meta.inline.length && $scope.attachAfterRow();
                         };
+
                     },
                     'm-p' : function($scope) {
+
                         $scope.dblClk = function(){ // We are adding on click in this one
                             if ( $scope.rowClass.indexOf('editable') === -1 ) {
                                 /// TODO see if contains does anything here
@@ -379,14 +378,14 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                             delete $scope.expose({data:'relData'})[$scope.rowId][$scope.list[$scope.id].id];
                             $scope.updateList();
                         };
-                        $scope.dblClk = function() {
-                            $element.parent().parent().parent().find('img-pane img').replaceWith(
-                                '<img src="' + $scope.workRow.right + '"></img>'
-                            ).show();
-                            setTimeout(function() {
-                                $($element.parent().parent().parent().find('img-pane img')).fadeOut(1000);
-                                
-                            }, 5000);
+                        $scope.clk = function() {
+                            angular.element('detail').html('');
+                            angular.element('detail').append(
+                                '<br />' +
+                                '<input type="button" onclick="$(this).parent().html(\'\'); LG(this)" value="close" style="color:black;"></input>' +
+                                '<div>' + $scope.workRow.left + '</div>' +
+                                '<img src="' + $scope.workRow.right + '" width="480"></img>' 
+                            );
                         }
                     },
                     'default' : function($scope) {
@@ -434,7 +433,7 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                         $scope.defaultClk = function(idx) {
                         };
 
-                        $scope.clk = function(idx) {
+                        $scope.clk = function(idx, noAttach) {
                             if ($scope.closeLastRow($scope)) {
                                 $scope.sel();
                             }

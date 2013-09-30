@@ -146,6 +146,11 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                 transclude  : false,
                 template    : "",
                 compile     : function(el, attrs, trans) {
+                    // TODO
+                    if (!_.isUndefined(el.data().meta)) {
+                        el.data().meta['jqueryUi'] = el.data().meta['jquery-ui'];
+                    }
+
                     function link($scope, $element, $attrs) {
                         var parentMeta = _.clone($scope.expose({data:'meta'}));
 
@@ -156,13 +161,21 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
 
                         config.getAllTemplates($scope, [], function() {
                             dom.makeMain($element);
-                            _.isEmpty($scope.meta.inline ) || dom.injectInlines($element);
-                            _.isUndefined($attrs.relChild) || dom.replaceExternals($scope);
+                       //     _.isEmpty($scope.meta.inline ) || dom.injectInlines($element);
+                            //_.isUndefined($attrs.relParent) || dom.findParent($scope);
                         });
+                        setTimeout( function() {
+                            $scope.$root.$broadcast('scopeReady', $attrs.key);
+                        },0);
                     };
 
                     var domMeta = dom.paramTransclude(el, attrs);
-                    return _.isUndefined(attrs.cmsPane) ? link : null;
+                    if (_.isUndefined(attrs.parentKey) ) {
+                        return link;
+                    } else {
+                        dom.appendExternals(el);
+                        return function() {};
+                    }
                 },
                 controller  :  function($scope, $element, $attrs) {
                     $scope.exposing = function(dataItem) {
@@ -171,6 +184,53 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
 
                     $scope.meta = {"rel" : $attrs.rel};
                     controllers.set('main', $scope);
+                }
+            };
+        }
+    ])
+    .directive('cmsChild', ['config', 'dom', '$compile',
+        function (config, dom, $compile) {
+            return {
+                replace     : false,
+                restrict    : 'EA',
+                scope       : { expose : '&', parentList : '=', rowId : "@"},
+                transclude  : false,
+                template    : "",
+                compile     : function(el, attrs, trans) {
+                    dom.convertChild(el.get()[0]);
+                    return function($scope, $element) {
+
+                        function getParentScope() {
+                            var found = false;
+                            cmsPanes = angular.element('body cms-pane');
+                            _(cmsPanes).each(function(v,k) {
+                                if (angular.element(v).attr('key') === attrs.parentKey) {
+                                    found = angular.element(v).data().$scope;
+                                }
+                            });
+                            return found;
+                        }
+
+                        function compileCmsPane(parentScope) {
+                            var data = _.extend(el.data());
+                            var inEl = angular.element(el.data().outer).data(data);
+                            el.replaceWith($compile(inEl)(parentScope));
+                        }
+
+                        var parentScope = getParentScope();
+                        if (parentScope) {
+                            compileCmsPane(parentScope);
+                        } else {
+                            $scope.$on('scopeReady', function(evtObj, key) {
+                                if (attrs.parentKey === key ) {
+                                    setTimeout(function() {
+                                        compileCmsPane(getParentScope());
+                                    },0 );
+                                }
+                            });
+                        }
+
+                    }
                 }
             };
         }

@@ -123,6 +123,7 @@ cms-pane .peekTable {
   background: transparent url('../image/glyph-white.png') -266px -24px no-repeat;
 }
 cms-pane .inlineWrapper {
+  display: none;
   width: 100%;
   margin: 5px 0;
   padding: 0;

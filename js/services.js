@@ -1,6 +1,8 @@
 angular.module('app.services', ['app.gridConf'])
     .factory('dom', function($compile, $http) {
         return {
+            'findParent' : function($scope) {
+            },
             'setupButtons' : function(el, attrs) {
                 if ( !_.isUndefined(attrs.use)) {
                     var buttons = el.find('input');
@@ -16,6 +18,54 @@ angular.module('app.services', ['app.gridConf'])
                 $http.get('partials/' + item + '.html').success(function(html) {
                     cb($compile(html)($scope));
                 });
+            },
+            'attrsToMeta' : function($attrs) {
+                $ret = {};
+                _($attrs).each(function(v,k) {
+                    if (_.isString(v)) {
+                        try { // Invalid JSON string will be considered a valid argument string
+                            $ret[k] = _(['[', '{']).contains(v.substr(0,1)) ? JSON.parse(v) : v;
+                        } catch (e) { }
+                    }
+                });
+                return $ret;
+            },
+            'convertChild' : function( child ) {
+                var dataAttrs = {};
+                for (var i=0; i<child.attributes.length; i++) {
+                    var key = child.attributes[i].nodeName;
+                    var val = child.attributes[i].nodeValue;
+
+                    if (key !== 'class')
+                        try { // Invalid JSON string will be considered a valid argument string
+                            dataAttrs[key] = _(['[', '{']).contains(val.substr(0,1)) ? JSON.parse(val) : val;
+                        } catch (e) { }
+                }
+
+                angular.element(child).data().meta  = dataAttrs;
+                angular.element(child).data().outer = 
+                    '<cms-pane row-id="{{rowId}}" parent-list="list" expose="exposing(data)"' +
+                    ' key="' + dataAttrs.key + '" rel="' + dataAttrs.rel + '">' +
+                        child.innerHTML +
+                    '</cms-pane>'
+                ;
+                child.innerHTML = '';
+                return angular.element(child).data().outer;
+            },
+            'paramTransclude' : function(el, attrs) {
+                var meta = _.isUndefined(el.data().meta) ? {} : el.data().meta;
+
+                var iterate =   el.find('>iterate'); 
+                if ( iterate.length ) {
+                    meta.iterate               = iterate.get()[0].innerHTML;
+                    iterate.get()[0].outerHTML = '{{ITERATION}}';
+                }
+
+                
+                meta.children = _.isEmpty(el.get()[0].innerHTML) ? "{{ITERATION}}" : el.get()[0].innerHTML;
+
+                el.get()[0].innerHTML = '';
+                return _.extend(meta, this.attrsToMeta(attrs));
             },
             'makeMain' : function(el) {
                 $scope = el.data().$scope;
@@ -39,6 +89,16 @@ angular.module('app.services', ['app.gridConf'])
                     $scope.meta.inline[i] = $compile($scope.meta.inline[i])($scope);
                 }
             },
+            'appendExternals' : function(el) {
+                var cmsPanes = angular.element('body').find('cms-pane');
+                setTimeout( function() {
+                    _(cmsPanes).each( function(v,k) {
+                        if (  v.attributes.key.nodeValue ===  el.attr('parent-key'))  {
+                            var parentScope = angular.element(v).data().$scope.$id;
+                        }
+                    });
+                 }, 0);
+            },
             'replaceExternals' : function($scope) {
                 var el = angular.element($scope.meta.relChild);
                 var replacement = angular.element(
@@ -48,49 +108,8 @@ angular.module('app.services', ['app.gridConf'])
                 ).data({"meta" : el.data().meta});
 
                 el.replaceWith($compile(replacement)($scope));
-            },
-            // Convert all JSON strings to objects and pass on remaining string attributes
-            'attrsToMeta' : function($attrs) {
-                $ret = {};
-                _($attrs).each(function(v,k) {
-                    if (_.isString(v)) {
-                        try { // Invalid JSON string will be considered a valid argument string
-                            $ret[k] = _(['[', '{']).contains(v.substr(0,1)) ? JSON.parse(v) : v;
-                        } catch (e) { }
-                    }
-                });
-                return $ret;
-            },
-            'paramTransclude' : function(el, attrs) {
-                var meta = _.isUndefined(el.data().meta) ? {} : el.data().meta;
-
-                if (!_.isUndefined(attrs.cmsPane)) {
-                    el.data().meta  = this.attrsToMeta(attrs);
-                    el.data().inner = el.get()[0].innerHTML;
-                }
-
-                var iterate =   el.find('>iterate'); 
-                if ( iterate.length ) {
-                    meta.iterate             = iterate.get()[0].innerHTML;
-                    iterate.get()[0].outerHTML = '{{ITERATION}}';
-                }
-
-                meta.inline = [];
-                var cmsPane =   el.find('>cms-pane'); 
-                if ( cmsPane.length ) {
-                    for( var i=0; i<cmsPane.length; i++){
-                        meta.inline[i] = cmsPane[i].outerHTML.replace('<cms-pane',
-                            '<cms-pane row-id="{{rowId}}" parent-list="list" expose="exposing(data)" ');
-                        meta.inline[i] = '<div class="inlineWrapper">' + meta.inline[i] + '</div>';
-                    }
-                    cmsPane.remove();
-                }
-                
-                meta.children = _.isEmpty(el.get()[0].innerHTML) ? "{{ITERATION}}" : el.get()[0].innerHTML;
-
-                el.get()[0].innerHTML = '';
-                return _.extend(meta, this.attrsToMeta(attrs));
             }
+            // Convert all JSON strings to objects and pass on remaining string attributes
         }
     })
     .factory('jquery_ui', function($http, config) {
