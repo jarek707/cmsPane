@@ -1,6 +1,6 @@
 <?php
     ini_set('display_errors', 1);
-    $fileName = '/var/www/cmsPane/stash/loc.data';
+    $fileName = $_SERVER['DOCUMENT_ROOT']  . '/stash/loc.data';
     if (file_exists($fileName)) {
         echo file_get_contents($fileName);
     } else { 
