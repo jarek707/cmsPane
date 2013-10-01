@@ -46,7 +46,7 @@ div.topMenu {
 }
 div.contentWrap {
   border-left: 180px solid #d3dce0;
-  border-right: 180px solid #d3dce0;
+  border-right: 280px solid #d3dce0;
   height: 100%;
 }
 div.contentPane,
@@ -63,8 +63,8 @@ div.contentPane {
   background: #d0e5f2;
 }
 div.right {
-  width: 180px;
-  margin-right: -180px;
+  width: 280px;
+  margin-right: -280px;
 }
 div.left {
   width: 180px;
@@ -85,6 +85,10 @@ div.gridBox {
 .savButton {
   background: transparent url('../image/glyph.png') -290px 0px no-repeat;
 }
+.contentPane cms-pane ul.dataContent li.row {
+  float: left;
+  width: auto;
+}
 cms-pane {
   margin: 0;
 }
@@ -103,7 +107,12 @@ cms-pane .savButton {
 cms-pane .addButton {
   background: transparent url('../image/glyph.png') -408px -96px no-repeat;
 }
-cms-pane .closeButton,
+cms-pane .outButton {
+  background: transparent url('../image/glyph.png') -120px -72px no-repeat;
+}
+cms-pane .closeButton {
+  background: transparent url('../image/glyph.png') -218px -96px no-repeat;
+}
 cms-pane .removeButton {
   background: transparent url('../image/glyph.png') -312px 0px no-repeat;
 }
@@ -113,21 +122,38 @@ cms-pane .restoreTable {
 cms-pane .peekTable {
   background: transparent url('../image/glyph-white.png') -266px -24px no-repeat;
 }
-cms-pane > cms-pane > * {
-  padding-left: 12px;
+cms-pane .inlineWrapper {
+  display: none;
+  width: 100%;
+  margin: 5px 0;
+  padding: 0;
+  background: #fff;
 }
-cms-pane > cms-pane > * > cms-pane > * {
-  padding-left: 12px;
+cms-pane .inlineWrapper cms-pane {
+  padding: 0;
 }
-cms-pane .buttons input {
+cms-pane .inlineWrapper cms-pane ul.dataContent {
+  width: 90%;
+  border: 4px solid #abc;
+  margin: 3px 0;
+  float: right;
+}
+cms-pane .inlineWrapper cms-pane ul.dataContent li {
+  border-top: 2px solid #eee;
+  background: #fff;
+}
+cms-pane .buttons div {
+  float: right;
+  margin: 0;
+}
+cms-pane .buttons div input {
   font-size: 0px;
   min-height: 14px;
   float: left;
   cursor: pointer;
-  border: 1px solid transparent;
   padding: 0;
-  width: 12px;
-  margin-left: 2px;
+  width: 14px;
+  margin-left: 1px;
   -webkit-border-radius: 0;
 }
 cms-pane cms-header,
@@ -227,77 +253,6 @@ cms-pane cms-header span.error,
 cms-pane [cms-header] span.error {
   color: #a03a5e;
 }
-cms-pane ul {
-  margin-top: 0;
-}
-cms-pane ul li {
-  position: relative;
-  float: left;
-  width: 100%;
-}
-cms-pane ul li div[p-img] {
-  margin: 5px;
-  padding: 5px;
-}
-cms-pane ul li div[p-img] img {
-  width: 40px;
-  margin: 0 8px 0 0;
-}
-cms-pane ul li div[p-img] p {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-}
-cms-pane ul li div[p-img] [row-buttons] {
-  position: absolute;
-  height: 16px;
-  width: 85%;
-}
-cms-pane ul li div {
-  overflow: auto;
-  float: left;
-}
-cms-pane ul li div[div-img] {
-  margin: 5px;
-  border: 1px solid #aaa;
-  padding: 5px;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
-  -o-border-radius: 5px;
-  border-radius: 5px;
-}
-cms-pane ul li div[div-img] img {
-  height: 80px;
-  width: auto;
-  margin: 0 0px 0 12px;
-  float: right;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  -ms-border-radius: 3px;
-  -o-border-radius: 3px;
-  border-radius: 3px;
-}
-cms-pane ul li div[div-img] [row-buttons] {
-  position: relative;
-  float: left;
-  height: 16px;
-  display: block;
-  clear: left;
-}
-cms-pane ul li .buttons {
-  position: absolute;
-  float: none;
-  width: 94%;
-  top: 8px;
-  display: none;
-}
-cms-pane ul li .buttons > input {
-  float: right;
-}
-cms-pane ul li:hover div.buttons {
-  display: block;
-}
 cms-pane ul.dataContent {
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
@@ -310,19 +265,114 @@ cms-pane ul.dataContent {
   margin: 0;
   padding: 0;
   width: 100%;
-  overflow: hidden;
 }
 cms-pane ul.dataContent li.row {
-  background: #d0e5f2;
-  border-bottom: 1px solid #aaa;
-  margin: 0 0 4px 0;
+  position: relative;
+  float: left;
+  width: 100%;
+  border: 0;
+  margin: 0;
+}
+cms-pane ul.dataContent li.row:hover div.buttons {
+  display: block;
+}
+cms-pane ul.dataContent li.row div {
+  float: left;
+}
+cms-pane ul.dataContent li.row div.item p {
+  margin: 0;
+  padding: 0;
+  overflow-x: auto;
+}
+cms-pane ul.dataContent li.row .buttons {
+  position: absolute;
+  float: none;
+  width: 100%;
+  top: 0px;
+  display: none;
+}
+cms-pane ul.dataContent li.row .buttons > div {
+  padding: 2px;
+  background: white;
+  opacity: 0.80;
+  float: right;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -o-border-radius: 3px;
+  border-radius: 3px;
+  box-shadow: -1px 2px 8px #778899;
+}
+cms-pane ul.dataContent li.row .buttons > input {
+  float: left;
+  padding-right: 4px;
+}
+cms-pane ul.dataContent li.row div[p-img] {
+  margin: 0;
+  padding: 0;
+}
+cms-pane ul.dataContent li.row div[p-img] div {
+  padding: 5px;
+}
+cms-pane ul.dataContent li.row div[p-img] img {
+  width: 40px;
+  margin: 0 8px 0 0;
+}
+cms-pane ul.dataContent li.row div[p-img] p {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+cms-pane ul.dataContent li.row div[p-img] [row-buttons] {
+  position: absolute;
+  height: 16px;
+  width: 85%;
+}
+cms-pane ul.dataContent li.row [div-img] {
+  margin: 5px;
+  border: 1px solid #aaa;
+  padding: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
+}
+cms-pane ul.dataContent li.row [div-img] img {
+  height: 80px;
+  width: auto;
+  margin: 0 0px 0 12px;
+  float: right;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -o-border-radius: 3px;
+  border-radius: 3px;
+}
+cms-pane ul.dataContent li.row [div-img] [row-buttons] {
+  position: relative;
+  float: left;
+  height: 16px;
+  display: block;
+  clear: left;
 }
 cms-pane ul.dataContent li.row.editable .active {
   display: block;
+  border: 1px solid #aaa;
+  padding: 8px;
+  background: #def;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
 }
 cms-pane ul.dataContent li.row.editable .active textarea,
 cms-pane ul.dataContent li.row.editable .active input {
-  max-width: 95%;
+  width: 100%;
+}
+cms-pane ul.dataContent li.row.editable .active label {
+  background: transparent;
 }
 cms-pane ul.dataContent li.row.editable .text {
   display: none;
@@ -330,6 +380,10 @@ cms-pane ul.dataContent li.row.editable .text {
 cms-pane ul.dataContent li.row:hover,
 cms-pane ul.dataContent li.row.selected {
   background: #a8cfe7;
+}
+cms-pane ul.dataContent li.row > .item {
+  border-bottom: 1px dotted #ccc;
+  width: 97%;
 }
 cms-pane ul.dataContent li {
   float: left;
@@ -345,14 +399,14 @@ cms-pane ul.dataContent ul {
   margin: 0;
   padding: 0;
 }
-cms-pane[rel="m-1-m"] ul.dataContent li.row {
+cms-pane[rel="m-1-out"] ul.dataContent li.row {
   float: left;
   width: auto;
 }
-cms-pane[rel="m-1-m"] ul.dataContent li.row div[p-img] {
+cms-pane[rel="m-1-out"] ul.dataContent li.row div[p-img] {
   height: 85px;
 }
-cms-pane[rel="m-1-m"] ul.dataContent li.row div[p-img] img {
+cms-pane[rel="m-1-out"] ul.dataContent li.row div[p-img] img {
   height: 80px;
   width: auto;
 }

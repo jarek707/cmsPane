@@ -62,34 +62,39 @@
                     <button ng-click='restoreLocalStorage()'>Restore</button>
                     <button onclick='LG(localStorage)'>To Console</button>
                     <div style='float:right; height:16px; width:14px; margin-top:3px;' class='savButton' ng-show="saved" is-success='{{saved}}'></div>
-
-                    <loosers cms-pane key="users" rel='m-p-m' jquery-ui='{"sortable":""}'>
-                        <div cms-header></div>
-                        <iterate><div div-img></div></iterate>
-                        <cms-pane key='stuff' cols='[["one", "One"], ["two", "Two"]]'>
-                            <div cms-header></div>
-                            <iterate><div p-img></div></iterate>
-                        </cms-pane>
-                    </loosers>
+                    <detail>
+                        <img />
+                    </detail>
                 </div>
                 <div class='left'>
-                    <cms-pane key='stylists' cols='[["left", "Left"], ["right", "Right"]]' jquery-ui='{"sortable" :""}' rel='1-m'>
+                    <cms-pane key='stylists' cols='[["left", "Left"], ["right", "Right"]]' jquery-ui='{"sortable" :""}' rel='1-m' selected='Raymond'>
                         <div cms-header></div>
-                        <iterate><div p-img></div></iterate>
+                        <iterate><buttons use='sav,del,edit'></buttons><div p-img></div></iterate>
 
-                        <cms-pane key="salons" rel='m-p' rel-child='loosers' jquery-ui='{"sortable":""}'>
-                            <div cms-header></div>
-                            <iterate><div p-img></div></iterate>
-                        </cms-pane>
-                        <cms-pane key="clients" rel='m-p' rel-child='chumps'>
-                            <div cms-header></div>
-                        </cms-pane>
+                        <inline class='inlineWrapper'>
+                            <cms-child key="salons" rel='m-p' jquery-ui='{"sortable":""}' parent-key='stylists' class='abc'>
+                                <div cms-header></div>
+                                <iterate><buttons use='sav,close,edit,del,out'></buttons><div cms-item='oneLabel'></div></iterate>
+                                <inline>
+                                </inline>
+                            </cms-child>
+                    <cms-child key="selected Salons" rel='m-p-out' jquery-ui='{"sortable":""}' parent-key='salons'>
+                        <div cms-header></div>
+                        <iterate><div p-img></div><buttons use='remove'></buttons></iterate>
+                    </cms-child>
+                            <hr />
+                            <cms-child key="clients" rel='m-p' jquery-ui='{"sortable":""}' parent-key='stylists'>
+                                <div cms-header></div>
+                                <iterate><buttons use='sav,close,edit,del,out'></buttons><div cms-item='oneLabel'></div></iterate>
+                            </cms-child>
+                        </inline>
                     </cms-pane>
                 </div>
                 <div class='right'>
-                    <chumps cms-pane key="chumps"  rel='m-p-m'>
-                            <div>HEADER</div>
-                    </chumps>
+                    <cms-child key="selected Clients" rel='m-p-out' jquery-ui='{"sortable":""}' parent-key='clients'>
+                        <div cms-header></div>
+                        <iterate><div p-img></div><buttons use='remove'></buttons></iterate>
+                    </cms-child>
                 </div>
             </div> <!-- contentWrap -->
         </div> <!-- page -->

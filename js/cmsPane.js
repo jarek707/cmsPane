@@ -1,4 +1,17 @@
 angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
+    .directive('cmsItem', ['config', 'dom', function(config, dom) {
+        return {
+            restrict    : 'A',
+            replace     : true,
+            transclude  : true,
+            template    : '',
+            link        : function($scope, $element, $attrs) { 
+                dom.getItem($scope, $attrs.cmsItem, function(compiled) {
+                    $element.replaceWith(compiled);
+                });
+            }
+        };
+    }])
     .directive('pImg', ['config', function(config) {
         return {
             restrict    : 'A',
@@ -101,51 +114,31 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                 restrict : 'EA',
                 templateUrl: 'partials/cmsHead.html',
                 link        : function($scope, $element, $attrs) {
-                    //($scope.spaces = UT.gridKey($scope.$attrs.key).split('/')).pop();
                 },
                 controller  : function($scope) { controllers.head['default']($scope); }
             };
         }
     ])
-    .directive('cmsRow', ['config', 'controllers', 'linkers',
-        function(config, controllers, linkers) {
+    .directive('buttons', ['config', 'controllers', 'linkers', 'dom',
+        function(config, controllers, linkers, dom) {
             return {
                 replace     : true,
-                restrict    : 'AE',
-                template : '<li ng-repeat="(id,row) in list" ng-class="rowClass" class="row" ord-id="{{row.id}}">',
+                restrict    : 'E',
+                templateUrl : 'partials/buttons.html',
                 compile     : function(el, attrs) {
+                    dom.setupButtons(el, attrs);
                     return function($scope, $element) { 
                         linkers.set('row', $scope, $element); 
                     };
                 },
-                controller  : function($scope) { 
-                    controllers.set('row', $scope); 
+                controller  : function($scope, $element) { 
+                    controllers.set('row', $scope, $element); 
                 }
             };
         }
     ])
-    .directive('rowButtons', ['config', 'controllers', 'linkers',
-        function(config, controllers, linkers) {
-            return {
-                replace     : true,
-                restrict    : 'AE',
-                templateUrl : 'partials/rowButtons.html',
-                compile     : function(el, attrs) {
-                    return function($scope, $element) { 
-                        linkers.set('row', $scope, $element); 
-
-                        //if ( !_.isUndefined($scope.$parent.meta) )
-                            //$scope.meta = $scope.$parent.meta.columns;
-                    };
-                },
-                controller  : function($scope) { 
-                    controllers.set('row', $scope); 
-                }
-            };
-        }
-    ])
-    .directive('cmsPane', ['$compile',  'config', 'controllers','linkers','dom',
-        function ($compile, config, controllers, linkers, dom) {
+    .directive('cmsPane', ['config', 'controllers','linkers','dom',
+        function (config, controllers, linkers, dom) {
             return {
                 replace     : false,
                 restrict    : 'EA',
@@ -153,24 +146,36 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                 transclude  : false,
                 template    : "",
                 compile     : function(el, attrs, trans) {
+                    // TODO
+                    if (!_.isUndefined(el.data().meta)) {
+                        el.data().meta['jqueryUi'] = el.data().meta['jquery-ui'];
+                    }
+
                     function link($scope, $element, $attrs) {
                         var parentMeta = _.clone($scope.expose({data:'meta'}));
 
                         $scope.meta = _.isUndefined(parentMeta) ? {} : parentMeta;
                         $scope.meta = _($scope.meta).extend( config.setParams(domMeta) );
-                        LG("LIN",  $attrs.key, $scope.meta.children);
 
                         linkers.set('main', $scope, $element);
 
                         config.getAllTemplates($scope, [], function() {
                             dom.makeMain($element);
-                            _.isEmpty($scope.meta.inline ) || dom.injectInlines($element);
-                            _.isUndefined($attrs.relChild) || dom.replaceExternals($scope);
+                       //     _.isEmpty($scope.meta.inline ) || dom.injectInlines($element);
+                            //_.isUndefined($attrs.relParent) || dom.findParent($scope);
                         });
+                        setTimeout( function() {
+                            $scope.$root.$broadcast('scopeReady', $attrs.key);
+                        },0);
                     };
 
                     var domMeta = dom.paramTransclude(el, attrs);
-                    return _.isUndefined(attrs.cmsPane) ? link : null;
+                    if (_.isUndefined(attrs.parentKey) ) {
+                        return link;
+                    } else {
+                        dom.appendExternals(el);
+                        return function() {};
+                    }
                 },
                 controller  :  function($scope, $element, $attrs) {
                     $scope.exposing = function(dataItem) {
@@ -179,6 +184,53 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
 
                     $scope.meta = {"rel" : $attrs.rel};
                     controllers.set('main', $scope);
+                }
+            };
+        }
+    ])
+    .directive('cmsChild', ['config', 'dom', '$compile',
+        function (config, dom, $compile) {
+            return {
+                replace     : false,
+                restrict    : 'EA',
+                scope       : { expose : '&', parentList : '=', rowId : "@"},
+                transclude  : false,
+                template    : "",
+                compile     : function(el, attrs, trans) {
+                    dom.convertChild(el.get()[0]);
+                    return function($scope, $element) {
+
+                        function getParentScope() {
+                            var found = false;
+                            cmsPanes = angular.element('body cms-pane');
+                            _(cmsPanes).each(function(v,k) {
+                                if (angular.element(v).attr('key') === attrs.parentKey) {
+                                    found = angular.element(v).data().$scope;
+                                }
+                            });
+                            return found;
+                        }
+
+                        function compileCmsPane(parentScope) {
+                            var data = _.extend(el.data());
+                            var inEl = angular.element(el.data().outer).data(data);
+                            el.replaceWith($compile(inEl)(parentScope));
+                        }
+
+                        var parentScope = getParentScope();
+                        if (parentScope) {
+                            compileCmsPane(parentScope);
+                        } else {
+                            $scope.$on('scopeReady', function(evtObj, key) {
+                                if (attrs.parentKey === key ) {
+                                    setTimeout(function() {
+                                        compileCmsPane(getParentScope());
+                                    },0 );
+                                }
+                            });
+                        }
+
+                    }
                 }
             };
         }
@@ -221,6 +273,11 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
             template:   '<div class="box">text in a box</div>',
             transclude: true,
             replace:    true
+        };
+    })
+    .filter('trimList', function() {
+        return function(input, cb) {
+            return _.isFunction(cb) ? cb(input) : input;
         };
     })
     .filter('last', function() {

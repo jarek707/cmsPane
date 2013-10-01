@@ -1,5 +1,5 @@
 @menuHeight: 15px;
-@rightWidth: 180px;
+@rightWidth: 280px;
 @leftWidth:  180px;
 
 @menuBg: lighten(#377095, 20%);
@@ -114,7 +114,16 @@ div.gridBox {
 }
 
 .savButton      { .glyphBg(-290px,    0px); }
-
+.contentPane {
+    cms-pane {
+        ul.dataContent {
+            li.row {
+                float:left;
+                width:auto;
+            }
+        }
+    }
+}
 cms-pane {
     margin:0;
     .delButton      { .glyphBg(-458px,    0px); }
@@ -122,28 +131,48 @@ cms-pane {
     .subButton      { .glyphBg(-410px, -120px); }
     .savButton      { .glyphBg(-290px,    0px); }
     .addButton      { .glyphBg(-408px, -96px);  }
-    .closeButton,
+    .outButton      { .glyphBg(-120px, -72px);  }
+    .closeButton    { .glyphBg(-218px, -96px);  }
     .removeButton   { .glyphBg(-312px,    0px); }
     .restoreTable   { .glyphBg(-266px,  -24px); }
     .peekTable      { .glyphBgWhite(-266px,  -24px); }
 
-    &>cms-pane >* {
-        padding-left:12px;
-        &>cms-pane >* {
-            padding-left:12px;
+    & .inlineWrapper { 
+        display:block;
+        width:100%;
+        margin:5px 0;
+        padding:0;
+        background:#fff;
+        cms-pane {
+            padding:0;
+            ul.dataContent {
+                width:90%;
+                border:4px solid #abc;
+                margin:3px 0;
+                float:right;
+                li {
+                    border-top:2px solid #eee;
+                    background:#fff;
+                }
+            }
         }
     }
 
-    .buttons input {
-        font-size:0px;
-        min-height:14px;
-        float:left;
-        cursor:pointer;
-        border: 1px solid transparent;
-        padding:0;
-        width:12px;
-        margin-left:2px;
-        -webkit-border-radius:0;
+    .buttons {
+        & div {
+            float:right;
+            margin:0;
+            input {
+                font-size:0px;
+                min-height:14px;
+                float:left;
+                cursor:pointer;
+                padding:0;
+                width:14px;
+                margin-left:1px;
+                -webkit-border-radius:0;
+            }
+        }
     }
     cms-header,
     [cms-header] {
@@ -212,15 +241,62 @@ cms-pane {
         span.warning {color:@warningColor;}
         span.error   {color:@errorColor;  }
     }
-    ul {
-       margin-top:0;
-        li {
+
+    ul.dataContent {
+        .rounded-corners(5px);
+        box-shadow: 1px 1px 11px #aaa;
+        float:left;
+        font-size:0.9em;
+        margin:0;
+        padding:0;
+        width:100%;
+        li.row {
             position:relative;
             float:left;
             width:100%;
+            border:0;
+            margin: 0;
+            &:hover {
+                div.buttons {
+                    display:block;
+                }
+            }
+            div {
+                float:left;
+                &.item {
+                    p {
+                        margin:0;
+                        padding:0;
+                        overflow-x:auto;
+                    }
+                }
+            }
+            .buttons {
+                //display:none;
+                position:absolute;
+                float:none;
+                width:100%;
+                top:0px;
+                &>div {
+                    padding:2px;
+                    background:white;
+                    opacity:0.80;
+                    float:right;
+                    .rounded-corners(3px); 
+                    box-shadow: -1px 2px 8px #789;
+                }
+                &>input {
+                    float:left;
+                    padding-right:4px;
+                }
+                display:none;
+            }
             div[p-img] {
-                margin:5px;
-                padding:5px;
+                margin:0;
+                padding:0;
+                div {
+                    padding:5px;
+                }
                 img {
                     width: 40px;
                     margin:0 8px 0 0;
@@ -236,67 +312,38 @@ cms-pane {
                    width:85%;
                 }
             }
-            div {
-                overflow:auto;
-                float:left;
-                &[div-img] {
-                    margin:5px;
-                    border:1px solid #aaa;
-                    padding:5px;
-                    .rounded-corners; 
-                    img {
-                        height: 80px;
-                        width:auto;
-                        margin:0 0px 0 12px;
-                        float:right;
-                        .rounded-corners(3px);
-                    }
-                    [row-buttons] {
-                       position:relative;
-                       float:left;
-                       height:16px;
-                       display:block;
-                       clear:left;
-                    }
-                }
+            [div-img] {
+               margin:5px;
+               border:1px solid #aaa;
+               padding:5px;
+               .rounded-corners; 
+               img {
+                   height: 80px;
+                   width:auto;
+                   margin:0 0px 0 12px;
+                   float:right;
+                   .rounded-corners(3px);
+               }
+               [row-buttons] {
+                  position:relative;
+                  float:left;
+                  height:16px;
+                  display:block;
+                  clear:left;
+               }
             }
-            .buttons {
-                //display:none;
-                position:absolute;
-                float:none;
-                width:94%;
-                top:8px;
-                &>input {
-                    float:right;
-                }
-                display:none;
-            }
-        }
-        li:hover {
-            div.buttons {
-                display:block;
-            }
-        }
-    }
-
-    ul.dataContent {
-        .rounded-corners(5px);
-        box-shadow: 1px 1px 11px #aaa;
-        float:left;
-        font-size:0.9em;
-        margin:0;
-        padding:0;
-        width:100%;
-        overflow:hidden;
-        li.row {
-            background:@mainPaneBg;
-            border-bottom:1px solid #aaa;
-            margin: 0 0 4px 0;
             &.editable .active {
                 display:block;
+                border:1px solid #aaa;
+                padding:8px;
+                background:#def;
+                .rounded-corners;
                 textarea,
                 input { 
-                    max-width:95%;
+                    width:100%;
+                }
+                label {
+                    background:transparent;
                 }
             }
             &.editable .text {
@@ -305,6 +352,10 @@ cms-pane {
             &:hover,
             &.selected {
                 background:darken(@mainPaneBg, 10%);
+            }
+            >.item {
+                border-bottom:1px dotted #ccc;
+                width:97%;
             }
         }
         li {
@@ -322,7 +373,7 @@ cms-pane {
             padding:0;
         }
     }
-    &[rel="m-1-m"] {
+    &[rel="m-1-out"] {
         ul.dataContent {
             li.row {
                 float:left;

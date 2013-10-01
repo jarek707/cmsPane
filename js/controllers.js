@@ -4,8 +4,8 @@ angular.module('app.directiveScopes', ['app.gridConf'])
      *          LINKERS
      *
     */
-    .service('linkers', ['$http', 'config', '$compile', 'gridDataSrv','jquery_ui',
-        function($http, config, $compile, gridDataSrv, jquery_ui) {
+    .service('linkers', ['$http', 'config', '$compile', 'lData','jquery_ui',
+        function($http, config, $compile, lData, jquery_ui) {
             'use strict';
 
             return {
@@ -19,36 +19,33 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                 },
                 // Main grid scope LINK
                 'main' : {
-                    '1-m'  :function($scope, $element) {
-                            setTimeout( function() {
-                                $scope.inline = $element.find('inline');
-                                $scope.inline.show();
-                            }, 300);
-                    },
-                    'm-p'  :function($scope, $element) {
-                        $scope.relDataKey = $scope.expose({data: 'meta'}).key + '/' + $scope.meta.key;
-
+                    'm-a' : function( $scope, $element) {
                         $scope.saveRelData = function() {
-                            gridDataSrv.save($scope.relDataKey, $scope.relData);
-                        };
+                            $scope.relDataKey = $scope.expose({data: 'meta'}).key + 
+                                                '/' + $scope.rowId + '/' + $scope.meta.key;
 
-                        gridDataSrv.getData($scope.relDataKey, function(data) {
-                            $scope.relData = _.isEmpty(data) ? {} : data;
-                        });
+                            lData.save($scope.relDataKey, $scope.relData);
+                        };
                     },
-                    'm-p-m'  :function($scope, $element) {
+                    'm-p-out'  :function($scope, $element) {
                         var saveRelData = $scope.expose({data:'saveRelData'});
 
                         $scope.updateList = function() {
-                            if ($scope.rowId) {
+                            if (!_.isEmpty($scope.rowId)) {
                                 $scope.list = {};
                                 var relData = $scope.expose({data:'relData'})[$scope.rowId];
 
                                 if (!_.isUndefined(relData)) {
+                                    var list = {};
                                     for (var i in relData) {
-                                        $scope.list[relData[i].ord] = $scope.parentList[i];
-                                        $scope.list[relData[i].ord].id = i;
+                                        list[relData[i].ord] = $scope.parentList[i];
+                                        if (_.isUndefined(list[relData[i].ord])) {
+                                            delete relData[i]; // SAFETY orphaned relation
+                                        } else {
+                                            list[relData[i].ord].id = i;
+                                        }
                                     }
+                                    setTimeout(function() { $scope.list = list; $scope.$digest(); }, 0);
                                 }
 
                                 jquery_ui.mkSortable($scope, $element, function(evt) {
@@ -64,8 +61,34 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                             }
                         };
 
-                        $scope.$on('relDataChanged', function() { $scope.updateList(); });
-                        $scope.$watch('rowId',       function() { $scope.updateList(); });
+                        $scope.$on('relDataChanged', $scope.updateList);
+                        $scope.$watch('rowId',       $scope.updateList);
+                    },
+                    'm-p'  :function($scope, $element) {
+                        $scope.saveRelData = function() {
+                            lData.save($scope.relDataKey, $scope.relData);
+                        };
+
+                        $scope.listFilter = function(list) {
+                            return $ret = _(list).omit(_($scope.relData[$scope.rowId]).keys());
+                        };
+
+                        $scope.relDataKey = $scope.expose({data: 'meta'}).key + '/' + $scope.meta.key;
+
+                        lData.getData($scope.relDataKey, function(relData) {
+                            $scope.relData = _.isEmpty(relData) ? {} : relData;
+                        });
+
+
+                        var parentSetData = $scope.setData;
+                        $scope.setData = function(data) {
+                            parentSetData(data);
+                            $scope.fullList = angular.copy($scope.list);
+                        }
+                    },
+                    '1-m'  :function($scope, $element) {
+                        if (!_.isUndefined($scope.meta.selected)) // autoInit - simulate click of the first data row
+                            setTimeout( function() { $scope.$broadcast('init',$scope.meta.selected); },500);
                     },
                     'default' : function($scope, $element) {
                         jquery_ui.setUp($scope);
@@ -73,15 +96,17 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                         $scope.lastRowScope = null;
                         $scope.relScope     = null;
 
-                        if (!_.isUndefined($scope.meta.key)) {
-                            gridDataSrv.getData($scope.meta.key, function(data) {
-                                $scope.list  = data;
-                                $scope.listW = angular.copy(data);
-                                setTimeout( function() { 
-                                    jquery_ui.mkSortable($scope, $element, $scope.handleSort); 
-                                }, 300);
-                            });
-                        }
+                        $scope.setData = function(data) {
+                            $scope.list  = data;
+                            $scope.listW = angular.copy(data);
+                            setTimeout( function() { 
+                                jquery_ui.mkSortable($scope, $element, $scope.handleSort); 
+                            }, 300);
+                        };
+
+                        setTimeout( function() { // wait for other relations to load
+                            _.isUndefined($scope.meta.key) || lData.getData($scope.meta.key, $scope.setData);
+                        },0);
 
                         $scope.handleSort = function() {
                             LGW( 'Presistent sorting not implemented for this relation');
@@ -101,16 +126,18 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                 },
                 'row' : { // LINK
                     '1-m' : function($scope, $element) {
-                        $scope.attachAfterRow = function() {
-                            $element.parent().after($scope.inline);
-                        }
                     },
                     'm-p' : function($scope) {
+                        $scope.buttonsOnOff('edit,del,add,out', 'save,sub,close');
                     },
-                    'm-p-m' : function($scope) {
-                        $scope.buttonsOnOff('close', 'add,save,sub,del,save,edit');
+                    'm-p-out' : function($scope) {
+                        $scope.buttonsOnOff('remove', '');
                     },
                     'default' : function($scope, $element) {
+                        $scope.attachAfterRow = function() {
+                            $element.parent().after($element.parent().parent().parent().find('>inline').show());
+                        };
+
                         $scope.buttons = {};
                         $scope.buttonsOnOff = function (on, off) {
                             _(on.split(',')).each(function(v,k)  { $scope.buttons[v] = true; });
@@ -126,7 +153,7 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                         }
 
                         if (joinVals) {
-                            $scope.rowClass = false; 
+                            $scope.rowClass = ''; 
                         } else {
                             $scope.rowClass = 'editable'; 
                         }
@@ -144,14 +171,14 @@ angular.module('app.directiveScopes', ['app.gridConf'])
      *          CONTROLLERS
      *
     */
-    .service('controllers', ['$http', 'config', '$compile', 'gridDataSrv', 
-        function($http, config, $compile, gridDataSrv) {
+    .service('controllers', ['$http', 'config', '$compile', 'lData', 
+        function($http, config, $compile, lData) {
             'use strict';
             return {
-                'set' : function(type, $scope) {
+                'set' : function(type, $scope, $element) {
                     this[type]['default']($scope);
                     
-                    _.isFunction(this[type][$scope.meta.rel]) && this[type][$scope.meta.rel]($scope);
+                    _.isFunction(this[type][$scope.meta.rel]) && this[type][$scope.meta.rel]($scope, $element);
                 },
                 'head' : {
                     'default' : function($scope) {
@@ -196,20 +223,19 @@ angular.module('app.directiveScopes', ['app.gridConf'])
 
                         $scope.save = function(row, id) {
                             $scope.list[id] = _.clone(row);
-                            $scope.notify('sav', gridDataSrv.save($scope.meta.key, $scope.list, id));
+                            var result = lData.save($scope.meta.key, $scope.list, id);
+                            _.isFunction($scope.notify) && $scope.notify('sav', result);
 
-                            if ($scope.meta.autoAdd) { //autoAdd
-                                $scope.add();
-                            }
+                            $scope.meta.autoAdd && $scope.add();  //autoAdd
                         };
 
                         $scope.del = function(id)  { 
                             var firstField = _($scope.list[id]).values().pop();
                             delete $scope.list[id];
-                            $scope.notify(  'del', 
-                                            gridDataSrv.save($scope.meta.key, $scope.list), 
-                                            ' <b>"' + firstField + '"</b>'
-                                         );
+
+                            var result = lData.save($scope.meta.key, $scope.list); 
+                            _.isFunction($scope.notify) && 
+                                $scope.notify('del', result, ' <b>"' + firstField + '"</b>');
                         };
 
                         $scope.add = function() {
@@ -251,66 +277,116 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                             $scope.openSub(rowText);
                         };
                         // Sub panes END
+                    },
+                    'm-p' : function($scope) {
+                        var parentSave = $scope.save;
+                        $scope.save = function(row, id) {
+                            parentSave(row, id);
+                        }
                     }
                 },
                 'row' : { // CONTROLLER
                     '1-m' : function($scope) {
-                        var parentClk = $scope.clk;
-                        $scope.clk = function(){
-                            $scope.$parent.rowId = $scope.id;
-                            parentClk();
-                            if ($scope.meta.relContainer === 'inline') {
-                                $scope.attachAfterRow();
+                        $scope.$on('init', function(evt, data) {
+                            // Simulate click on the first row for autoInit
+                            if ( _.isEmpty(data) ) {
+                                if ($scope.id === _.keys($scope.list)[0]) {
+                                    $scope.clk();
+                                    $scope.$parent.$digest();
+                                }
+                            } else {
+                                if ( $scope.list[$scope.id][$scope.meta.cols[0][0]] === data ) {
+                                    $scope.clk();
+                                    $scope.$parent.$digest();
+                                }
                             }
+                        });
+
+                        var parentClk = $scope.clk;
+                        $scope.clk = function() {
+                            $scope.$parent.rowId = $scope.id;
+                            $scope.attachAfterRow();
+                            parentClk();
                         };
+
                     },
                     'm-p' : function($scope) {
-                        $scope.clk = function(){ // We are adding on click in this one
-                            /// TODO see if contains does anything here
-                            if (!_.contains($scope.relData[$scope.rowId], $scope.id)) {
-                                var relData = $scope.relData[$scope.rowId];
 
-                                if ( _.isUndefined(relData)) {
-                                    $scope.relData[$scope.rowId] = relData = {};
-                                }
+                        $scope.dblClk = function(){ // We are adding on click in this one
+                            if ( $scope.rowClass.indexOf('editable') === -1 ) {
+                                /// TODO see if contains does anything here
+                                if (!_.contains($scope.relData[$scope.rowId], $scope.id)) {
+                                    var relData = $scope.relData[$scope.rowId];
 
-                                var maxId = 0;
-                                // Get max id of all related items 
-                                for ( var i in relData) {
-                                    if (relData[i].ord >= maxId ) {
-                                       maxId = parseInt(relData[i].ord) + 1;
+                                    _.isUndefined(relData) && 
+                                        ($scope.relData[$scope.rowId] = relData = {});
+
+                                    var maxId = 0;
+                                    // Get max id of all related items 
+                                    for (var i in relData) {
+                                        if (relData[i].ord >= maxId ) {
+                                           maxId = parseInt(relData[i].ord) + 1;
+                                        }
+                                    }
+
+                                    if (_.isUndefined(relData[$scope.id])) {
+                                        $scope.relData[$scope.rowId][$scope.id] = ({'ord' : maxId});
                                     }
                                 }
 
-                                if (_.isUndefined(relData[$scope.id])) {
-                                    $scope.relData[$scope.rowId][$scope.id] = ({'ord' : maxId});
-                                }
+                                $scope.saveRelData();
+                                $scope.$parent.$broadcast('relDataChanged'); // update rel pane
                             }
-
-                            $scope.saveRelData();
-                            $scope.$parent.$broadcast('relDataChanged'); // update rel pane
                         };
 
-                        var parentDel = $scope.del;
-                        $scope.del = function() {
-                            // TODO add sorting 'ord' for relData
+                        $scope.out = function() {
+                            $scope.dblClk();
+                        }
+
+                        function updateRelData() {
                             if ( $scope.relData ) {
                                 for (var i in $scope.relData ) {
                                     if (!_.has($scope.relData[i], $scope.id))
                                         $scope.relData[i] = _($scope.relData[i]).omit($scope.id);
                                 }
                             }
+                        };
+
+                        var parentDel = $scope.del;
+                        $scope.del = function() {
+                            // TODO add sorting 'ord' for relData
+                            updateRelData();
 
                             $scope.saveRelData();
+                            LG( 'call rel data ');
+                            updateRelData();
                             $scope.$parent.$broadcast('relDataChanged'); // update rel pane
                             parentDel();
                         };
+                        
+                        var parentSave = $scope.save;
+                        $scope.save = function() {
+                            LG( 'call rel data ');
+                            parentSave();
+                            LG( 'call rel data 2');
+                            updateRelData();
+                            $scope.$parent.$broadcast('relDataChanged'); // update rel pane
+                        };
                     },
-                    'm-p-m' : function($scope) {
-                        $scope.close = function() { // Remove related item
+                    'm-p-out' : function($scope, $element) {
+                        $scope.remove = function() { // Remove related item
                             delete $scope.expose({data:'relData'})[$scope.rowId][$scope.list[$scope.id].id];
                             $scope.updateList();
                         };
+                        $scope.clk = function() {
+                            angular.element('detail').html('');
+                            angular.element('detail').append(
+                                '<br />' +
+                                '<input type="button" onclick="$(this).parent().html(\'\'); LG(this)" value="close" style="color:black;"></input>' +
+                                '<div>' + $scope.workRow.left + '</div>' +
+                                '<img src="' + $scope.workRow.right + '" width="480"></img>' 
+                            );
+                        }
                     },
                     'default' : function($scope) {
                         function isDirty() { 
@@ -357,7 +433,7 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                         $scope.defaultClk = function(idx) {
                         };
 
-                        $scope.clk = function(idx) {
+                        $scope.clk = function(idx, noAttach) {
                             if ($scope.closeLastRow($scope)) {
                                 $scope.sel();
                             }
