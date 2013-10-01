@@ -1,7 +1,10 @@
 angular.module('app.services', ['app.gridConf'])
     .factory('dom', function($compile, $http) {
         return {
-            'findParent' : function($scope) {
+            'compileChildPane' : function(parentScope, el) {
+                var data = _.extend(el.data());
+                var inEl = angular.element(el.data().outer).data(data);
+                el.replaceWith($compile(inEl)(parentScope));
             },
             'setupButtons' : function(el, attrs) {
                 if ( !_.isUndefined(attrs.use)) {
@@ -82,12 +85,6 @@ angular.module('app.services', ['app.gridConf'])
                 }
 
                 el.append($compile(html)($scope));
-            },
-            'injectInlines' : function(el) {
-                $scope = el.data().$scope;
-                for (var i=0; i<$scope.meta.inline.length; i++){
-                    $scope.meta.inline[i] = $compile($scope.meta.inline[i])($scope);
-                }
             },
             'appendExternals' : function(el) {
                 var cmsPanes = angular.element('body').find('cms-pane');

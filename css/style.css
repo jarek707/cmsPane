@@ -123,7 +123,7 @@ cms-pane .peekTable {
   background: transparent url('../image/glyph-white.png') -266px -24px no-repeat;
 }
 cms-pane .inlineWrapper {
-  display: none;
+  display: block;
   width: 100%;
   margin: 5px 0;
   padding: 0;
@@ -472,6 +472,25 @@ cms-pane[rel="m-1-out"] ul.dataContent li.row div[p-img] img {
   -o-border-radius: 8px;
   border-radius: 8px;
   border: 2px solid #aaa;
+}
+detail {
+  color: black;
+  position: relative;
+  float: left;
+  padding: 20px;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  -ms-border-radius: 8px;
+  -o-border-radius: 8px;
+  border-radius: 8px;
+  border: 2px solid #aaa;
+}
+detail img {
+  width: 94%;
+  margin: 2%;
+}
+detail input[type="button"] {
+  color: black;
 }
 .paneScroll {
   overflow-y: auto;

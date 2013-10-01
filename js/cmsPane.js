@@ -159,23 +159,15 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
 
                         linkers.set('main', $scope, $element);
 
-                        config.getAllTemplates($scope, [], function() {
-                            dom.makeMain($element);
-                       //     _.isEmpty($scope.meta.inline ) || dom.injectInlines($element);
-                            //_.isUndefined($attrs.relParent) || dom.findParent($scope);
+                        config.getAllTemplates($scope, [], function() { dom.makeMain($element); });
+
+                        _.defer(function() { 
+                            $scope.$root.$broadcast('scopeReady', $attrs.key, $scope); 
                         });
-                        setTimeout( function() {
-                            $scope.$root.$broadcast('scopeReady', $attrs.key);
-                        },0);
                     };
 
                     var domMeta = dom.paramTransclude(el, attrs);
-                    if (_.isUndefined(attrs.parentKey) ) {
-                        return link;
-                    } else {
-                        dom.appendExternals(el);
-                        return function() {};
-                    }
+                    return link;
                 },
                 controller  :  function($scope, $element, $attrs) {
                     $scope.exposing = function(dataItem) {
@@ -198,34 +190,24 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                 template    : "",
                 compile     : function(el, attrs, trans) {
                     dom.convertChild(el.get()[0]);
+
+                    // We need to comile child pane against parent $scope.  Parent might be rendered
+                    // after the child so the child has to wait until parent $scope is available.
                     return function($scope, $element) {
+                        var parentScope = false;
 
-                        function getParentScope() {
-                            var found = false;
-                            cmsPanes = angular.element('body cms-pane');
-                            _(cmsPanes).each(function(v,k) {
-                                if (angular.element(v).attr('key') === attrs.parentKey) {
-                                    found = angular.element(v).data().$scope;
-                                }
-                            });
-                            return found;
-                        }
+                        _(angular.element('body cms-pane')).each(function(v,k) {
+                            if (angular.element(v).attr('key') === attrs.parentKey) {
+                                parentScope = angular.element(v).data().$scope;
+                            }
+                        });
 
-                        function compileCmsPane(parentScope) {
-                            var data = _.extend(el.data());
-                            var inEl = angular.element(el.data().outer).data(data);
-                            el.replaceWith($compile(inEl)(parentScope));
-                        }
-
-                        var parentScope = getParentScope();
                         if (parentScope) {
-                            compileCmsPane(parentScope);
+                            dom.compileChildPane(parentScope, el);
                         } else {
-                            $scope.$on('scopeReady', function(evtObj, key) {
+                            $scope.$on('scopeReady', function(evtObj, key, pScope) {
                                 if (attrs.parentKey === key ) {
-                                    setTimeout(function() {
-                                        compileCmsPane(getParentScope());
-                                    },0 );
+                                    _.defer(function() { dom.compileChildPane(pScope, el); });
                                 }
                             });
                         }
@@ -294,6 +276,11 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
     .filter('colName', function() {
         return function(input, delim) {
             return input.split(_.isUndefined(delim) ? ':' : delim).shift();
+        };
+    })
+    .filter('noEmpty', function() {
+        return function(input, delim) {
+            return input === '' ? 'noName' : input;
         };
     })
     .filter('toLabel', function() {

@@ -135,7 +135,8 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                     },
                     'default' : function($scope, $element) {
                         $scope.attachAfterRow = function() {
-                            $element.parent().after($element.parent().parent().parent().find('>inline').show());
+                            var inEl = $element.parent().parent().parent().find('inline').show().detach();
+                            $element.parent().after(inEl);
                         };
 
                         $scope.buttons = {};
@@ -372,6 +373,14 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                             updateRelData();
                             $scope.$parent.$broadcast('relDataChanged'); // update rel pane
                         };
+                        $scope.clk = function() {
+                            angular.element('detail').html('');
+                            angular.element('detail').append(
+                                '<input type="button" onclick="$(this).parent().html(\'\');" value="close"></input>' +
+                                '<div>' + $scope.workRow.left + '</div>' +
+                                '<img src="' + $scope.workRow.right + '"></img>' 
+                            );
+                        }
                     },
                     'm-p-out' : function($scope, $element) {
                         $scope.remove = function() { // Remove related item
@@ -381,10 +390,9 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                         $scope.clk = function() {
                             angular.element('detail').html('');
                             angular.element('detail').append(
-                                '<br />' +
-                                '<input type="button" onclick="$(this).parent().html(\'\'); LG(this)" value="close" style="color:black;"></input>' +
+                                '<input type="button" onclick="$(this).parent().html(\'\');" value="close"</input>' +
                                 '<div>' + $scope.workRow.left + '</div>' +
-                                '<img src="' + $scope.workRow.right + '" width="480"></img>' 
+                                '<img src="' + $scope.workRow.right + '"></img>' 
                             );
                         }
                     },
