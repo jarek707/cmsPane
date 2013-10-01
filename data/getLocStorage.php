@@ -4,7 +4,7 @@
     if (file_exists($fileName)) {
         echo file_get_contents($fileName);
     } else { 
-        echo "File doesn't exist";
+        echo "File doesn't exist :" . $fileName;
     }
     flush();
 ?>
