@@ -64,6 +64,14 @@
                         <button onclick='LG(localStorage)'>To Console</button>
                         <div style='float:right; height:16px; width:14px; margin-top:3px;' class='savButton' ng-show="saved" is-success='{{saved}}'></div>
                     </div>
+                    <cms-child key="selected Salons" rel='m-p-out' jquery-ui='{"sortable":""}' parent-key='salons'>
+                        <div cms-header></div>
+                        <iterate><div p-img></div><buttons use='remove'></buttons></iterate>
+                    </cms-child>
+                    <cms-child key="selected Clients" rel='m-p-out' jquery-ui='{"sortable":""}' parent-key='clients'>
+                        <div cms-header></div>
+                        <iterate><div p-img></div><buttons use='remove'></buttons></iterate>
+                    </cms-child>
                     <detail>
                         <img />
                     </detail>
@@ -81,10 +89,6 @@
                                 </inline>
                             </cms-child>
                             <hr />
-                    <cms-child key="selected Salons" rel='m-p-out' jquery-ui='{"sortable":""}' parent-key='salons'>
-                        <div cms-header></div>
-                        <iterate><div p-img></div><buttons use='remove'></buttons></iterate>
-                    </cms-child>
                         </inline>
                     </cms-pane>
                 </div>
@@ -93,10 +97,6 @@
                                 <div cms-header></div>
                                 <iterate><buttons use='sav,close,edit,del,out'></buttons><div cms-item='oneLabel'></div></iterate>
                             </cms-child>
-                    <cms-child key="selected Clients" rel='m-p-out' jquery-ui='{"sortable":""}' parent-key='clients'>
-                        <div cms-header></div>
-                        <iterate><div p-img></div><buttons use='remove'></buttons></iterate>
-                    </cms-child>
                 </div>
             </div> <!-- contentWrap -->
         </div> <!-- page -->

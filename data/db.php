@@ -17,18 +17,25 @@ class db extends mysqli {
         }
     }
 
-    public function save() {
+    public function insert( $tab, $data) {
+        $this->query($sql = "INSERT INTO $tab (`left`,`right`) VALUES ('" . $data['left'] . "' ,'" . $data['right'] . "')");
+
+        return array($this->error, $sql);
+    }
+
+    public function update( $tab, $data) {
+        $this->query($sql = "UPDATE $tab SET `left` = '" . $data['left'] . "', `right`='" . $data['right'] . "' WHERE id=" . $data['id']);
+        return array($this->error, $sql);
     }
 
     public function getAll( $table ) {
         $out = array();
 
-        if ($res = $this->query('SELECT * FROM users')) {
+        if ($res = $this->query($sql = "SELECT * FROM $table")) {
             while( $obj = $res->fetch_object() )  {
-                $out[] = $obj;
+                $out[$obj->id] = $obj;
             }
         }
-
         return $out;
     }
 }
@@ -41,8 +48,27 @@ $tab    = $_GET['table'];
 if ($action == 'get' ) {
     echo json_encode($db->getAll($tab));
 } elseif ($action == 'post') {
-    $data = $_POST['data'];
-    echo 'Nothing to post yet';
+
+    if ( isset($_POST['first']) ) {
+        echo json_encode(array($_GET['rowId'], $_POST));
+    } else {
+        echo json_encode(array($_GET['rowId'] => json_encode($_POST)));
+        
+    }
+    return false;
+    try {
+        $data = $_POST;
+        if ($data['id'] > 0 ) {
+            $res = $db->update($tab, $data);
+        } else {
+            $res = $db->insert($tab, $data);
+        }
+
+        echo json_encode(array($res, $_POST, $_GET['rowId']));
+    } catch (Exception $e) { 
+        echo $e->getMessage();
+    }
+
 }
 
 $db->close();

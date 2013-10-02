@@ -24,7 +24,8 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                             $scope.relDataKey = $scope.expose({data: 'meta'}).key + 
                                                 '/' + $scope.rowId + '/' + $scope.meta.key;
 
-                            lData.save($scope.relDataKey, $scope.relData);
+LG( SER($scope.relData), ' rel before sav');
+                            lData.save($scope.relDataKey, $scope.relData, $scope.rowId);
                         };
                     },
                     'm-p-out'  :function($scope, $element) {
@@ -66,10 +67,15 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                     },
                     'm-p'  :function($scope, $element) {
                         $scope.saveRelData = function() {
-                            lData.save($scope.relDataKey, $scope.relData);
+                            lData.save($scope.relDataKey, $scope.relData, $scope.rowId);
                         };
 
                         $scope.listFilter = function(list) {
+                            if (_.isUndefined($scope.relData) || _.isEmpty($scope.rowId)) {
+                                return list;
+                             } else {
+                                if (_.isUndefined($scope.relData[$scope.rowId])) return list;
+                             }
                             return $ret = _(list).omit(_($scope.relData[$scope.rowId]).keys());
                         };
 
@@ -234,13 +240,14 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                             var firstField = _($scope.list[id]).values().pop();
                             delete $scope.list[id];
 
-                            var result = lData.save($scope.meta.key, $scope.list); 
+                            var result = lData.save($scope.meta.key, $scope.list, id); 
                             _.isFunction($scope.notify) && 
                                 $scope.notify('del', result, ' <b>"' + firstField + '"</b>');
                         };
 
                         $scope.add = function() {
                             var newIdx = UT.minIntKey($scope.list, -1);
+                            LG( 'list ' , SER($scope.list) );
 
                             $scope.list[newIdx]  = {};
                             $scope.listW[newIdx] = {};
@@ -248,6 +255,7 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                                 $scope.list[newIdx][$scope.meta.cols[i][0]]  = '';
                                 $scope.listW[newIdx][$scope.meta.cols[i][0]] = '';
                             }
+                        LG( 'add ', newIdx, SER($scope.list), $scope.meta.key);
 
                             $scope.closeLastRow(false);
                             $scope.hideContent = false;

@@ -148,7 +148,7 @@ angular.module('app.services', ['app.gridConf'])
     .factory('lData', function($http, config) {
         return  {
             prefix: 'GRID:',
-            useLocal : true,
+            useLocal : document.location.host === 'cms',
 
             clear: function() { 
                 var keys = '';
@@ -161,13 +161,20 @@ angular.module('app.services', ['app.gridConf'])
                 _.isEmpty(key) ? localStorage.clear() : delete localStorage[this.prefix + key]; 
             },
 
-            save: function(key, listOrRow, byRow) {
+            save: function(key, list, id, byRow) {
                 if (_.isUndefined(byRow) || !byRow) {
                     key = UT.gridKey(key);
                 }
+
+                if (_.isEmpty(list) ) return false;
                 if (this.useLocal)
-                    localStorage[this.prefix + key] = JSON.stringify(listOrRow);
+                    localStorage[this.prefix + key] = JSON.stringify(list);
                 else // TODO implement real server save
+                    var url = key.replace('/','_');
+                    LG( 'posting' , SER(list), this.useLocal, key, id );
+                    $.post('data/db.php?action=post&table=' + url + '&rowId=' + id,list[id]).success( function(data) { 
+                        LG( 'POST resutl:' , SER(data) );
+                    });
                     ;
                 return 'success';
             },
@@ -184,9 +191,15 @@ angular.module('app.services', ['app.gridConf'])
                     else 
                         cb(JSON.parse(localData));
                 } else {
-                    $http.get(config.findMeta(key).url).success( function(data) { 
+                    var url = key.replace('/','_');
+                    $http.get('data/db.php?action=get&table=' + url).success( function(data) { 
+                        if (_.isEmpty(data)) data = {};
+                        LG( 'getting ' , url, SER(data) );
                         cb(data); 
-                    });
+                    }).error(
+                        function(data) { LG('ERROR', data );}
+                    )
+                    ;
                 }
             }
         };
