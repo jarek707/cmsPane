@@ -17,16 +17,29 @@ class db extends mysqli {
         }
     }
 
-    public function insert( $tab, $data) {
+    public function insert($tab, $data) {
         $this->query($sql = "INSERT INTO $tab (`left`,`right`) VALUES ('" . $data['left'] . "' ,'" . $data['right'] . "')");
 
         return array($this->error, $sql);
     }
 
-    public function update( $tab, $data) {
+    public function update($tab, $data) {
         $this->query($sql = "UPDATE $tab SET `left` = '" . $data['left'] . "', `right`='" . $data['right'] . "' WHERE id=" . $data['id']);
         return array($this->error, $sql);
     }
+
+    public function updateRel($tab, $rowId, $data) {
+        //$data = mysql_real_escape_string($data);
+
+        $numRows= mysqli_num_rows($this->query("SELECT * FROM `$tab` WHERE id=$rowId"));
+        if ($numRows)  {
+            $this->query($sql = "UPDATE `$tab` SET `rel` = '" . $data . "' WHERE id=$rowId");
+        } else {
+            $this->query($sql = "INSERT INTO `$tab` (`id`, `rel`) VALUES ($rowId, '" . $data . "')");
+        }
+        return array($this->error, $sql, $numRows);
+    }
+
 
     public function getAll( $table ) {
         $out = array();
@@ -49,11 +62,11 @@ if ($action == 'get' ) {
     echo json_encode($db->getAll($tab));
 } elseif ($action == 'post') {
 
-    if ( isset($_POST['first']) ) {
-        echo json_encode(array($_GET['rowId'], $_POST));
+    if ( isset($_GET['rel']) ) {
+        echo 'rel found' . json_encode($_GET['rowId']) . '....POST>>' . json_encode($_POST). '<<POST..' . $tab;
+        echo json_encode($db->updateRel($tab,$_GET['rowId'],  json_encode($_POST)));
     } else {
-        echo json_encode(array($_GET['rowId'] => json_encode($_POST)));
-        
+        echo 'rel NOT found'. json_encode($_GET);;
     }
     return false;
     try {

@@ -24,7 +24,6 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                             $scope.relDataKey = $scope.expose({data: 'meta'}).key + 
                                                 '/' + $scope.rowId + '/' + $scope.meta.key;
 
-LG( SER($scope.relData), ' rel before sav');
                             lData.save($scope.relDataKey, $scope.relData, $scope.rowId);
                         };
                     },
@@ -36,6 +35,7 @@ LG( SER($scope.relData), ' rel before sav');
                                 $scope.list = {};
                                 var relData = $scope.expose({data:'relData'})[$scope.rowId];
 
+LG( SER(relData), ' rel data'  ) ;
                                 if (!_.isUndefined(relData)) {
                                     var list = {};
                                     for (var i in relData) {
@@ -247,7 +247,6 @@ LG( SER($scope.relData), ' rel before sav');
 
                         $scope.add = function() {
                             var newIdx = UT.minIntKey($scope.list, -1);
-                            LG( 'list ' , SER($scope.list) );
 
                             $scope.list[newIdx]  = {};
                             $scope.listW[newIdx] = {};
@@ -255,7 +254,6 @@ LG( SER($scope.relData), ' rel before sav');
                                 $scope.list[newIdx][$scope.meta.cols[i][0]]  = '';
                                 $scope.listW[newIdx][$scope.meta.cols[i][0]] = '';
                             }
-                        LG( 'add ', newIdx, SER($scope.list), $scope.meta.key);
 
                             $scope.closeLastRow(false);
                             $scope.hideContent = false;
@@ -324,6 +322,7 @@ LG( SER($scope.relData), ' rel before sav');
                         $scope.dblClk = function(){ // We are adding on click in this one
                             if ( $scope.rowClass.indexOf('editable') === -1 ) {
                                 /// TODO see if contains does anything here
+                                LG( SER($scope.relData), ', in ', $scope.rowId , $scope.id);
                                 if (!_.contains($scope.relData[$scope.rowId], $scope.id)) {
                                     var relData = $scope.relData[$scope.rowId];
 
@@ -367,7 +366,6 @@ LG( SER($scope.relData), ' rel before sav');
                             updateRelData();
 
                             $scope.saveRelData();
-                            LG( 'call rel data ');
                             updateRelData();
                             $scope.$parent.$broadcast('relDataChanged'); // update rel pane
                             parentDel();
@@ -375,9 +373,7 @@ LG( SER($scope.relData), ' rel before sav');
                         
                         var parentSave = $scope.save;
                         $scope.save = function() {
-                            LG( 'call rel data ');
                             parentSave();
-                            LG( 'call rel data 2');
                             updateRelData();
                             $scope.$parent.$broadcast('relDataChanged'); // update rel pane
                         };

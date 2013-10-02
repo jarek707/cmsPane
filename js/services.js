@@ -171,9 +171,10 @@ angular.module('app.services', ['app.gridConf'])
                     localStorage[this.prefix + key] = JSON.stringify(list);
                 else // TODO implement real server save
                     var url = key.replace('/','_');
-                    LG( 'posting' , SER(list), this.useLocal, key, id );
-                    $.post('data/db.php?action=post&table=' + url + '&rowId=' + id,list[id]).success( function(data) { 
-                        LG( 'POST resutl:' , SER(data) );
+                    var rel = ( url.indexOf('_') > -1 ) ? 'rel' : ''; 
+                    //LG( 'posting' , SER(list), this.useLocal, key, id );
+                    $.post('data/db.php?action=post&table=' + url + '&' + rel +'&rowId=' + id,list[id]).success( function(data) { 
+                        //LG( 'POST resutl:' , SER(data) );
                     });
                     ;
                 return 'success';
@@ -194,7 +195,7 @@ angular.module('app.services', ['app.gridConf'])
                     var url = key.replace('/','_');
                     $http.get('data/db.php?action=get&table=' + url).success( function(data) { 
                         if (_.isEmpty(data)) data = {};
-                        LG( 'getting ' , url, SER(data) );
+                        //LG( 'getting ' , url, SER(data) );
                         cb(data); 
                     }).error(
                         function(data) { LG('ERROR', data );}
