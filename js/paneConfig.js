@@ -1,6 +1,17 @@
 PaneConfig  = {
     'stylists' : {
-        'cols'    : [["caption", "Caption"], ["url", "Url"]]
+        'cols'    : [["name", "Stylist's Name"], 
+                     ["image_url", "Image Url"],
+                     ["address", "Address"],
+                     ["phone", "Phone"],
+                     ["email", "Email"]
+                    ]
+    },
+    'salons' : {
+        'cols'    : [["left", "Salon Name"], ["right", "Image Url"]]
+    },
+    'clients' : {
+        'cols'    : [["left", "Name"], ["right", "Image Url"]]
     },
     'users' :{
         //'cols' : [["first", "First Name"], ["last", "Last Name"], ["email", "Email"]]

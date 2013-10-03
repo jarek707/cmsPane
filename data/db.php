@@ -17,14 +17,32 @@ class db extends mysqli {
         }
     }
 
+    public function genSql($tab) {
+        $ret = array(); $val = $cols = $upd = '';
+
+        if ($res = $this->query($sql = "SHOW COLUMNS FROM `$tab`"))
+            while( $obj = $res->fetch_object() )
+                if (!in_array($obj->Field, array('id', 'user_id'))) {
+                    $cols .= ',`'  . $obj->Field . '`';
+                    $vals .= ",'$" . $obj->Field . "'";
+                    $upd  .= ",`"  . $obj->Field . "`=" . "'$" . $obj->Field . "'";
+                }
+
+            $ret['insert'] = '"INSERT INTO `' . $tab . '` (' . substr($cols, 1) . ") VALUES (" . substr($vals, 1) . ')"';
+            $ret['update'] = '"UPDATE `' . $tab . '` SET ' . substr($upd, 1) . ' WHERE id=$rowId"';
+
+        return $ret;
+    }
+
     public function update($tab, $rowId,  $data) {
         extract($data);
-        $sql = $rowId < 0 
-            ? "INSERT INTO `$tab` (`left`,`right`) VALUES ('$left' ,'$right')"
-            : "UPDATE `$tab` SET `left` = '$left', `right`='$right' WHERE id=$rowId";
-        
+
+        $ret = $this->genSql($tab);
+
+        eval('$sql=' . $ret[$rowId < 0 ? 'insert' : 'update'] . ';');
         $this->query($sql);
-        return array($this->error, json_encode($data), $sql);
+
+        return array($sql, $this->error);
     }
 
     public function updateRel($tab, $rowId, $data) {
@@ -39,23 +57,28 @@ class db extends mysqli {
     }
 
 
-    public function getAll($table, $rel) {
+    public function getAll($tab, $rel) {
         $out = array();
 
-        if ($res = $this->query($sql = "SELECT * FROM $table"))
+        if ($res = $this->query($sql = "SELECT * FROM $tab"))
             while( $obj = $res->fetch_object() )
                 $out[$obj->id] = $rel ? json_decode($obj->rel) : $obj;
 
         return $out;
     }
 }
-ini_set('error_reporting', 1);
+
 $db = new db('kodemaistercom.ipagemysql.com', 'club', 'club_99','club');
 
 $action = $_GET['action'];
 $tab    = $_GET['table'];
 $rowId  = intval($_GET['rowId']);
 $rel    = isset($_GET['rel']);
+$schema = isset($_GET['schema']);
+
+if ($action == 'schema') {
+    echo json_encode($db->genCols($tab));
+}
 
 if ($action == 'get' ) {
     echo json_encode($db->getAll($tab, $rel));
@@ -63,7 +86,7 @@ if ($action == 'get' ) {
     $ret = $rel ? $db->updateRel($tab, $rowId, json_encode($_POST))
                 : $db->update(   $tab, $rowId, $_POST);
 
-    echo json_encode(array($ret, $_POST, $_GET['rowId']));
+    echo json_encode(array($ret));
 }
 
 $db->close();

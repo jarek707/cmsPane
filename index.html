@@ -77,7 +77,7 @@
                     </detail>
                 </div>
                 <div class='left'>
-                    <cms-pane key='stylists' cols='[["left", "Left"], ["right", "Right"]]' jquery-ui='{"sortable" :""}' rel='1-m' selected='Vidal'>
+                    <cms-pane key='stylists' jquery-ui='{"sortable" :""}' rel='1-m' selected='Vidal'>
                         <div cms-header></div>
                         <iterate><buttons use='sav,del,edit,close'></buttons><div p-img></div></iterate>
 
@@ -87,11 +87,11 @@
                     </cms-pane>
                 </div>
                 <div class='right'>
-                            <cms-child key="clients" rel='m-p' jquery-ui='{"sortable":""}' parent-key='stylists'>
+                            <cms-child key="clients" rel='m-p' jquery-ui='{"sortable":""}' parent-key='stylists' cols='[["left", "Name"], ["right", "Image URL"]]'>
                                 <div cms-header></div>
                                 <iterate><buttons use='sav,close,edit,del,out'></buttons><div cms-item='oneLabel'></div></iterate>
                             </cms-child>
-                            <cms-child key="salons" rel='m-p' jquery-ui='{"sortable":""}' parent-key='stylists' class='abc'>
+                            <cms-child key="salons" rel='m-p' jquery-ui='{"sortable":""}' parent-key='stylists' class='abc' cols='[["left", "Name"], ["right", "Image URL"]]'>
                                 <div cms-header></div>
                                 <iterate><buttons use='sav,close,edit,del,out'></buttons><div cms-item='oneLabel'></div></iterate>
                             </cms-child>

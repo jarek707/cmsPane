@@ -48,18 +48,7 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                                     setTimeout(function() { $scope.list = list; $scope.$digest(); }, 0);
                                 }
 
-                                /*
-                                if (false)
-                                jquery_ui.mkSortable($scope, $element, function(evt) {
-                                    var items = $(evt.target).find('.row');
-
-                                    for (var i=0; i<items.length; i++) {
-                                        relData[$(items[i]).attr('ord-id')].ord = i;
-                                    }
-                                    saveRelData();
-                                });
-                                */
-
+                                _.isEmpty(relData) && (relData = {} );
                                 saveRelData();
                             }
                         };
@@ -78,6 +67,9 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                     },
                     'm-p'  :function($scope, $element) {
                         $scope.saveRelData = function() {
+                            if ( _.isEmpty($scope.relData[$scope.rowId])) {
+                                $scope.relData[$scope.rowId] = {};
+                            }
                             lData.save($scope.relDataKey, $scope.relData, $scope.rowId);
                         };
 
