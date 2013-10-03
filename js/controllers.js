@@ -35,7 +35,6 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                                 $scope.list = {};
                                 var relData = $scope.expose({data:'relData'})[$scope.rowId];
 
-LG( SER(relData), ' rel data'  ) ;
                                 if (!_.isUndefined(relData)) {
                                     var list = {};
                                     for (var i in relData) {
@@ -49,6 +48,8 @@ LG( SER(relData), ' rel data'  ) ;
                                     setTimeout(function() { $scope.list = list; $scope.$digest(); }, 0);
                                 }
 
+                                /*
+                                if (false)
                                 jquery_ui.mkSortable($scope, $element, function(evt) {
                                     var items = $(evt.target).find('.row');
 
@@ -57,6 +58,7 @@ LG( SER(relData), ' rel data'  ) ;
                                     }
                                     saveRelData();
                                 });
+                                */
 
                                 saveRelData();
                             }
@@ -64,6 +66,15 @@ LG( SER(relData), ' rel data'  ) ;
 
                         $scope.$on('relDataChanged', $scope.updateList);
                         $scope.$watch('rowId',       $scope.updateList);
+                        $scope.handleSort = function(evt) {
+                            var items = $(evt.target).find('.row');
+                            var relData = $scope.expose({data:'relData'})[$scope.rowId];
+
+                            for (var i=0; i<items.length; i++) {
+                                relData[$(items[i]).attr('ord-id')].ord = i;
+                            }
+                            saveRelData();
+                        }
                     },
                     'm-p'  :function($scope, $element) {
                         $scope.saveRelData = function() {
@@ -82,6 +93,7 @@ LG( SER(relData), ' rel data'  ) ;
                         $scope.relDataKey = $scope.expose({data: 'meta'}).key + '/' + $scope.meta.key;
 
                         lData.getData($scope.relDataKey, function(relData) {
+                            relData = _.isString(relData) ? json_parse(relData) : relData;
                             $scope.relData = _.isEmpty(relData) ? {} : relData;
                         });
 
@@ -155,8 +167,10 @@ LG( SER(relData), ' rel data'  ) ;
                         $scope.rowClass  = '';
 
                         var joinVals = false;
-                        for (var i=0; i<$scope.meta.cols.length; i++ ) {
-                            joinVals |= $scope.row[$scope.meta.cols[i][0]] !== '';
+                        if (!_.isUndefined($scope.row) ) {
+                            for (var i=0; i<$scope.meta.cols.length; i++ ) {
+                                joinVals |= $scope.row[$scope.meta.cols[i][0]] !== '';
+                            }
                         }
 
                         if (joinVals) {
@@ -182,8 +196,10 @@ LG( SER(relData), ' rel data'  ) ;
         function($http, config, $compile, lData) {
             'use strict';
             return {
+                'defaultScope' : null,
                 'set' : function(type, $scope, $element) {
                     this[type]['default']($scope);
+                    this.defaultScope = _.clone($scope);
                     
                     _.isFunction(this[type][$scope.meta.rel]) && this[type][$scope.meta.rel]($scope, $element);
                 },
@@ -322,7 +338,6 @@ LG( SER(relData), ' rel data'  ) ;
                         $scope.dblClk = function(){ // We are adding on click in this one
                             if ( $scope.rowClass.indexOf('editable') === -1 ) {
                                 /// TODO see if contains does anything here
-                                LG( SER($scope.relData), ', in ', $scope.rowId , $scope.id);
                                 if (!_.contains($scope.relData[$scope.rowId], $scope.id)) {
                                     var relData = $scope.relData[$scope.rowId];
 
@@ -342,7 +357,7 @@ LG( SER(relData), ' rel data'  ) ;
                                     }
                                 }
 
-                                $scope.saveRelData();
+                                //$scope.saveRelData();
                                 $scope.$parent.$broadcast('relDataChanged'); // update rel pane
                             }
                         };

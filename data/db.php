@@ -17,21 +17,19 @@ class db extends mysqli {
         }
     }
 
-    public function insert($tab, $data) {
-        $this->query($sql = "INSERT INTO $tab (`left`,`right`) VALUES ('" . $data['left'] . "' ,'" . $data['right'] . "')");
-
-        return array($this->error, $sql);
-    }
-
-    public function update($tab, $data) {
-        $this->query($sql = "UPDATE $tab SET `left` = '" . $data['left'] . "', `right`='" . $data['right'] . "' WHERE id=" . $data['id']);
-        return array($this->error, $sql);
+    public function update($tab, $rowId,  $data) {
+        extract($data);
+        $sql = $rowId < 0 
+            ? "INSERT INTO `$tab` (`left`,`right`) VALUES ('$left' ,'$right')"
+            : "UPDATE `$tab` SET `left` = '$left', `right`='$right' WHERE id=$rowId";
+        
+        $this->query($sql);
+        return array($this->error, json_encode($data), $sql);
     }
 
     public function updateRel($tab, $rowId, $data) {
-        //$data = mysql_real_escape_string($data);
-
         $numRows= mysqli_num_rows($this->query("SELECT * FROM `$tab` WHERE id=$rowId"));
+
         if ($numRows)  {
             $this->query($sql = "UPDATE `$tab` SET `rel` = '" . $data . "' WHERE id=$rowId");
         } else {
@@ -41,47 +39,31 @@ class db extends mysqli {
     }
 
 
-    public function getAll( $table ) {
+    public function getAll($table, $rel) {
         $out = array();
 
-        if ($res = $this->query($sql = "SELECT * FROM $table")) {
-            while( $obj = $res->fetch_object() )  {
-                $out[$obj->id] = $obj;
-            }
-        }
+        if ($res = $this->query($sql = "SELECT * FROM $table"))
+            while( $obj = $res->fetch_object() )
+                $out[$obj->id] = $rel ? json_decode($obj->rel) : $obj;
+
         return $out;
     }
 }
-
+ini_set('error_reporting', 1);
 $db = new db('kodemaistercom.ipagemysql.com', 'club', 'club_99','club');
 
 $action = $_GET['action'];
 $tab    = $_GET['table'];
+$rowId  = intval($_GET['rowId']);
+$rel    = isset($_GET['rel']);
 
 if ($action == 'get' ) {
-    echo json_encode($db->getAll($tab));
+    echo json_encode($db->getAll($tab, $rel));
 } elseif ($action == 'post') {
+    $ret = $rel ? $db->updateRel($tab, $rowId, json_encode($_POST))
+                : $db->update(   $tab, $rowId, $_POST);
 
-    if ( isset($_GET['rel']) ) {
-        echo 'rel found' . json_encode($_GET['rowId']) . '....POST>>' . json_encode($_POST). '<<POST..' . $tab;
-        echo json_encode($db->updateRel($tab,$_GET['rowId'],  json_encode($_POST)));
-    } else {
-        echo 'rel NOT found'. json_encode($_GET);;
-    }
-    return false;
-    try {
-        $data = $_POST;
-        if ($data['id'] > 0 ) {
-            $res = $db->update($tab, $data);
-        } else {
-            $res = $db->insert($tab, $data);
-        }
-
-        echo json_encode(array($res, $_POST, $_GET['rowId']));
-    } catch (Exception $e) { 
-        echo $e->getMessage();
-    }
-
+    echo json_encode(array($ret, $_POST, $_GET['rowId']));
 }
 
 $db->close();
