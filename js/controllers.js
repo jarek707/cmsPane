@@ -67,9 +67,8 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                     },
                     'm-p'  :function($scope, $element) {
                         $scope.saveRelData = function() {
-                            if ( _.isEmpty($scope.relData[$scope.rowId])) {
-                                $scope.relData[$scope.rowId] = {};
-                            }
+                            _.isEmpty($scope.relData[$scope.rowId]) && ($scope.relData[$scope.rowId] = {});
+
                             lData.save($scope.relDataKey, $scope.relData, $scope.rowId);
                         };
 
@@ -385,11 +384,13 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                             $scope.$parent.$broadcast('relDataChanged'); // update rel pane
                         };
                         $scope.clk = function() {
-                            angular.element('detail').html('');
+                            angular.element('detail').html('').show();;
                             angular.element('detail').append(
-                                '<input type="button" onclick="$(this).parent().html(\'\');" value="close"></input>' +
-                                '<div>' + $scope.workRow.left + '</div>' +
-                                '<img src="' + $scope.workRow.right + '"></img>' 
+                                '<div class="box" style="width:99%">' +
+                                '<input type="button" onclick="$(this).parent().html(\'\').hide();" style="position:relative; margin:12px 12px 0 12px; float:right;" value="close"></input>' +
+                                '<div style="margin:12px 12px 0 12px;">' + $scope.workRow.left + '</div>' +
+                                '<img src="' + $scope.workRow.right + '"></img>' +
+                                '</div>'
                             );
                         }
                     },
@@ -399,11 +400,13 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                             $scope.updateList();
                         };
                         $scope.clk = function() {
-                            angular.element('detail').html('');
+                            angular.element('detail').html('').show();
                             angular.element('detail').append(
-                                '<input type="button" onclick="$(this).parent().html(\'\');" value="close"</input>' +
-                                '<div>' + $scope.workRow.left + '</div>' +
-                                '<img src="' + $scope.workRow.right + '"></img>' 
+                                '<div class="box" style="width:99%">' +
+                                '<input type="button" onclick="$(this).parent().html(\'\').hide();" style="position:relative; margin:12px 12px 0 12px; float:right;" value="close"></input>' +
+                                '<div style="margin:12px 12px 0 12px;">' + $scope.workRow.left + '</div>' +
+                                '<img src="' + $scope.workRow.right + '"></img>' +
+                                '</div>'
                             );
                         }
                     },

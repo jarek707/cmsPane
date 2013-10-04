@@ -39,20 +39,57 @@ div.topMenu {
   margin: 0;
   padding: 0;
   width: 100%;
-  height: 15px;
+  height: 55px;
   color: #eeeeee;
-  background: #6aa3c8;
+  background: #ffffff;
   overflow: hidden;
+  color: #ddd;
+}
+div.topMenu h1 {
+  font-style: italic;
+  margin: 14px 0 0 22px;
+  float: left;
+  font-family: georgia;
+  font-size: 1.9em;
+}
+div.topMenu div.loginWrap {
+  position: absolute;
+  width: 100%;
+}
+div.topMenu div.loginWrap div.login {
+  white-space: nowrap;
+  position: relative;
+  float: right;
+  font-size: 0.9em;
+  margin: 8px 12px 0 0;
+}
+div.topMenu div.loginWrap div.login label {
+  color: #bbb;
+}
+div.topMenu div.loginWrap div.login input {
+  border: 2px solid #ccc;
+  width: 80px;
+  margin: 0 2px;
+}
+div.topMenu div.loginWrap div.login button {
+  border: none;
+  color: #bbb;
+  background: transparent;
+  cursor: pointer;
+  padding-left: 0px;
+  padding-right: 0px;
 }
 div.contentWrap {
   border-left: 180px solid #d3dce0;
-  border-right: 280px solid #d3dce0;
+  border-right: 182px solid #d3dce0;
   height: 100%;
+  margin: 0 8px;
 }
 div.contentPane,
 .left,
 .right {
   float: left;
+  margin-top: 8px;
 }
 .right,
 .left {
@@ -60,11 +97,10 @@ div.contentPane,
 }
 div.contentPane {
   width: 100%;
-  background: #d0e5f2;
 }
 div.right {
-  width: 280px;
-  margin-right: -280px;
+  width: 182px;
+  margin-right: -182px;
 }
 div.left {
   width: 180px;
@@ -105,7 +141,7 @@ cms-pane .savButton {
   background: transparent url('../image/glyph.png') -290px 0px no-repeat;
 }
 cms-pane .addButton {
-  background: transparent url('../image/glyph.png') -408px -96px no-repeat;
+  background: transparent url('../image/glyph.png') -408px -98px no-repeat;
 }
 cms-pane .outButton {
   background: transparent url('../image/glyph.png') -120px -72px no-repeat;
@@ -120,7 +156,12 @@ cms-pane .restoreTable {
   background: transparent url('../image/glyph.png') -266px -24px no-repeat;
 }
 cms-pane .peekTable {
-  background: transparent url('../image/glyph-white.png') -266px -24px no-repeat;
+  background: transparent url('../image/glyph.png') -266px -26px no-repeat;
+}
+cms-pane .headButtons input {
+  width: 14px;
+  margin: 0;
+  padding: 0;
 }
 cms-pane .inlineWrapper {
   display: block;
@@ -161,9 +202,13 @@ cms-pane [cms-header] {
   float: left;
   width: 100%;
   margin-bottom: 2px;
-  background: #6aa3c8;
+  background: #abc;
   font-family: Helvetica;
   font-size: 0.9em;
+  color: #eef;
+  font-family: Georgia;
+  font-style: italic;
+  border-top-left-radius: 5px;
 }
 cms-pane cms-header div:first-child,
 cms-pane [cms-header] div:first-child {
@@ -184,7 +229,7 @@ cms-pane cms-header .button,
 cms-pane [cms-header] .button {
   float: right;
   margin: 3px 2px 0px 1px;
-  padding: 0px 1px 6px 0px;
+  padding: 2px 1px 6px 0px;
   height: 11px;
   border-radius: 2px;
 }
@@ -194,14 +239,6 @@ cms-pane [cms-header] input.reloadButton {
 }
 cms-pane cms-header input.restoreTable,
 cms-pane [cms-header] input.restoreTable {
-  background: transparent url('../image/glyph.png') -266px -24px no-repeat;
-}
-cms-pane cms-header input.peekTable,
-cms-pane [cms-header] input.peekTable {
-  background: transparent url('../image/glyph-white.png') -266px -24px no-repeat;
-}
-cms-pane cms-header input.peekTable.hidden,
-cms-pane [cms-header] input.peekTable.hidden {
   background: transparent url('../image/glyph.png') -266px -24px no-repeat;
 }
 cms-pane cms-header div.spaces,
@@ -218,7 +255,7 @@ cms-pane [cms-header] div.spaces div.space {
   float: left;
   width: 22px;
   height: 22px;
-  border-right: 1px dashed #6aa3c8;
+  border-right: 1px dashed #ffffff;
 }
 cms-pane cms-header span,
 cms-pane [cms-header] span {
@@ -272,6 +309,7 @@ cms-pane ul.dataContent li.row {
   width: 100%;
   border: 0;
   margin: 0;
+  min-height: 19px;
 }
 cms-pane ul.dataContent li.row:hover div.buttons {
   display: block;
@@ -293,15 +331,15 @@ cms-pane ul.dataContent li.row .buttons {
 }
 cms-pane ul.dataContent li.row .buttons > div {
   padding: 2px;
-  background: white;
-  opacity: 0.80;
+  background-color: #d4d4d4;
+  opacity: 0.70;
   float: right;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   -ms-border-radius: 3px;
   -o-border-radius: 3px;
   border-radius: 3px;
-  box-shadow: -1px 2px 8px #778899;
+  box-shadow: -1px 2px 11px #778899;
 }
 cms-pane ul.dataContent li.row .buttons > input {
   float: left;
@@ -360,7 +398,7 @@ cms-pane ul.dataContent li.row.editable .active {
   display: block;
   border: 1px solid #aaa;
   padding: 8px;
-  background: #def;
+  background: #cde;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   -ms-border-radius: 5px;
@@ -379,7 +417,7 @@ cms-pane ul.dataContent li.row.editable .text {
 }
 cms-pane ul.dataContent li.row:hover,
 cms-pane ul.dataContent li.row.selected {
-  background: #a8cfe7;
+  background: #cad5df;
 }
 cms-pane ul.dataContent li.row > .item {
   border-bottom: 1px dotted #ccc;
@@ -465,29 +503,33 @@ cms-pane[rel="m-1-out"] ul.dataContent li.row div[p-img] img {
   width: 100px;
 }
 .box {
-  margin: 20px 8px 8px 8px;
+  margin: 4px;
+  float: left;
   -webkit-border-radius: 8px;
   -moz-border-radius: 8px;
   -ms-border-radius: 8px;
   -o-border-radius: 8px;
   border-radius: 8px;
-  border: 2px solid #aaa;
+  box-shadow: 1px 1px 11px #aaa;
+}
+.box.inside {
+  margin-left: 12px;
 }
 detail {
+  display: none;
   color: black;
   position: relative;
   float: left;
-  padding: 20px;
-  -webkit-border-radius: 8px;
-  -moz-border-radius: 8px;
-  -ms-border-radius: 8px;
-  -o-border-radius: 8px;
-  border-radius: 8px;
-  border: 2px solid #aaa;
+  padding: 0;
+  margin: 0;
+  width: 99%;
 }
 detail img {
-  width: 94%;
+  width: 96%;
   margin: 2%;
+}
+detail div.box {
+  width: 99%;
 }
 detail input[type="button"] {
   color: black;

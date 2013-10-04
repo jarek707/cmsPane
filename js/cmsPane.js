@@ -114,7 +114,6 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                 restrict : 'EA',
                 templateUrl: 'partials/cmsHead.html',
                 link        : function($scope, $element, $attrs) {
-                    LG( $attrs.title, ' title', $attrs.key, $scope.meta.key, $scope.meta.title );
                     $scope.title       = _.isUndefined($attrs.title) ? $scope.meta.key : $attrs.title;
                     $scope.showHeadAdd = _.isUndefined($attrs.noAddButton);
                 },

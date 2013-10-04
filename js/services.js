@@ -4,7 +4,8 @@ angular.module('app.services', ['app.gridConf'])
             'compileChildPane' : function(parentScope, el) {
                 var data = _.extend(el.data());
                 var inEl = angular.element(el.data().outer).data(data);
-                el.replaceWith($compile(inEl)(parentScope));
+                var comp = $compile(inEl)(parentScope);
+                el.replaceWith( comp );
             },
             'setupButtons' : function(el, attrs) {
                 if ( !_.isUndefined(attrs.use)) {
@@ -12,7 +13,7 @@ angular.module('app.services', ['app.gridConf'])
                     var toUse = attrs.use.split(',');
                     for (var i=0; i<buttons.length; i++) {
                         if (!_(toUse).contains(buttons[i].className.replace('Button',''))) {
-                            buttons[i].remove();
+                            angular.element(buttons[i]).remove();
                         }
                     }
                 }
@@ -167,14 +168,13 @@ angular.module('app.services', ['app.gridConf'])
                 }
 
                 if (_.isEmpty(list) ) return false;
-                if (this.useLocal)
+                if (false && this.useLocal)
                     localStorage[this.prefix + key] = JSON.stringify(list);
                 else // TODO implement real server save
-                    LG( key );
-
                     var url = key.replace('/','_');
                     var rel = ( url.indexOf('_') > -1 ) ? '&rel' : ''; 
-                    $.post('data/db.php?action=post&table=' + url + rel +'&rowId=' + id,list[id]).success( function(data) {
+                    var action = (_.isUndefined(list[id])) ? 'del' : 'post';
+                    $.post('data/db.php?action=' + action + '&table=' + url + rel + '&rowId=' + id,list[id]).success( function(data) {
                     });
                     ;
                 return 'success';
@@ -185,7 +185,7 @@ angular.module('app.services', ['app.gridConf'])
             },
 
             getData: function(key, cb) {
-                if (this.useLocal) {
+                if (false && this.useLocal) {
                     var localData = localStorage[this.prefix + key];
                     if (_.isUndefined(localData) || _.isEmpty(localData))
                         cb({});

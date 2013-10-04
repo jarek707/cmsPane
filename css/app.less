@@ -1,8 +1,8 @@
-@menuHeight: 15px;
-@rightWidth: 280px;
+@menuHeight: 55px;
+@rightWidth: 182px;
 @leftWidth:  180px;
 
-@menuBg: lighten(#377095, 20%);
+@menuBg: lighten(#ddd, 20%);
 @menuColor: #eee;
 
 @mainPaneBg: #D0E5F2;
@@ -78,20 +78,56 @@ div.topMenu{
     color:  @menuColor;
     background: @menuBg;
     overflow:hidden;
+    color:#ddd;
+    h1 {
+        font-style:italic;
+        margin:14px 0 0 22px;
+        float:left;
+        font-family:georgia;
+        font-size:1.9em;
+    }
+    div.loginWrap {
+        position:absolute;
+        width:100%;
+        div.login {
+            white-space:nowrap;
+            position:relative;
+            float:right;
+            font-size:0.9em;
+            margin:8px 12px 0 0;
+            label {
+                color:#bbb;
+            }
+            input {
+                border:2px solid #ccc;
+                width:80px;
+                margin:0 2px;
+            }
+            button {
+                border:none;
+                color:#bbb;
+                background:transparent;
+                cursor:pointer;
+                padding-left:0px;
+                padding-right:0px;
+            }
+        }
+    }
 }
 
 div.contentWrap {
     border-left: @leftWidth  solid @leftPaneBg;
     border-right:@rightWidth solid @rightPaneBg;
     height:100%;
+    margin:0 8px;
 }
 
-div.contentPane, .left, .right  { float:left; }
+div.contentPane, .left, .right  { float:left; margin-top:8px; }
 .right, .left               { position:relative; }
 
 div.contentPane {
     width:100%;
-    background:@mainPaneBg;
+    //background:@mainPaneBg;
 }
 
 div.right {
@@ -130,12 +166,20 @@ cms-pane {
     .editButton     { .glyphBg(   0px,  -72px); }
     .subButton      { .glyphBg(-410px, -120px); }
     .savButton      { .glyphBg(-290px,    0px); }
-    .addButton      { .glyphBg(-408px, -96px);  }
+    .addButton      { .glyphBg(-408px, -98px);  }
     .outButton      { .glyphBg(-120px, -72px);  }
     .closeButton    { .glyphBg(-218px, -96px);  }
     .removeButton   { .glyphBg(-312px,    0px); }
     .restoreTable   { .glyphBg(-266px,  -24px); }
-    .peekTable      { .glyphBgWhite(-266px,  -24px); }
+    //.peekTable      { .glyphBgWhite(-266px,  -24px); }
+    .peekTable      { .glyphBg(-266px,  -26px); }
+    .headButtons { 
+        input {
+            width:14px; 
+            margin:0;
+            padding:0;
+        }
+    }
 
     & .inlineWrapper { 
         display:block;
@@ -179,9 +223,13 @@ cms-pane {
         float:left;
         width:100%;
         margin-bottom:2px;
-        background: @menuBg;
+        background: #abc;
         font-family:Helvetica;
         font-size:0.9em;
+        color:#eef;
+        font-family:Georgia;
+        font-style:italic;
+        border-top-left-radius:5px;
         div:first-child {
              font-style:italic;
              font-weight:bold;
@@ -198,7 +246,7 @@ cms-pane {
         .button {
             float:right;
             margin:3px 2px 0px 1px;
-            padding:0px 1px 6px 0px;
+            padding:2px 1px 6px 0px;
             height:11px;
             border-radius:2px;
         }
@@ -207,8 +255,8 @@ cms-pane {
             &.reloadButton { .glyphBg(-218px, -24px); }
             //&.restoreTable { .glyphBg(-409px, -73px); }
             &.restoreTable { .glyphBg(-266px,  -24px); }
-            &.peekTable    { .glyphBgWhite(-266px,  -24px); }
-            &.peekTable.hidden { .glyphBg(-266px,  -24px); }
+            //&.peekTable    { .glyphBgWhite(-266px,  -24px); }
+            //&.peekTable.hidden { .glyphBg(-266px,  -24px); }
         }
         div.spaces {
             position:relative;
@@ -256,6 +304,7 @@ cms-pane {
             width:100%;
             border:0;
             margin: 0;
+            min-height:19px;
             &:hover {
                 div.buttons {
                     display:block;
@@ -279,11 +328,11 @@ cms-pane {
                 top:0px;
                 &>div {
                     padding:2px;
-                    background:white;
-                    opacity:0.80;
+                    background-color:lighten(#222222, 70%);
+                    opacity:0.70;
                     float:right;
                     .rounded-corners(3px); 
-                    box-shadow: -1px 2px 8px #789;
+                    box-shadow: -1px 2px 11px #789;
                 }
                 &>input {
                     float:left;
@@ -336,7 +385,7 @@ cms-pane {
                 display:block;
                 border:1px solid #aaa;
                 padding:8px;
-                background:#def;
+                background:#cde;
                 .rounded-corners;
                 textarea,
                 input { 
@@ -351,7 +400,7 @@ cms-pane {
             }
             &:hover,
             &.selected {
-                background:darken(@mainPaneBg, 10%);
+                background:lighten(#abc, 10%);
             }
             >.item {
                 border-bottom:1px dotted #ccc;
@@ -451,21 +500,32 @@ cms-pane {
 }
 
 .box {
-    margin:20px 8px 8px 8px;
+    margin:4px;
+    float:left;
     .rounded-corners(8px);
-    border:2px solid #aaa;
+    //border:2px solid #aaa;
+    box-shadow: 1px 1px 11px #aaa;
+    &.inside {
+        margin-left:12px;
+    }
 }
 
 detail {
+    display:none;
     color:black;
     position:relative;
     float:left;
-    padding:20px;
-    .rounded-corners(8px);
-    border:2px solid #aaa;
+    padding:0;
+    margin:0;
+    width:99%;
+    //.rounded-corners(8px);
+    //border:2px solid #aaa;
     img {
-        width:94%;
+        width:96%;
         margin:2%;
+    }
+    div.box {
+        width:99%;
     }
     input[type="button"] {
         color:black;

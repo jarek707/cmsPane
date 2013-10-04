@@ -28,8 +28,8 @@ class db extends mysqli {
                     $upd  .= ",`"  . $obj->Field . "`=" . "'$" . $obj->Field . "'";
                 }
 
-            $ret['insert'] = '"INSERT INTO `' . $tab . '` (' . substr($cols, 1) . ") VALUES (" . substr($vals, 1) . ')"';
-            $ret['update'] = '"UPDATE `' . $tab . '` SET ' . substr($upd, 1) . ' WHERE id=$rowId"';
+        $ret['insert'] = '"INSERT INTO `' . $tab . '` (' . substr($cols, 1) . ") VALUES (" . substr($vals, 1) . ')"';
+        $ret['update'] = '"UPDATE `' . $tab . '` SET ' . substr($upd, 1) . ' WHERE id=$rowId"';
 
         return $ret;
     }
@@ -66,28 +66,38 @@ class db extends mysqli {
 
         return $out;
     }
+
+    public function delete($tab, $rowId) {
+        $this->query($sql = "DELETE FROM `$tab` WHERE id=$rowId");
+
+        return array($this->error, $sql);
+    }
 }
 
-$db = new db('kodemaistercom.ipagemysql.com', 'club', 'club_99','club');
-
-$action = $_GET['action'];
-$tab    = $_GET['table'];
-$rowId  = intval($_GET['rowId']);
-$rel    = isset($_GET['rel']);
-$schema = isset($_GET['schema']);
-
-if ($action == 'schema') {
-    echo json_encode($db->genCols($tab));
+if ($_SERVER['HTTP_HOST'] === 'cms') {
+    $dbHost = 'localhost';
+} else {
+    $dbHost = 'kodemaistercom.ipagemysql.com';
 }
 
-if ($action == 'get' ) {
-    echo json_encode($db->getAll($tab, $rel));
-} elseif ($action == 'post') {
-    $ret = $rel ? $db->updateRel($tab, $rowId, json_encode($_POST))
-                : $db->update(   $tab, $rowId, $_POST);
+$db = new db($dbHost, 'club', 'club_99','club');
 
-    echo json_encode(array($ret));
+$tab   = $_GET['table'];
+$rowId = intval($_GET['rowId']);
+$rel   = isset($_GET['rel']);
+
+switch ($_GET['action']) {
+    case 'schema' : $ret = $db->genCols($tab);          break;
+    case 'get'    : $ret = $db->getAll($tab, $rel);     break;
+    case 'del'    : $ret = $db->delete($tab, $rowId);   break;
+    case 'post'   : 
+        $ret = $rel ? $db->updateRel($tab, $rowId, json_encode($_POST))
+                    : $db->update(   $tab, $rowId, $_POST);
+        break;
+    default: ;
 }
+
+echo json_encode($ret);
 
 $db->close();
 ?>

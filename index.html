@@ -1,7 +1,8 @@
+
 <!DOCTYPE html>
 <html id="ng-app" ng-app="app" debug="false">
     <head>
-        <title>Angular Grid (DEV)</title>
+        <title>just come by ...</title>
 
         <link href="css/style.css" rel="stylesheet" type="text/css" />
         <!--
@@ -19,16 +20,15 @@
             <script src='http://ang/js/lib/json2.js'></script>
             <script>
                 document.createElement('iterate');
+                document.createElement('inline');
                 document.createElement('cms-pane');
-                document.createElement('cms-pane-rel-key');
-                document.createElement('params');
+                document.createElement('cms-child');
                 document.createElement('cms-header');
-                document.createElement('cms-footer');
-                document.createElement('row-buttons');
+                document.createElement('buttons');
                 document.createElement('p-img');
+                document.createElement('div-img');
+                document.createElement('cms-item');
 
-                document.createElement('salons');
-                document.createElement('salon-stylist');
             </script>
         <![endif]-->
         <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -53,48 +53,69 @@
     <body>
         <div id='page'>
             <div class='topMenu'>
+                <h1>just come by ...</h1>
+                <div class='loginWrap'>
+                    <div class='login'>
+                        <label for='username'>User Name:</label><input type='text'></input>
+                        <label for='password'>Password:</label><input type='password'></input>
+                        <button ng-click=''>Log In</button>
+                        <button ng-click=''>Sign Up</button>
+                    </div>
+                </div>
             </div>
             <div class='contentWrap'>
                 <div class='contentPane' ng-controller="contentPane">
-                    <div class='box'>
-                        <div style='float:left; font-size:0.9em;'>Local Storage:</div>
+                    <div class='box' style='width:99%; display:none;'>
+                        <div style='padding:3px; float:left; font-size:0.9em;'>Local Storage:</div>
                         <button ng-click='clearLocalStorage()'>Clear</button>
                         <button ng-click='dumpLocalStorage()'>Save</button>
                         <button ng-click='restoreLocalStorage()'>Restore</button>
                         <button onclick='LG(localStorage)'>To Console</button>
                         <div style='float:right; height:16px; width:14px; margin-top:3px;' class='savButton' ng-show="saved" is-success='{{saved}}'></div>
                     </div>
-                    <cms-child key="selected salons" rel='m-p-out' jquery-ui='{"sortable":""}' parent-key='salons'>
-                        <div cms-header title='Selected Salons' no-add-button></div>
-                        <iterate><div p-img></div><buttons use='remove'></buttons></iterate>
-                    </cms-child>
-                    <cms-child key="none" rel='m-p-out' jquery-ui='{"sortable":""}' parent-key='clients'>
-                        <div cms-header title='Selected Clients' no-add-button></div>
-                        <iterate><div div-img></div><buttons use='remove'></buttons></iterate>
-                    </cms-child>
                     <detail>
-                        <img />
+                        <div class='box'>
+                            <img />
+                        </div>
                     </detail>
+                    &nbsp;
                 </div>
                 <div class='left'>
-                    <cms-pane key='stylists' jquery-ui='{"sortable" :""}' rel='1-m' selected='Vidal'>
-                        <div cms-header></div>
-                        <iterate><buttons use='sav,del,edit,close'></buttons><div p-img></div></iterate>
+                    <div class='box'>
+                        <cms-pane key='stylists' jquery-ui='{"sortable" :""}' rel='1-m' selected='Vidal'>
+                            <div cms-header></div>
+                            <iterate><buttons use='sav,del,edit,close'></buttons><div p-img></div></iterate>
 
-                        <inline class='inlineWrapper'>
-                            <hr />
-                        </inline>
-                    </cms-pane>
+                            <inline class='inlineWrapper'>
+                            <div class='box inside'>
+                                <cms-child key="salons result" rel='m-p-out' jquery-ui='{"sortable":""}' parent-key='salons'>
+                                    <div cms-header title='Selected Salons' no-add-button></div>
+                                    <iterate><div p-img></div><buttons use='remove'></buttons></iterate>
+                                </cms-child>
+                            </div>
+                            <div class='box inside'>
+                                <cms-child key="clients result" rel='m-p-out' jquery-ui='{"sortable":""}' parent-key='clients'>
+                                    <div cms-header title='Selected Clients' no-add-button></div>
+                                    <iterate><div p-img></div><buttons use='remove'></buttons></iterate>
+                                </cms-child>
+                            </div>
+                            </inline>
+                        </cms-pane>
+                    </div>
                 </div>
                 <div class='right'>
-                            <cms-child key="clients" rel='m-p' jquery-ui='{"sortable":""}' parent-key='stylists' cols='[["left", "Name"], ["right", "Image URL"]]'>
-                                <div cms-header></div>
-                                <iterate><buttons use='sav,close,edit,del,out'></buttons><div cms-item='oneLabel'></div></iterate>
-                            </cms-child>
-                            <cms-child key="salons" rel='m-p' jquery-ui='{"sortable":""}' parent-key='stylists' class='abc' cols='[["left", "Name"], ["right", "Image URL"]]'>
-                                <div cms-header></div>
-                                <iterate><buttons use='sav,close,edit,del,out'></buttons><div cms-item='oneLabel'></div></iterate>
-                            </cms-child>
+                    <div class='box'>
+                        <cms-child key="salons" rel='m-p' jquery-ui='{"sortable":""}' parent-key='stylists' class='abc' cols='[["left", "Name"], ["right", "Image URL"]]'>
+                            <div cms-header title='Available Salons' ></div>
+                            <iterate><buttons use='sav,close,edit,del,out'></buttons><div cms-item='oneLabel'></div></iterate>
+                        </cms-child>
+                    </div>
+                    <div class='box'>
+                        <cms-child key="clients" rel='m-p' jquery-ui='{"sortable":""}' parent-key='stylists' cols='[["left", "Name"], ["right", "Image URL"]]'>
+                            <div cms-header title='Available Clients' ></div>
+                            <iterate><buttons use='sav,close,edit,del,out'></buttons><div cms-item='oneLabel'></div></iterate>
+                        </cms-child>
+                    </div>
                 </div>
             </div> <!-- contentWrap -->
         </div> <!-- page -->
