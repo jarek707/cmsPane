@@ -121,48 +121,62 @@ div.gridBox {
 .savButton {
   background: transparent url('../image/glyph.png') -290px 0px no-repeat;
 }
+.contentPane div[cms-pane] ul.dataContent li.row,
 .contentPane cms-pane ul.dataContent li.row {
   float: left;
   width: auto;
 }
+div[cms-pane],
 cms-pane {
   margin: 0;
 }
+div[cms-pane] .delButton,
 cms-pane .delButton {
   background: transparent url('../image/glyph.png') -458px 0px no-repeat;
 }
+div[cms-pane] .editButton,
 cms-pane .editButton {
   background: transparent url('../image/glyph.png') 0px -72px no-repeat;
 }
+div[cms-pane] .subButton,
 cms-pane .subButton {
   background: transparent url('../image/glyph.png') -410px -120px no-repeat;
 }
+div[cms-pane] .savButton,
 cms-pane .savButton {
   background: transparent url('../image/glyph.png') -290px 0px no-repeat;
 }
+div[cms-pane] .addButton,
 cms-pane .addButton {
   background: transparent url('../image/glyph.png') -408px -98px no-repeat;
 }
+div[cms-pane] .outButton,
 cms-pane .outButton {
   background: transparent url('../image/glyph.png') -120px -72px no-repeat;
 }
+div[cms-pane] .closeButton,
 cms-pane .closeButton {
   background: transparent url('../image/glyph.png') -218px -96px no-repeat;
 }
+div[cms-pane] .removeButton,
 cms-pane .removeButton {
   background: transparent url('../image/glyph.png') -312px 0px no-repeat;
 }
+div[cms-pane] .restoreTable,
 cms-pane .restoreTable {
   background: transparent url('../image/glyph.png') -266px -24px no-repeat;
 }
+div[cms-pane] .peekTable,
 cms-pane .peekTable {
   background: transparent url('../image/glyph.png') -266px -26px no-repeat;
 }
+div[cms-pane] .headButtons input,
 cms-pane .headButtons input {
   width: 14px;
   margin: 0;
   padding: 0;
 }
+div[cms-pane] .inlineWrapper,
 cms-pane .inlineWrapper {
   display: block;
   width: 100%;
@@ -170,23 +184,34 @@ cms-pane .inlineWrapper {
   padding: 0;
   background: #fff;
 }
+div[cms-pane] .inlineWrapper div[cms-pane],
+cms-pane .inlineWrapper div[cms-pane],
+div[cms-pane] .inlineWrapper cms-pane,
 cms-pane .inlineWrapper cms-pane {
   padding: 0;
 }
+div[cms-pane] .inlineWrapper div[cms-pane] ul.dataContent,
+cms-pane .inlineWrapper div[cms-pane] ul.dataContent,
+div[cms-pane] .inlineWrapper cms-pane ul.dataContent,
 cms-pane .inlineWrapper cms-pane ul.dataContent {
   width: 90%;
   border: 4px solid #abc;
   margin: 3px 0;
   float: right;
 }
+div[cms-pane] .inlineWrapper div[cms-pane] ul.dataContent li,
+cms-pane .inlineWrapper div[cms-pane] ul.dataContent li,
+div[cms-pane] .inlineWrapper cms-pane ul.dataContent li,
 cms-pane .inlineWrapper cms-pane ul.dataContent li {
   border-top: 2px solid #eee;
   background: #fff;
 }
+div[cms-pane] .buttons div,
 cms-pane .buttons div {
   float: right;
   margin: 0;
 }
+div[cms-pane] .buttons div input,
 cms-pane .buttons div input {
   font-size: 0px;
   min-height: 14px;
@@ -197,7 +222,9 @@ cms-pane .buttons div input {
   margin-left: 1px;
   -webkit-border-radius: 0;
 }
+div[cms-pane] cms-header,
 cms-pane cms-header,
+div[cms-pane] [cms-header],
 cms-pane [cms-header] {
   float: left;
   width: 100%;
@@ -210,7 +237,9 @@ cms-pane [cms-header] {
   font-style: italic;
   border-top-left-radius: 5px;
 }
+div[cms-pane] cms-header div:first-child,
 cms-pane cms-header div:first-child,
+div[cms-pane] [cms-header] div:first-child,
 cms-pane [cms-header] div:first-child {
   font-style: italic;
   font-weight: bold;
@@ -218,14 +247,18 @@ cms-pane [cms-header] div:first-child {
   padding: 0px 3px;
   border-radius: 2px;
 }
+div[cms-pane] cms-header div,
 cms-pane cms-header div,
+div[cms-pane] [cms-header] div,
 cms-pane [cms-header] div {
   padding: 3px 0;
   position: relative;
   float: left;
   margin-left: 3px;
 }
+div[cms-pane] cms-header .button,
 cms-pane cms-header .button,
+div[cms-pane] [cms-header] .button,
 cms-pane [cms-header] .button {
   float: right;
   margin: 3px 2px 0px 1px;
@@ -233,15 +266,21 @@ cms-pane [cms-header] .button {
   height: 11px;
   border-radius: 2px;
 }
+div[cms-pane] cms-header input.reloadButton,
 cms-pane cms-header input.reloadButton,
+div[cms-pane] [cms-header] input.reloadButton,
 cms-pane [cms-header] input.reloadButton {
   background: transparent url('../image/glyph.png') -218px -24px no-repeat;
 }
+div[cms-pane] cms-header input.restoreTable,
 cms-pane cms-header input.restoreTable,
+div[cms-pane] [cms-header] input.restoreTable,
 cms-pane [cms-header] input.restoreTable {
   background: transparent url('../image/glyph.png') -266px -24px no-repeat;
 }
+div[cms-pane] cms-header div.spaces,
 cms-pane cms-header div.spaces,
+div[cms-pane] [cms-header] div.spaces,
 cms-pane [cms-header] div.spaces {
   position: relative;
   float: left;
@@ -250,14 +289,18 @@ cms-pane [cms-header] div.spaces {
   padding: 0px;
   background-color: #c7d2d8;
 }
+div[cms-pane] cms-header div.spaces div.space,
 cms-pane cms-header div.spaces div.space,
+div[cms-pane] [cms-header] div.spaces div.space,
 cms-pane [cms-header] div.spaces div.space {
   float: left;
   width: 22px;
   height: 22px;
   border-right: 1px dashed #ffffff;
 }
+div[cms-pane] cms-header span,
 cms-pane cms-header span,
+div[cms-pane] [cms-header] span,
 cms-pane [cms-header] span {
   display: none;
   -webkit-border-radius: 2px;
@@ -274,22 +317,31 @@ cms-pane [cms-header] span {
   color: green;
   background: #d0e5f2;
 }
+div[cms-pane] cms-header span.success,
 cms-pane cms-header span.success,
+div[cms-pane] [cms-header] span.success,
 cms-pane [cms-header] span.success {
   color: #008000;
 }
+div[cms-pane] cms-header span.info,
 cms-pane cms-header span.info,
+div[cms-pane] [cms-header] span.info,
 cms-pane [cms-header] span.info {
   color: #0000ff;
 }
+div[cms-pane] cms-header span.warning,
 cms-pane cms-header span.warning,
+div[cms-pane] [cms-header] span.warning,
 cms-pane [cms-header] span.warning {
   color: #ffff00;
 }
+div[cms-pane] cms-header span.error,
 cms-pane cms-header span.error,
+div[cms-pane] [cms-header] span.error,
 cms-pane [cms-header] span.error {
   color: #a03a5e;
 }
+div[cms-pane] ul.dataContent,
 cms-pane ul.dataContent {
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
@@ -303,6 +355,7 @@ cms-pane ul.dataContent {
   padding: 0;
   width: 100%;
 }
+div[cms-pane] ul.dataContent li.row,
 cms-pane ul.dataContent li.row {
   position: relative;
   float: left;
@@ -311,17 +364,21 @@ cms-pane ul.dataContent li.row {
   margin: 0;
   min-height: 19px;
 }
+div[cms-pane] ul.dataContent li.row:hover div.buttons,
 cms-pane ul.dataContent li.row:hover div.buttons {
   display: block;
 }
+div[cms-pane] ul.dataContent li.row div,
 cms-pane ul.dataContent li.row div {
   float: left;
 }
+div[cms-pane] ul.dataContent li.row div.item p,
 cms-pane ul.dataContent li.row div.item p {
   margin: 0;
   padding: 0;
   overflow-x: auto;
 }
+div[cms-pane] ul.dataContent li.row .buttons,
 cms-pane ul.dataContent li.row .buttons {
   position: absolute;
   float: none;
@@ -329,6 +386,7 @@ cms-pane ul.dataContent li.row .buttons {
   top: 0px;
   display: none;
 }
+div[cms-pane] ul.dataContent li.row .buttons > div,
 cms-pane ul.dataContent li.row .buttons > div {
   padding: 2px;
   background-color: #d4d4d4;
@@ -341,31 +399,38 @@ cms-pane ul.dataContent li.row .buttons > div {
   border-radius: 3px;
   box-shadow: -1px 2px 11px #778899;
 }
+div[cms-pane] ul.dataContent li.row .buttons > input,
 cms-pane ul.dataContent li.row .buttons > input {
   float: left;
   padding-right: 4px;
 }
+div[cms-pane] ul.dataContent li.row div[p-img],
 cms-pane ul.dataContent li.row div[p-img] {
   margin: 0;
   padding: 0;
 }
+div[cms-pane] ul.dataContent li.row div[p-img] div,
 cms-pane ul.dataContent li.row div[p-img] div {
   padding: 5px;
 }
+div[cms-pane] ul.dataContent li.row div[p-img] img,
 cms-pane ul.dataContent li.row div[p-img] img {
   width: 40px;
   margin: 0 8px 0 0;
 }
+div[cms-pane] ul.dataContent li.row div[p-img] p,
 cms-pane ul.dataContent li.row div[p-img] p {
   margin: 0;
   padding: 0;
   width: 100%;
 }
+div[cms-pane] ul.dataContent li.row div[p-img] [row-buttons],
 cms-pane ul.dataContent li.row div[p-img] [row-buttons] {
   position: absolute;
   height: 16px;
   width: 85%;
 }
+div[cms-pane] ul.dataContent li.row [div-img],
 cms-pane ul.dataContent li.row [div-img] {
   margin: 5px;
   border: 1px solid #aaa;
@@ -376,6 +441,7 @@ cms-pane ul.dataContent li.row [div-img] {
   -o-border-radius: 5px;
   border-radius: 5px;
 }
+div[cms-pane] ul.dataContent li.row [div-img] img,
 cms-pane ul.dataContent li.row [div-img] img {
   height: 80px;
   width: auto;
@@ -387,6 +453,7 @@ cms-pane ul.dataContent li.row [div-img] img {
   -o-border-radius: 3px;
   border-radius: 3px;
 }
+div[cms-pane] ul.dataContent li.row [div-img] [row-buttons],
 cms-pane ul.dataContent li.row [div-img] [row-buttons] {
   position: relative;
   float: left;
@@ -394,6 +461,7 @@ cms-pane ul.dataContent li.row [div-img] [row-buttons] {
   display: block;
   clear: left;
 }
+div[cms-pane] ul.dataContent li.row.editable .active,
 cms-pane ul.dataContent li.row.editable .active {
   display: block;
   border: 1px solid #aaa;
@@ -405,27 +473,36 @@ cms-pane ul.dataContent li.row.editable .active {
   -o-border-radius: 5px;
   border-radius: 5px;
 }
+div[cms-pane] ul.dataContent li.row.editable .active textarea,
 cms-pane ul.dataContent li.row.editable .active textarea,
+div[cms-pane] ul.dataContent li.row.editable .active input,
 cms-pane ul.dataContent li.row.editable .active input {
   width: 100%;
 }
+div[cms-pane] ul.dataContent li.row.editable .active label,
 cms-pane ul.dataContent li.row.editable .active label {
   background: transparent;
 }
+div[cms-pane] ul.dataContent li.row.editable .text,
 cms-pane ul.dataContent li.row.editable .text {
   display: none;
 }
+div[cms-pane] ul.dataContent li.row:hover,
 cms-pane ul.dataContent li.row:hover,
+div[cms-pane] ul.dataContent li.row.selected,
 cms-pane ul.dataContent li.row.selected {
   background: #cad5df;
 }
+div[cms-pane] ul.dataContent li.row > .item,
 cms-pane ul.dataContent li.row > .item {
   border-bottom: 1px dotted #ccc;
   width: 97%;
 }
+div[cms-pane] ul.dataContent li,
 cms-pane ul.dataContent li {
   float: left;
 }
+div[cms-pane] ul.dataContent li.button,
 cms-pane ul.dataContent li.button {
   height: 16px;
   margin-top: 2px;
@@ -433,17 +510,21 @@ cms-pane ul.dataContent li.button {
   width: auto;
   white-space: nowrap;
 }
+div[cms-pane] ul.dataContent ul,
 cms-pane ul.dataContent ul {
   margin: 0;
   padding: 0;
 }
+div[cms-pane][rel="m-1-out"] ul.dataContent li.row,
 cms-pane[rel="m-1-out"] ul.dataContent li.row {
   float: left;
   width: auto;
 }
+div[cms-pane][rel="m-1-out"] ul.dataContent li.row div[p-img],
 cms-pane[rel="m-1-out"] ul.dataContent li.row div[p-img] {
   height: 85px;
 }
+div[cms-pane][rel="m-1-out"] ul.dataContent li.row div[p-img] img,
 cms-pane[rel="m-1-out"] ul.dataContent li.row div[p-img] img {
   height: 80px;
   width: auto;

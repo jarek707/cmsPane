@@ -3,7 +3,8 @@ angular.module('app.services', ['app.gridConf'])
         return {
             'compileChildPane' : function(parentScope, el) {
                 var data = _.extend(el.data());
-                var inEl = angular.element(el.data().outer).data(data);
+                //var inEl = angular.element(el.data().outer).data(data);
+                var inEl = angular.element(el.data().outer);
                 var comp = $compile(inEl)(parentScope);
                 el.replaceWith( comp );
             },
@@ -48,12 +49,14 @@ angular.module('app.services', ['app.gridConf'])
 
                 angular.element(child).data().meta  = dataAttrs;
                 angular.element(child).data().outer = 
-                    '<cms-pane row-id="{{rowId}}" parent-list="list" expose="exposing(data)"' +
+                    '<div cms-pane row-id="{{rowId}}" parent-list="list" expose="exposing(data)"' +
                     ' key="' + dataAttrs.key + '" rel="' + dataAttrs.rel + '">' +
-                        child.innerHTML +
-                    '</cms-pane>'
+                        //child.innerHTML +
+                        angular.element(child).html() +
+                    '</div>'
                 ;
-                child.innerHTML = '';
+                //child.innerHTML = '';
+                angular.element(child).html('');
                 return angular.element(child).data().outer;
             },
             'paramTransclude' : function(el, attrs) {
@@ -68,7 +71,7 @@ angular.module('app.services', ['app.gridConf'])
                 
                 meta.children = _.isEmpty(el.get()[0].innerHTML) ? "{{ITERATION}}" : el.get()[0].innerHTML;
 
-                el.get()[0].innerHTML = '';
+                el.html('');
                 return _.extend(meta, this.attrsToMeta(attrs));
             },
             'makeMain' : function(el) {

@@ -309,10 +309,11 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                                     $scope.$parent.$digest();
                                 }
                             } else {
-                                if ( $scope.list[$scope.id][$scope.meta.cols[0][0]] === data ) {
-                                    $scope.clk();
-                                    $scope.$parent.$digest();
-                                }
+                                if ( !_.isUndefined($scope.id)) 
+                                    if ( $scope.list[$scope.id][$scope.meta.cols[0][0]] === data ) {
+                                        $scope.clk();
+                                        $scope.$parent.$digest();
+                                    }
                             }
                         });
 

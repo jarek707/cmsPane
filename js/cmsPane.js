@@ -148,7 +148,8 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                 transclude  : false,
                 template    : "",
                 compile     : function(el, attrs, trans) {
-                    // TODO
+                    if ( typeof USING_IE == 'undefined') USING_IE = false;
+
                     if (!_.isUndefined(el.data().meta)) {
                         el.data().meta['jqueryUi'] = el.data().meta['jquery-ui'];
                     }
@@ -169,6 +170,7 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                     };
 
                     var domMeta = dom.paramTransclude(el, attrs);
+
                     return link;
                 },
                 controller  :  function($scope, $element, $attrs) {
@@ -204,12 +206,20 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                             }
                         });
 
+                        if (!parentScope) {
+                            _($('body div[cms-pane]')).each(function(v,k) {
+                                if (angular.element(v).attr('key') === attrs.parentKey) {
+                                    parentScope = angular.element(v).data().$scope;
+                                }
+                            });
+                        }
+
                         if (parentScope) {
                             dom.compileChildPane(parentScope, el);
                         } else {
                             $scope.$on('scopeReady', function(evtObj, key, pScope) {
                                 if (attrs.parentKey === key ) {
-                                    _.defer(function() { dom.compileChildPane(pScope, el); });
+                                    _.defer(function() { dom.compileChildPane(pScope, el); }, 300);
                                 }
                             });
                         }
