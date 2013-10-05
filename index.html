@@ -27,6 +27,7 @@
                 document.createElement('p-img');
                 document.createElement('div-img');
                 document.createElement('cms-item');
+                document.createElement('detail');
 
             </script>
         <![endif]-->
@@ -83,37 +84,35 @@
                     <div class='box'>
                         <cms-pane key='stylists' jquery-ui='{"sortable" :""}' rel='1-m' selected='Vidal'>
                             <div cms-header></div>
-                            <iterate><buttons use='sav,del,edit,close'></buttons><div p-img></div></iterate>
+                            <div iterate><buttons use='sav,del,edit,close'></buttons><div p-img></div></div>
 
                             <inline class='inlineWrapper'>
-                            <div class='box inside'>
-                                <div cms-child key="clients result" rel='m-p-out' jquery-ui='{"sortable":""}' parent-key='clients'>
-                                    <div cms-header title='Selected Clients' no-add-button></div>
-                                    <iterate><div p-img></div><buttons use='remove'></buttons></iterate>
+                                <div class='box'>
+                                    <div cms-child key="clients result" rel='m-p-out' jquery-ui='{"sortable":""}' parent-key='clients'>
+                                        <div cms-header title='Selected Clients' no-add-button></div>
+                                        <div iterate><div p-img></div><buttons use='remove'></buttons></div>
+                                    </div>
+                                    <div cms-child key="salons result" rel='m-p-out' jquery-ui='{"sortable":""}' parent-key='salons'>
+                                        <div cms-header title='Selected Salons' no-add-button></div>
+                                        <div iterate><div p-img></div><buttons use='remove'></buttons></div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class='box inline'>
-                                <div cms-child key="salons result" rel='m-p-out' jquery-ui='{"sortable":""}' parent-key='salons'>
-                                    <div cms-header title='Selected Salons' no-add-button></div>
-                                    <iterate><div p-img></div><buttons use='remove'></buttons></iterate>
-                                </div>
-                            </div>
                             </inline>
                         </cms-pane>
                     </div>
                 </div>
                 <div class='right'>
                     <div class='box'>
-                        <div cms-child key="salons" rel='m-p' jquery-ui='{"sortable":""}' parent-key='stylists' class='abc' cols='[["left", "Name"], ["right", "Image URL"]]'>
-                            <div cms-header title='Available Salons' ></div>
-                            <iterate><buttons use='sav,close,edit,del,out'></buttons><div cms-item='oneLabel'></div></iterate>
-                        </div>
-                    </div>
-                    <div class='box'>
                         <cms-child key="clients" rel='m-p' jquery-ui='{"sortable":""}' parent-key='stylists' cols='[["left", "Name"], ["right", "Image URL"]]'>
                             <div cms-header title='Available Clients' ></div>
-                            <iterate><buttons use='sav,close,edit,del,out'></buttons><div cms-item='oneLabel'></div></iterate>
+                            <div iterate><buttons use='sav,close,edit,del,out'></buttons><div cms-item='oneLabel'></div></div>
                         </cms-child>
+                    </div>
+                    <div class='box'>
+                        <div cms-child key="salons" rel='m-p' jquery-ui='{"sortable":""}' parent-key='stylists' class='abc' cols='[["left", "Name"], ["right", "Image URL"]]'>
+                            <div cms-header title='Available Salons' ></div>
+                            <div iterate><buttons use='sav,close,edit,del,out'></buttons><div cms-item='oneLabel'></div></div>
+                        </div>
                     </div>
                 </div>
             </div> <!-- contentWrap -->

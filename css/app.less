@@ -79,9 +79,12 @@ div.topMenu{
     background: @menuBg;
     overflow:hidden;
     color:#ddd;
+    border-bottom-left-radius:9px;
+    border-bottom-right-radius:9px;
+    background-color:#abc;
     h1 {
         font-style:italic;
-        margin:4px 0 0 22px;
+        margin:2px 0 0 22px;
         float:left;
         font-family:georgia;
         font-size:1.9em;
@@ -94,20 +97,21 @@ div.topMenu{
             position:relative;
             float:right;
             font-size:0.9em;
-            margin:4px 12px 0 0;
-            background:white;
-            padding-left:8px;
+            margin:8px 8px 0 0;
+            background:#eee;
+            padding:1px 8px 0px 8px;
+            .rounded-corners(4px);
+            color:#999;
             label {
-                color:#bbb;
             }
             input {
-                border:2px solid #ccc;
+                border:1px solid #ccc;
                 width:80px;
                 margin:0 2px;
             }
             button {
                 border:none;
-                color:#bbb;
+                color:#888;
                 background:transparent;
                 cursor:pointer;
                 padding-left:0px;
@@ -389,12 +393,15 @@ cms-pane {
             &.editable .active {
                 display:block;
                 border:1px solid #aaa;
-                padding:8px;
+                padding:6px 8px 4px 4px;
                 background:#cde;
                 .rounded-corners;
+                width:94%;
                 textarea,
                 input { 
                     width:100%;
+                    border:1px solid #ddd;
+                    .rounded-corners;
                 }
                 label {
                     background:transparent;
@@ -482,6 +489,8 @@ cms-pane {
         border:1px solid #aaa;
         textarea {
             width:100%;
+            border:1px solid #ddd;
+            .rounded-corners(3px);
         }
         label {
             clear:left;

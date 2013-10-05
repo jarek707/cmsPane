@@ -184,6 +184,25 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
             };
         }
     ])
+    .directive('iterate', ['config', 'dom', '$compile',
+        function (config, dom, $compile) {
+            return {
+                replace : true,
+                restrict : 'A',
+                template : '',
+                compile  : function(el, attrs) {
+                    var iterate = el.html();
+                    el.html('');
+                    function link($scope, $element) {
+                        $element.append(
+                            $compile($scope.templates.cmsPane.replace('<inject-iterator />', iterate)
+                        )($scope));
+                    };
+                    return link;
+                }
+            }
+        }
+    ])
     .directive('cmsChild', ['config', 'dom', '$compile',
         function (config, dom, $compile) {
             return {
@@ -195,7 +214,7 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                 compile     : function(el, attrs, trans) {
                     dom.convertChild(el.get()[0]);
 
-                    // We need to comile child pane against parent $scope.  Parent might be rendered
+                    // We need to compile child pane against parent $scope.  Parent might be rendered
                     // after the child so the child has to wait until parent $scope is available.
                     return function($scope, $element) {
                         var parentScope = false;
@@ -215,9 +234,11 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                         }
 
                         if (parentScope) {
+                            LG( attrs.key, '1');
                             dom.compileChildPane(parentScope, el);
                         } else {
                             $scope.$on('scopeReady', function(evtObj, key, pScope) {
+                            LG( attrs.key, '2');
                                 if (attrs.parentKey === key ) {
                                     _.defer(function() { dom.compileChildPane(pScope, el); }, 300);
                                 }

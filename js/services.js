@@ -1,13 +1,6 @@
 angular.module('app.services', ['app.gridConf'])
     .factory('dom', function($compile, $http) {
         return {
-            'compileChildPane' : function(parentScope, el) {
-                var data = _.extend(el.data());
-                //var inEl = angular.element(el.data().outer).data(data);
-                var inEl = angular.element(el.data().outer);
-                var comp = $compile(inEl)(parentScope);
-                el.replaceWith( comp );
-            },
             'setupButtons' : function(el, attrs) {
                 if ( !_.isUndefined(attrs.use)) {
                     var buttons = el.find('input');
@@ -35,6 +28,13 @@ angular.module('app.services', ['app.gridConf'])
                 });
                 return $ret;
             },
+            'compileChildPane' : function(parentScope, el) {
+                LG( ' comp ' );
+                var data = _.clone(el.data().meta);
+                var comp = $compile(el.data().outer)(parentScope);
+                comp.data().meta = data;
+                el.replaceWith( comp );
+            },
             'convertChild' : function( child ) {
                 var dataAttrs = {};
                 for (var i=0; i<child.attributes.length; i++) {
@@ -47,70 +47,30 @@ angular.module('app.services', ['app.gridConf'])
                         } catch (e) { }
                 }
 
-                angular.element(child).data().meta  = dataAttrs;
                 angular.element(child).data().outer = 
                     '<div cms-pane row-id="{{rowId}}" parent-list="list" expose="exposing(data)"' +
                     ' key="' + dataAttrs.key + '" rel="' + dataAttrs.rel + '">' +
-                        //child.innerHTML +
-                        angular.element(child).html() +
+                        child.innerHTML +
                     '</div>'
                 ;
-                //child.innerHTML = '';
-                angular.element(child).html('');
+                angular.element(child).data().meta  = dataAttrs;
+
+                child.innerHTML = '';
                 return angular.element(child).data().outer;
             },
             'paramTransclude' : function(el, attrs) {
                 var meta = _.isUndefined(el.data().meta) ? {} : el.data().meta;
 
-                var iterate =   el.find('>iterate'); 
-                if ( iterate.length ) {
-                    meta.iterate               = iterate.get()[0].innerHTML;
-                    iterate.get()[0].outerHTML = '{{ITERATION}}';
-                }
-
-                
-                meta.children = _.isEmpty(el.get()[0].innerHTML) ? "{{ITERATION}}" : el.get()[0].innerHTML;
+                meta.children = el.get()[0].innerHTML;
 
                 el.html('');
                 return _.extend(meta, this.attrsToMeta(attrs));
             },
             'makeMain' : function(el) {
                 $scope = el.data().$scope;
-
-                var html = $scope.templates.cmsPane;
-
-                if (html.indexOf('<inject-iterator-here />') > -1)
-                    html = html.replace('<inject-iterator-here />', $scope.meta.iterate);
-
-                if ($scope.meta.children.indexOf('{{ITERATION}}') > -1) {
-                    html = $scope.meta.children.replace('{{ITERATION}}',html); 
-                } else {
-                    html = $scope.meta.children + html;  // Put iterator at the bottom if not located
-                }
-
-                el.append($compile(html)($scope));
-            },
-            'appendExternals' : function(el) {
-                var cmsPanes = angular.element('body').find('cms-pane');
-                setTimeout( function() {
-                    _(cmsPanes).each( function(v,k) {
-                        if (  v.attributes.key.nodeValue ===  el.attr('parent-key'))  {
-                            var parentScope = angular.element(v).data().$scope.$id;
-                        }
-                    });
-                 }, 0);
-            },
-            'replaceExternals' : function($scope) {
-                var el = angular.element($scope.meta.relChild);
-                var replacement = angular.element(
-                    '<cms-pane key="' + el.attr('key') + '"' + 'rel="' + el.attr('rel') + '"' +
-                    ' row-id="{{rowId}}" parent-list="list" expose="exposing(data)">' +
-                    el.data().inner + '</cms-pane>'
-                ).data({"meta" : el.data().meta});
-
-                el.replaceWith($compile(replacement)($scope));
+                
+                el.append($compile($scope.meta.children)($scope));
             }
-            // Convert all JSON strings to objects and pass on remaining string attributes
         }
     })
     .factory('jquery_ui', function($http, config) {

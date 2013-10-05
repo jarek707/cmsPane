@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html id="ng-app" ng-app="app" debug="false">
     <head>
@@ -28,6 +27,7 @@
                 document.createElement('p-img');
                 document.createElement('div-img');
                 document.createElement('cms-item');
+                document.createElement('detail');
 
             </script>
         <![endif]-->
@@ -87,34 +87,32 @@
                             <iterate><buttons use='sav,del,edit,close'></buttons><div p-img></div></iterate>
 
                             <inline class='inlineWrapper'>
-                            <div class='box inside'>
-                                <cms-child key="salons result" rel='m-p-out' jquery-ui='{"sortable":""}' parent-key='salons'>
-                                    <div cms-header title='Selected Salons' no-add-button></div>
-                                    <iterate><div p-img></div><buttons use='remove'></buttons></iterate>
-                                </cms-child>
-                            </div>
-                            <div class='box inside'>
-                                <cms-child key="clients result" rel='m-p-out' jquery-ui='{"sortable":""}' parent-key='clients'>
-                                    <div cms-header title='Selected Clients' no-add-button></div>
-                                    <iterate><div p-img></div><buttons use='remove'></buttons></iterate>
-                                </cms-child>
-                            </div>
+                                <div class='box'>
+                                    <div cms-child key="clients result" rel='m-p-out' jquery-ui='{"sortable":""}' parent-key='clients'>
+                                        <div cms-header title='Selected Clients' no-add-button></div>
+                                        <iterate><div>{{workRow}}</div><buttons use='remove'></buttons></iterate>
+                                    </div>
+                                    <div cms-child key="salons result" rel='m-p-out' jquery-ui='{"sortable":""}' parent-key='salons'>
+                                        <div cms-header title='Selected Salons' no-add-button></div>
+                                        <iterate><div p-img></div><buttons use='remove'></buttons></iterate>
+                                    </div>
+                                </div>
                             </inline>
                         </cms-pane>
                     </div>
                 </div>
                 <div class='right'>
                     <div class='box'>
-                        <cms-child key="salons" rel='m-p' jquery-ui='{"sortable":""}' parent-key='stylists' class='abc' cols='[["left", "Name"], ["right", "Image URL"]]'>
-                            <div cms-header title='Available Salons' ></div>
-                            <iterate><buttons use='sav,close,edit,del,out'></buttons><div cms-item='oneLabel'></div></iterate>
+                        <cms-child key="clients" rel='m-p' jquery-ui='{"sortable":""}' parent-key='stylists' cols='[["left", "Name"], ["right", "Image URL"]]'>
+                            <div cms-header title='Available Clients' ></div>
+                            <iterate><buttons use='sav,close,edit,del,out'></buttons><div p-img='oneLabel'></div></iterate>
                         </cms-child>
                     </div>
                     <div class='box'>
-                        <cms-child key="clients" rel='m-p' jquery-ui='{"sortable":""}' parent-key='stylists' cols='[["left", "Name"], ["right", "Image URL"]]'>
-                            <div cms-header title='Available Clients' ></div>
+                        <div cms-child key="salons" rel='m-p' jquery-ui='{"sortable":""}' parent-key='stylists' class='abc' cols='[["left", "Name"], ["right", "Image URL"]]'>
+                            <div cms-header title='Available Salons' ></div>
                             <iterate><buttons use='sav,close,edit,del,out'></buttons><div cms-item='oneLabel'></div></iterate>
-                        </cms-child>
+                        </div>
                     </div>
                 </div>
             </div> <!-- contentWrap -->
