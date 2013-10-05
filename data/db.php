@@ -74,6 +74,9 @@ class db extends mysqli {
         return array($this->error, $sql);
     }
 }
+header('Cache-Control: no-cache, no-store, must-revalidate'); // HTTP 1.1.
+header('Pragma: no-cache'); // HTTP 1.0.
+header('Expires: 0'); // Proxies.
 
 if ($_SERVER['HTTP_HOST'] === 'cms') {
     $dbHost = 'localhost';
