@@ -1,7 +1,10 @@
 @menuHeight: 40px;
 @rightWidth: 182px;
 @leftWidth:  180px;
+@shadowBg : #c0d0ef;
 
+@bodyBg: #cde;
+@menuBg: lighten(#ddd, 20%);
 @menuBg: lighten(#ddd, 20%);
 @menuColor: #eee;
 
@@ -26,6 +29,10 @@
     background: transparent url('../image/glyph-white.png') @left @top  no-repeat;
 }
 
+.shadow(@one: 5px, @two: 5px, @depth: 8px) {
+    box-shadow: @one @two @depth @shadowBg;
+}
+
 .rounded-corners (@radius: 5px) {
     -webkit-border-radius: @radius;
     -moz-border-radius: @radius;
@@ -38,7 +45,7 @@
 
 body {
     min-width: @bodyMinWidth;
-    background: #eee;
+    background: @bodyBg;
     margin:  0;
     padding: 0;
     font-family: Helvetica;
@@ -192,12 +199,12 @@ cms-pane {
     & .inlineWrapper { 
         display:block;
         width:100%;
-       // margin:5px 0;
         padding:0;
         background:#fff;
         &>* {
             float:right;
             max-width:90%;
+            margin-right:6px;
         }
         div[cms-pane],
         cms-pane {
@@ -311,7 +318,7 @@ cms-pane {
 
     ul.dataContent {
         .rounded-corners(5px);
-        box-shadow: 1px 1px 11px #aaa;
+        .shadow;
         float:left;
         font-size:0.9em;
         margin:0 0 0px 0;
@@ -336,6 +343,7 @@ cms-pane {
                         margin:0;
                         padding:0;
                         overflow-x:auto;
+                        font-size:0.94em;
                     }
                 }
             }
@@ -351,7 +359,7 @@ cms-pane {
                     opacity:0.70;
                     float:right;
                     .rounded-corners(3px); 
-                    box-shadow: -1px 2px 11px #789;
+                    .shadow;
                 }
                 &>input {
                     float:left;
@@ -422,7 +430,7 @@ cms-pane {
             }
             &:hover,
             &.selected {
-                background:lighten(#abc, 10%);
+                background:#fff;
             }
             >.item {
                 border-bottom:1px dotted #ccc;
@@ -528,7 +536,8 @@ cms-pane {
     float:left;
     .rounded-corners(8px);
     //border:2px solid #aaa;
-    box-shadow: 5px 5px 11px #aaa;
+    //box-shadow: 5px 5px 11px @shadowBg;
+    .shadow();
     &.inside {
         margin-left:12px;
     }
@@ -541,7 +550,7 @@ detail {
     float:left;
     padding:0;
     margin:0;
-    width:99%;
+    width:98%;
     //.rounded-corners(8px);
     //border:2px solid #aaa;
     img {

@@ -3,7 +3,7 @@
 }
 body {
   min-width: 490px;
-  background: #eee;
+  background: #ccddee;
   margin: 0;
   padding: 0;
   font-family: Helvetica;
@@ -195,6 +195,7 @@ div[cms-pane] .inlineWrapper > *,
 cms-pane .inlineWrapper > * {
   float: right;
   max-width: 90%;
+  margin-right: 6px;
 }
 div[cms-pane] .inlineWrapper div[cms-pane],
 cms-pane .inlineWrapper div[cms-pane],
@@ -369,7 +370,7 @@ cms-pane ul.dataContent {
   -ms-border-radius: 5px;
   -o-border-radius: 5px;
   border-radius: 5px;
-  box-shadow: 1px 1px 11px #aaa;
+  box-shadow: 5px 5px 8px #c0d0ef;
   float: left;
   font-size: 0.9em;
   margin: 0 0 0px 0;
@@ -398,6 +399,7 @@ cms-pane ul.dataContent li.row div.item p {
   margin: 0;
   padding: 0;
   overflow-x: auto;
+  font-size: 0.94em;
 }
 div[cms-pane] ul.dataContent li.row .buttons,
 cms-pane ul.dataContent li.row .buttons {
@@ -418,7 +420,7 @@ cms-pane ul.dataContent li.row .buttons > div {
   -ms-border-radius: 3px;
   -o-border-radius: 3px;
   border-radius: 3px;
-  box-shadow: -1px 2px 11px #778899;
+  box-shadow: 5px 5px 8px #c0d0ef;
 }
 div[cms-pane] ul.dataContent li.row .buttons > input,
 cms-pane ul.dataContent li.row .buttons > input {
@@ -519,7 +521,7 @@ div[cms-pane] ul.dataContent li.row:hover,
 cms-pane ul.dataContent li.row:hover,
 div[cms-pane] ul.dataContent li.row.selected,
 cms-pane ul.dataContent li.row.selected {
-  background: #cad5df;
+  background: #fff;
 }
 div[cms-pane] ul.dataContent li.row > .item,
 cms-pane ul.dataContent li.row > .item {
@@ -625,7 +627,7 @@ cms-pane[rel="m-1-out"] ul.dataContent li.row div[p-img] img {
   -ms-border-radius: 8px;
   -o-border-radius: 8px;
   border-radius: 8px;
-  box-shadow: 5px 5px 11px #aaa;
+  box-shadow: 5px 5px 8px #c0d0ef;
 }
 .box.inside {
   margin-left: 12px;
@@ -637,7 +639,7 @@ detail {
   float: left;
   padding: 0;
   margin: 0;
-  width: 99%;
+  width: 98%;
 }
 detail img {
   width: 96%;

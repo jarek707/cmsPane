@@ -389,7 +389,7 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                         $scope.clk = function() {
                             angular.element('detail').html('').show();;
                             angular.element('detail').append(
-                                '<div class="box" style="width:99%">' +
+                                '<div class="box">' +
                                 '<input type="button" onclick="$(this).parent().html(\'\').hide();" style="position:relative; margin:12px 12px 0 12px; float:right;" value="close"></input>' +
                                 '<div style="margin:12px 12px 0 12px;">' + $scope.workRow.left + '</div>' +
                                 '<img src="' + $scope.workRow.right + '"></img>' +
@@ -405,7 +405,7 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                         $scope.clk = function() {
                             angular.element('detail').html('').show();
                             angular.element('detail').append(
-                                '<div class="box" style="width:99%">' +
+                                '<div class="box">' +
                                 '<input type="button" onclick="$(this).parent().html(\'\').hide();" style="position:relative; margin:12px 12px 0 12px; float:right;" value="close"></input>' +
                                 '<div style="margin:12px 12px 0 12px;">' + $scope.workRow.left + '</div>' +
                                 '<img src="' + $scope.workRow.right + '"></img>' +
