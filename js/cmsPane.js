@@ -192,6 +192,10 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                 template : '',
                 compile  : function(el, attrs) {
                     var iterate = el.html();
+                    var buttons=el.find('buttons').attr('use');
+                    LGE( 'bu ' + buttons +  '  ttons');
+                    el.find('buttons').replaceWith('<div>BUTTONS</div>');
+                    LGE( 'no buttons : ' + iterate);
                     el.html('');
                     function link($scope, $element) {
                         $element.append(
@@ -234,11 +238,9 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                         }
 
                         if (parentScope) {
-                            LG( attrs.key, '1');
                             dom.compileChildPane(parentScope, el);
                         } else {
                             $scope.$on('scopeReady', function(evtObj, key, pScope) {
-                            LG( attrs.key, '2');
                                 if (attrs.parentKey === key ) {
                                     _.defer(function() { dom.compileChildPane(pScope, el); }, 300);
                                 }

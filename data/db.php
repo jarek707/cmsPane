@@ -46,6 +46,7 @@ class db extends mysqli {
     }
 
     public function updateRel($tab, $rowId, $data) {
+        $data = empty($data) ? '{}' : json_encode($data);
         $numRows= mysqli_num_rows($this->query("SELECT * FROM `$tab` WHERE id=$rowId"));
 
         if ($numRows)  {
@@ -53,7 +54,7 @@ class db extends mysqli {
         } else {
             $this->query($sql = "INSERT INTO `$tab` (`id`, `rel`) VALUES ($rowId, '" . $data . "')");
         }
-        return array($this->error, $sql, $numRows);
+        return array($this->error, $sql, $inData);
     }
 
 
@@ -91,7 +92,7 @@ switch ($_GET['action']) {
     case 'get'    : $ret = $db->getAll($tab, $rel);     break;
     case 'del'    : $ret = $db->delete($tab, $rowId);   break;
     case 'post'   : 
-        $ret = $rel ? $db->updateRel($tab, $rowId, json_encode($_POST))
+        $ret = $rel ? $db->updateRel($tab, $rowId, $_POST)
                     : $db->update(   $tab, $rowId, $_POST);
         break;
     default: ;

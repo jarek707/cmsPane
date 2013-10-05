@@ -10,6 +10,8 @@ angular.module('app.services', ['app.gridConf'])
                             angular.element(buttons[i]).remove();
                         }
                     }
+                    el.data().html = el.html();
+                    //el.html('');
                 }
             },
             'getItem' : function($scope, item, cb) {
@@ -29,7 +31,6 @@ angular.module('app.services', ['app.gridConf'])
                 return $ret;
             },
             'compileChildPane' : function(parentScope, el) {
-                LG( ' comp ' );
                 var data = _.clone(el.data().meta);
                 var comp = $compile(el.data().outer)(parentScope);
                 comp.data().meta = data;
@@ -161,7 +162,7 @@ angular.module('app.services', ['app.gridConf'])
                         if (_.isEmpty(data)) data = {};
                         cb(data); 
                     }).error(
-                        function(data) { LG('ERROR', data, key );}
+                        function(data) { LGE('GET DATA ERROR FOR ' + data, key );}
                     )
                     ;
                 }
