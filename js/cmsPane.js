@@ -151,9 +151,6 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                     if ( typeof USING_IE == 'undefined') USING_IE = false;
 
                     function link($scope, $element, $attrs) {
-                        if ( $attrs.key == 'salons result' ) {
-                            LG( $element.data().meta, ' DATA', $attrs.key);
-                        }
                         var parentMeta = _.clone($scope.expose({data:'meta'}));
 
                         $scope.meta = _.isUndefined(parentMeta) ? {} : parentMeta;

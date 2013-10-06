@@ -154,8 +154,9 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                     },
                     'default' : function($scope, $element) {
                         $scope.attachAfterRow = function() {
-                            var inEl = $element.parent().parent().parent().parent().find('inline').show().detach();
-                            $element.parent().after(inEl);
+                            $element.parent().after(
+                                $scope.meta.element.find('inline').detach()
+                            );
                         };
 
                         $scope.buttons = {};
