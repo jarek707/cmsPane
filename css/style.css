@@ -65,14 +65,11 @@ div.topMenu div.loginWrap div.login {
   float: right;
   font-size: 0.7em;
   font-style: italic;
-  margin: 8px 8px 0 0;
+  margin: 0;
   background: #ccddee;
   padding: 1px 5px 0px 5px;
-  -webkit-border-radius: 6px;
-  -moz-border-radius: 6px;
-  -ms-border-radius: 6px;
-  -o-border-radius: 6px;
-  border-radius: 6px;
+  border-bottom-left-radius: 9px;
+  border-top-left-radius: 3px;
   color: #999;
 }
 div.topMenu div.loginWrap div.login input {
