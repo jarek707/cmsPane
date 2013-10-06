@@ -30,9 +30,9 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                     'm-p-out'  :function($scope, $element) {
                         $scope.updateList = function() {
                             $scope.list = {};
-                            var relData = $scope.expose({data:'relData'})[$scope.rowId];
-                            if (!_.isEmpty($scope.rowId) && !_.isEmpty(relData)) {
-                                if (!_.isUndefined(relData) ) {
+                            if (!_.isEmpty($scope.rowId)) { 
+                                var relData = $scope.expose({data:'relData'})[$scope.rowId];
+                                if (!_.isUndefined(relData) && !_.isEmpty(relData)) {
                                     var list = {};
                                     for (var i in relData) {
                                         list[relData[i].ord] = $scope.parentList[i];
@@ -55,6 +55,7 @@ angular.module('app.directiveScopes', ['app.gridConf'])
 
                         $scope.$on('relDataChanged', $scope.updateList);
                         $scope.$watch('rowId',       $scope.updateList);
+
                         $scope.handleSort = function(evt) {
                             var items = $(evt.target).find('.row');
                             var relData = $scope.expose({data:'relData'})[$scope.rowId];
@@ -101,6 +102,10 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                             parentSetData(data);
                             $scope.fullList = angular.copy($scope.list);
                         }
+                            
+                        setTimeout( function() { 
+                            jquery_ui.mkSortable($scope, $element, $scope.handleSort); 
+                        }, 800);
                     },
                     '1-m'  :function($scope, $element) {
                         if (!_.isUndefined($scope.meta.selected)) // autoInit - simulate click of the first data row
@@ -115,9 +120,6 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                         $scope.setData = function(data) {
                             $scope.list  = data;
                             $scope.listW = angular.copy(data);
-                            setTimeout( function() { 
-                                jquery_ui.mkSortable($scope, $element, $scope.handleSort); 
-                            }, 800);
                         };
 
                         setTimeout( function() { // wait for other relations to load
