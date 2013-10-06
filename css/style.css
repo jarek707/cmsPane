@@ -89,6 +89,7 @@ div.topMenu div.loginWrap div.login button {
   padding-left: 0px;
   padding-right: 0px;
   margin: 0 4px;
+  font-style: none;
 }
 div.contentWrap {
   border-left: 180px solid #d3dce0;
