@@ -76,9 +76,10 @@ div.topMenu div.loginWrap div.login {
   color: #999;
 }
 div.topMenu div.loginWrap div.login input {
-  border: 1px solid #ccc;
+  border: 1px solid #888;
   width: 80px;
   margin: 0 2px;
+  background: #cde;
 }
 div.topMenu div.loginWrap div.login button {
   border: none;
@@ -87,6 +88,7 @@ div.topMenu div.loginWrap div.login button {
   cursor: pointer;
   padding-left: 0px;
   padding-right: 0px;
+  margin: 0 4px;
 }
 div.contentWrap {
   border-left: 180px solid #d3dce0;
