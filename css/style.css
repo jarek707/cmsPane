@@ -400,7 +400,8 @@ cms-pane ul.dataContent li.row div.item p {
   margin: 0;
   padding: 0;
   overflow-x: auto;
-  font-size: 0.94em;
+  font-size: 0.91em;
+  font-style: italic;
 }
 div[cms-pane] ul.dataContent li.row .buttons,
 cms-pane ul.dataContent li.row .buttons {
