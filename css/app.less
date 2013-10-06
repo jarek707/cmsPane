@@ -108,9 +108,9 @@ div.topMenu{
             margin:0;
             background:@bodyBg;
             padding:1px 5px 0px 5px;
-            border-bottom-left-radius:9px;
+            border-bottom-left-radius:7px;
             border-top-left-radius:3px;
-            color:#999;
+            color:#888;
             label {
             }
             input {
@@ -118,7 +118,8 @@ div.topMenu{
                 width:80px;
                 margin:0 2px;
                 background:#cde;
-
+                border-top-left-radius:2px;
+                border-top-right-radius:2px;
             }
             button {
                 border:none;
@@ -129,6 +130,14 @@ div.topMenu{
                 padding-right:0px;
                 margin:0 4px;
                 font-style:none;
+            }
+            button:hover {
+                color:#222
+            }
+            &:hover {
+                label {
+                    color:#222;
+                }
             }
         }
     }

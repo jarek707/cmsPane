@@ -68,15 +68,17 @@ div.topMenu div.loginWrap div.login {
   margin: 0;
   background: #ccddee;
   padding: 1px 5px 0px 5px;
-  border-bottom-left-radius: 9px;
+  border-bottom-left-radius: 7px;
   border-top-left-radius: 3px;
-  color: #999;
+  color: #888;
 }
 div.topMenu div.loginWrap div.login input {
   border: 1px solid #888;
   width: 80px;
   margin: 0 2px;
   background: #cde;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
 }
 div.topMenu div.loginWrap div.login button {
   border: none;
@@ -87,6 +89,12 @@ div.topMenu div.loginWrap div.login button {
   padding-right: 0px;
   margin: 0 4px;
   font-style: none;
+}
+div.topMenu div.loginWrap div.login button:hover {
+  color: #222222;
+}
+div.topMenu div.loginWrap div.login:hover label {
+  color: #222;
 }
 div.contentWrap {
   border-left: 180px solid #d3dce0;
