@@ -68,7 +68,7 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                         var stopWatching= $scope.$watch('list', function() {
                             setTimeout( function() {
                                 jquery_ui.mkSortable($scope, $element, $scope.handleSort); 
-                            }, 500); // let's be generous
+                            }, 800); // let's be generous
                             stopWatching(); // turns off this $scope.$watch
                         });
                     },
@@ -117,7 +117,7 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                             $scope.listW = angular.copy(data);
                             setTimeout( function() { 
                                 jquery_ui.mkSortable($scope, $element, $scope.handleSort); 
-                            }, 300);
+                            }, 800);
                         };
 
                         setTimeout( function() { // wait for other relations to load
