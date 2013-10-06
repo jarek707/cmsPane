@@ -43,10 +43,9 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                                         }
                                     }
                                     setTimeout(function() { $scope.list = list; $scope.$digest(); }, 0);
+                                } else {
+                                    relData = {};
                                 }
-
-                            } else {
-                                relData = {};
                             }
                         };
 
@@ -109,7 +108,9 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                     },
                     '1-m'  :function($scope, $element) {
                         if (!_.isUndefined($scope.meta.selected)) // autoInit - simulate click of the first data row
-                            setTimeout( function() { $scope.$broadcast('init',$scope.meta.selected); },500);
+                            setTimeout( function() { 
+                                $scope.$broadcast('init',$scope.meta.selected); 
+                            }, 1000);
                     },
                     'default' : function($scope, $element) {
                         jquery_ui.setUp($scope);
