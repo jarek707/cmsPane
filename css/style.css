@@ -423,7 +423,7 @@ div[cms-pane] ul.dataContent li.row .buttons > div,
 cms-pane ul.dataContent li.row .buttons > div {
   padding: 2px;
   background-color: #d4d4d4;
-  opacity: 0.70;
+  opacity: 0.85;
   float: right;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
@@ -531,7 +531,7 @@ div[cms-pane] ul.dataContent li.row:hover,
 cms-pane ul.dataContent li.row:hover,
 div[cms-pane] ul.dataContent li.row.selected,
 cms-pane ul.dataContent li.row.selected {
-  background: #fff;
+  background: #eee;
 }
 div[cms-pane] ul.dataContent li.row > .item,
 cms-pane ul.dataContent li.row > .item {
