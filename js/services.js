@@ -32,32 +32,36 @@ angular.module('app.services', ['app.gridConf'])
             },
             'compileChildPane' : function(parentScope, el) {
                 var data = _.clone(el.data().meta);
-                var comp = $compile(el.data().outer)(parentScope);
+                var comp = angular.element(el.data().outer);
                 comp.data().meta = data;
+                comp = $compile(comp)(parentScope);
                 el.replaceWith( comp );
             },
             'convertChild' : function( child ) {
                 var dataAttrs = {};
-                for (var i=0; i<child.attributes.length; i++) {
-                    var key = child.attributes[i].nodeName;
-                    var val = child.attributes[i].nodeValue;
+                var el = child.get()[0];
+                for (var i=0; i<el.attributes.length; i++) {
+                    var key = el.attributes[i].nodeName;
+                    var val = el.attributes[i].nodeValue;
 
                     if (key !== 'class')
+                        key.indexOf('-') > -1 && (key = UT.camelDash(key));
                         try { // Invalid JSON string will be considered a valid argument string
                             dataAttrs[key] = _(['[', '{']).contains(val.substr(0,1)) ? JSON.parse(val) : val;
                         } catch (e) { }
                 }
 
-                angular.element(child).data().outer = 
+
+                child.data().outer = 
                     '<div cms-pane row-id="{{rowId}}" parent-list="list" expose="exposing(data)"' +
                     ' key="' + dataAttrs.key + '" rel="' + dataAttrs.rel + '">' +
-                        child.innerHTML +
+                        el.innerHTML +
                     '</div>'
                 ;
-                angular.element(child).data().meta  = dataAttrs;
+                child.data().meta  = dataAttrs;
 
-                child.innerHTML = '';
-                return angular.element(child).data().outer;
+                el.innerHTML = '';
+                return;
             },
             'paramTransclude' : function(el, attrs) {
                 var meta = _.isUndefined(el.data().meta) ? {} : el.data().meta;

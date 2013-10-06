@@ -38,7 +38,14 @@ UT = {
 
         return upFirst ? $return : firstChar + $return.substr(1);
     },
-
+    camelDash: function(inStr) {
+        var a = inStr.split('-'); 
+        var $return = a[0];
+        for (var i=1; i<a.length; i++) {
+            $return += a[i].charAt(0).toUpperCase() + a[i].substr(1);
+        }
+        return $return;
+    },
     doubleCopy : function(src, dest) {
         if (_(dest).isObject()) angular.copy(src, dest);
 

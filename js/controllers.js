@@ -62,8 +62,15 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                             for (var i=0; i<items.length; i++) {
                                 relData[$(items[i]).attr('ord-id')].ord = i;
                             }
-                            saveRelData();
-                        }
+                            $scope.expose({data: 'saveRelData'})();
+                        };
+
+                        var stopWatching= $scope.$watch('list', function() {
+                            setTimeout( function() {
+                                jquery_ui.mkSortable($scope, $element, $scope.handleSort); 
+                            }, 500); // let's be generous
+                            stopWatching(); // turns off this $scope.$watch
+                        });
                     },
                     'm-p'  :function($scope, $element) {
                         $scope.saveRelData = function() {
@@ -145,7 +152,6 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                     'default' : function($scope, $element) {
                         $scope.attachAfterRow = function() {
                             var inEl = $element.parent().parent().parent().parent().find('inline').show().detach();
-                            LG( inEl, ' after ' , $element.parent());
                             $element.parent().after(inEl);
                         };
 
@@ -427,7 +433,6 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                         }
 
                         $scope.hover = function() {
-                            LGE( 'hover ' );
                         };
 
                         $scope.getElementClass = function(i) {

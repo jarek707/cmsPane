@@ -150,15 +150,15 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                 compile     : function(el, attrs, trans) {
                     if ( typeof USING_IE == 'undefined') USING_IE = false;
 
-                    if (!_.isUndefined(el.data().meta)) {
-                        el.data().meta['jqueryUi'] = el.data().meta['jquery-ui'];
-                    }
-
                     function link($scope, $element, $attrs) {
+                        if ( $attrs.key == 'salons result' ) {
+                            LG( $element.data().meta, ' DATA', $attrs.key);
+                        }
                         var parentMeta = _.clone($scope.expose({data:'meta'}));
 
                         $scope.meta = _.isUndefined(parentMeta) ? {} : parentMeta;
                         $scope.meta = _($scope.meta).extend( config.setParams(domMeta) );
+                        $scope.meta.element = $element;
 
                         linkers.set('main', $scope, $element);
 
@@ -193,9 +193,7 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                 compile  : function(el, attrs) {
                     var iterate = el.html();
                     var buttons=el.find('buttons').attr('use');
-                    LGE( 'bu ' + buttons +  '  ttons');
                     el.find('buttons').replaceWith('<div>BUTTONS</div>');
-                    LGE( 'no buttons : ' + iterate);
                     el.html('');
                     function link($scope, $element) {
                         $element.append(
@@ -216,7 +214,7 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
                 transclude  : false,
                 template    : "",
                 compile     : function(el, attrs, trans) {
-                    dom.convertChild(el.get()[0]);
+                    dom.convertChild(el);
 
                     // We need to compile child pane against parent $scope.  Parent might be rendered
                     // after the child so the child has to wait until parent $scope is available.
