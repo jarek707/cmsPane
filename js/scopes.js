@@ -60,17 +60,14 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
                             var relData = $scope.expose({data:'relData'})[$scope.rowId];
 
                             for (var i=0; i<items.length; i++) {
-                                relData[$(items[i]).attr('ord-id')].ord = i;
+                                relData[$(items[i]).attr('row-id')].ord = i;
                             }
                             $scope.expose({data: 'saveRelData'})();
                         };
 
-                        var stopWatching= $scope.$watch('list', function() {
-                            setTimeout( function() {
-                                jquery_ui.mkSortable($scope, $element, $scope.handleSort); 
-                            }, 800); // let's be generous
-                            stopWatching(); // turns off this $scope.$watch
-                        });
+                        setTimeout( function() {
+                            jquery_ui.init($element, $scope.handleSort); 
+                        }, 800); // let's be generous
                     },
                     'm-p'  :function($scope, $element) {
                         $scope.saveRelData = function() {
@@ -103,7 +100,7 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
                         }
                             
                         setTimeout( function() { 
-                            jquery_ui.mkSortable($scope, $element, $scope.handleSort); 
+                            jquery_ui.init($element, $scope.handleSort); 
                         }, 800);
                     },
                     '1-m'  :function($scope, $element) {

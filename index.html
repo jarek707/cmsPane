@@ -88,11 +88,11 @@
 
                             <inline class='inlineWrapper'>
                                 <div class='box'>
-                                    <div cms-child key="clients result" rel='m-p-out' jquery-ui='{"sortable":""}' parent-key='clients'>
+                                    <div cms-child key="clients result" rel='m-p-out' jq-sortable parent-key='clients'>
                                         <div cms-header title='Selected Clients' no-add-button></div>
                                         <div iterate><div p-img></div><buttons use='remove'></buttons></div>
                                     </div>
-                                    <div cms-child key="salons result" rel='m-p-out' jquery-ui='{"sortable":""}' parent-key='salons'>
+                                    <div cms-child key="salons result" rel='m-p-out' jq-sortable parent-key='salons'>
                                         <div cms-header title='Selected Salons' no-add-button></div>
                                         <div iterate><div p-img></div><buttons use='remove'></buttons></div>
                                     </div>
@@ -103,13 +103,13 @@
                 </div>
                 <div class='right'>
                     <div class='box'>
-                        <cms-child key="clients" rel='m-p' jquery-ui='{"sortable":""}' parent-key='stylists' cols='[["left", "Name"], ["right", "Image URL"]]'>
+                        <cms-child key="clients" rel='m-p' jq-sortable parent-key='stylists' cols='[["left", "Name"], ["right", "Image URL"]]'>
                             <div cms-header title='Available Clients' ></div>
                             <div iterate><buttons use='sav,close,edit,del,out'></buttons><div cms-item='oneLabel'></div></div>
                         </cms-child>
                     </div>
                     <div class='box'>
-                        <div cms-child key="salons" rel='m-p' jquery-ui='{"sortable":""}' parent-key='stylists' class='abc' cols='[["left", "Name"], ["right", "Image URL"]]'>
+                        <div cms-child key="salons" rel='m-p' js-sortable parent-key='stylists' class='abc' cols='[["left", "Name"], ["right", "Image URL"]]'>
                             <div cms-header title='Available Salons' ></div>
                             <div iterate><buttons use='sav,close,edit,del,out'></buttons><div cms-item='oneLabel'></div></div>
                         </div>

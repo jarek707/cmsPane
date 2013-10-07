@@ -81,21 +81,13 @@ angular.module('app.services', ['app.gridConf'])
     .factory('jquery_ui', ['$http', 'config', function($http, config) {
         return  {
             setUp : function($scope) {
-                if ( !_.isUndefined($scope.meta.jqueryUi)){
-                    var jqObj = _.isObject($scope.meta.jqueryUi) ?
-                                $scope.meta.jqueryUi             :
-                                JSON.parse($scope.meta.jqueryUi);
-
-                    $scope.sortable = _(jqObj).has('sortable')  ? 'sortable' : false;
-                }
+                $scope.sortable = _.isUndefined($scope.meta.jqSortable) ? false : 'sortable';
             },
-            mkSortable : function( $scope, $element, cb) { 
-                if ( !_.isUndefined($scope.meta.jqueryUi)){
-                    
-                    var jqObj = _.isObject($scope.meta.jqueryUi) ?
-                                $scope.meta.jqueryUi             :
-                                JSON.parse($scope.meta.jqueryUi);
 
+            init: function($element, cb) { 
+                var sortable = $element.data().meta.jqSortable;
+                if ( !_.isUndefined(sortable)){
+                    
                     var params = {
                         'tolerance' : 'pointer',
                         'helper'    : 'clone',
@@ -105,9 +97,8 @@ angular.module('app.services', ['app.gridConf'])
                         'update'    : _.isFunction(cb) ? cb : function() {}
                     };
 
-                    if (!_.isEmpty(jqObj.sortable)) {
-                        params = _.extend(params, {"connectWith" : jqObj.sortable});
-                    }
+                    _.isEmpty(sortable) ||
+                        (params = _.extend(params, {"connectWith" : $scope.meta.sortable}));
 
                     $($element).find('.sortable').sortable(params);
                 }
