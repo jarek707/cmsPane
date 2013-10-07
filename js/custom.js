@@ -1,5 +1,5 @@
 angular.module('app.customDirectives', ['app.gridConf'])
-    .directive('details', function factory($compile, lData, config) { // head scope
+    .directive('details', ['$compile', 'lData', 'config', function factory($compile, lData, config) { // head scope
         return {
             restrict    : 'A',
             replace     : true,
@@ -28,7 +28,7 @@ angular.module('app.customDirectives', ['app.gridConf'])
                 };
             }
         };
-    })
+    }])
     .directive('cmsUser', ['config', function(config) {
         return {
             restrict    : 'A',

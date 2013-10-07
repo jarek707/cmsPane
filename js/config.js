@@ -2,7 +2,7 @@
 // Service Modules START
 //
 angular.module('app.gridConf', ['app.directives'])
-    .service('config', function($http) {
+    .service('config', ['$http', function($http) {
         var selects = {};
         $http.get('data/selects').success(function(data) { selects = data; });
 
@@ -136,5 +136,6 @@ angular.module('app.gridConf', ['app.directives'])
                 return _.isUndefined(m = this.findMeta(key)) ? false : m.children; 
             }
         };
-    })
+    }])
+
 ;

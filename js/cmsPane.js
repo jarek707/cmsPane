@@ -1,4 +1,4 @@
-angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
+angular.module('app.directives', ['app.gridConf', 'app.scopes'])
     .directive('cmsItem', ['config', 'dom', function(config, dom) {
         return {
             restrict    : 'A',
@@ -345,4 +345,3 @@ angular.module('app.directives', ['app.gridConf', 'app.directiveScopes'])
 ;
 //  Directives END
 
-angular.module('app', ['app.services', 'app.directives', 'app.customDirectives']);

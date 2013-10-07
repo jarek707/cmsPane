@@ -1,0 +1,3 @@
+#!/bin/bash
+cd ..
+cat utils.js paneConfig.js config.js services.js custom.js relations.js scopes.js app.js | uglifyjs > min/all.min.js

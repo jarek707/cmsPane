@@ -1,4 +1,4 @@
-angular.module('app.directiveScopes', ['app.gridConf'])
+angular.module('app.relations', ['app.gridConf'])
     /*
      *
      *          LINKERS
@@ -111,36 +111,6 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                             setTimeout( function() { 
                                 $scope.$broadcast('init',$scope.meta.selected); 
                             }, 1000);
-                    },
-                    'default' : function($scope, $element) {
-                        jquery_ui.setUp($scope);
-
-                        $scope.lastRowScope = null;
-                        $scope.relScope     = null;
-
-                        $scope.setData = function(data) {
-                            $scope.list  = data;
-                            $scope.listW = angular.copy(data);
-                        };
-
-                        setTimeout( function() { // wait for other relations to load
-                            _.isUndefined($scope.meta.key) || lData.getData($scope.meta.key, $scope.setData);
-                        },0);
-
-                        $scope.handleSort = function() {
-                            LGW( 'Presistent sorting not implemented for this relation');
-                        }
-                        
-                        // Append child pane after the table
-                        $scope.after = function(html, rowScope) {
-                            // IE8 needs this
-                            if ($element.find('table').parent().children().length > 2) {
-                                $element.find('table').next().remove();
-                            }
-
-                            var compiled = $compile(html)(rowScope);
-                            $element.find('table').after( compiled );
-                        };
                     }
                 },
                 'row' : { // LINK
@@ -151,38 +121,6 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                     },
                     'm-p-out' : function($scope) {
                         $scope.buttonsOnOff('remove', '');
-                    },
-                    'default' : function($scope, $element) {
-                        $scope.attachAfterRow = function() {
-                            $element.parent().after(
-                                $scope.meta.element.find('inline').detach()
-                            );
-                        };
-
-                        $scope.buttons = {};
-                        $scope.buttonsOnOff = function (on, off) {
-                            _(on.split(',')).each(function(v,k)  { $scope.buttons[v] = true; });
-                            _(off.split(',')).each(function(v,k)  { $scope.buttons[v] = false; });
-                        };
-
-                        $scope.buttonsOnOff('edit,del', 'add,save,sub,close');
-                        $scope.rowClass  = '';
-
-                        var joinVals = false;
-                        if (!_.isUndefined($scope.row) ) {
-                            for (var i=0; i<$scope.meta.cols.length; i++ ) {
-                                joinVals |= $scope.row[$scope.meta.cols[i][0]] !== '';
-                            }
-                        }
-
-                        if (joinVals) {
-                            $scope.rowClass = ''; 
-                        } else {
-                            $scope.rowClass = 'editable'; 
-                        }
-
-                        // Setup a shadow data row to keep local changes for comparisons and saving
-                        $scope.workRow = angular.copy($scope.row);
                     }
                 } 
 
@@ -198,7 +136,6 @@ angular.module('app.directiveScopes', ['app.gridConf'])
         function($http, config, $compile, lData) {
             'use strict';
             return {
-                'defaultScope' : null,
                 'set' : function(type, $scope, $element) {
                     this[type]['default']($scope);
                     this.defaultScope = _.clone($scope);
@@ -422,85 +359,6 @@ angular.module('app.directiveScopes', ['app.gridConf'])
                                 '</div>'
                             );
                         }
-                    },
-                    'default' : function($scope) {
-                        function isDirty() { 
-                            return ($scope.buttons.save = $scope.dirty = !_($scope.row).isEqual($scope.workRow));
-                        }
-
-                        function rowDataLabel() { 
-                            return UT.join(_($scope.workRow).filter( function(v,k) {
-                                if (!_.isUndefined($scope.meta.tab[k])) {
-                                    return $scope.meta.tab[k].type === 'T' ? v : false;
-                                }
-                            }));
-                        }
-
-                        $scope.hover = function() {
-                        };
-
-                        $scope.getElementClass = function(i) {
-                            return $scope.meta.tab[i].type === 'T' ? '' : 'notext';
-                        };
-
-                        $scope.chg = function() {
-                            $scope.rowClass = 'editable' + (isDirty() ? ' dirty' : '');   
-
-                        };
-
-                        $scope.sel = function() {
-                            $scope.rowClass = 'selected' + (isDirty() ? ' dirty' : '');   
-                        };
-
-                        $scope.blr = function() { 
-                            if ( $scope.rowClass ) {
-                                $scope.rowClass = $scope.rowClass.replace('editable','')
-                                                                 .replace('selected','');
-                            } else {
-                                $scope.rowClass = '';
-                            }
-
-                            $scope.buttonsOnOff('edit','save,close');
-                        };
-                        
-                        $scope.editRow = function() { // Usually on ng-Dblclick
-                           $scope.closeLastRow($scope);
-                           $scope.chg();
-                        };
-
-                        $scope.defaultClk = function(idx) {
-                        };
-
-                        $scope.clk = function(idx, noAttach) {
-                            if ($scope.closeLastRow($scope)) {
-                                $scope.sel();
-                            }
-                        };
-
-                        $scope.save = function() {
-                            $scope.$parent.save($scope.workRow, $scope.id);
-                            $scope.rowClass = '';
-                            $scope.buttonsOnOff('edit','close,save');
-                        };
-
-                        $scope.del = function() {
-                            $scope.$parent.del($scope.id);
-                        };
-
-                        $scope.subPane = function() {
-                            $scope.$parent.subPane($scope, rowDataLabel());
-                        };
-
-                        $scope.edit = function() {
-                            $scope.chg();
-                            $scope.closeLastRow($scope);
-                            $scope.buttonsOnOff('close','edit');
-                        };
-
-                        $scope.close = function() {
-                            $scope.workRow = _.clone($scope.row);
-                            $scope.blr();
-                        };
                     }
                 }
             };

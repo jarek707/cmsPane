@@ -1,5 +1,5 @@
 angular.module('app.services', ['app.gridConf'])
-    .factory('dom', function($compile, $http) {
+    .factory('dom', ['$compile', '$http', function($compile, $http) {
         return {
             'setupButtons' : function(el, attrs) {
                 if ( !_.isUndefined(attrs.use)) {
@@ -77,8 +77,8 @@ angular.module('app.services', ['app.gridConf'])
                 el.append($compile($scope.meta.children)($scope));
             }
         }
-    })
-    .factory('jquery_ui', function($http, config) {
+    }])
+    .factory('jquery_ui', ['$http', 'config', function($http, config) {
         return  {
             setUp : function($scope) {
                 if ( !_.isUndefined($scope.meta.jqueryUi)){
@@ -113,8 +113,8 @@ angular.module('app.services', ['app.gridConf'])
                 }
             }
         }
-    })
-    .factory('lData', function($http, config) {
+    }])
+    .factory('lData', ['$http', 'config', function($http, config) {
         return  {
             prefix: 'GRID:',
             useLocal : document.location.host === 'cms',
@@ -172,5 +172,5 @@ angular.module('app.services', ['app.gridConf'])
                 }
             }
         };
-    })
+    }])
 ;

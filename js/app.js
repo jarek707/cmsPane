@@ -22,7 +22,7 @@ function LGT()    {
     setTimeout(function() {if (window.console) console.log(args);}, args.pop()); 
 }
 
-function contentPane($scope, $routeParams, $http, lData, config) {
+function contentPane($scope, lData) {
     $scope.saved = false;
 
     $scope.clearLocalStorage = function() {
@@ -51,9 +51,12 @@ function contentPane($scope, $routeParams, $http, lData, config) {
             });
         });
     }
-    //if ( _.isUndefined(localStorage['GRID:METADATA']) ) 
-        //localStorage['GRID:METADATA'] = JSON.stringify(config.meta);
 }
+
+var myApp = angular.module('app', ['app.services', 'app.directives', 'app.customDirectives']);
+
+contentPane.$inject = ['$scope','lData'];
+myApp.controller('contentPane', contentPane);
 
 function leftPane() {}
 
