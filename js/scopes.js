@@ -55,14 +55,21 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
                         $scope.$on('relDataChanged', $scope.updateList);
                         $scope.$watch('rowId',       $scope.updateList);
 
-                        $scope.handleSort = function() {
-                            var evt = arguments[0];
-                            var items = $(evt.target).find('.row');
+                        $scope.handleSort = function(evt, obj) {
                             var relData = $scope.expose({data:'relData'})[$scope.rowId];
 
+                            if (_.isUndefined(relData[$(obj.item).attr('row-id')])) {
+                                relData[$(obj.item).attr('row-id')] = {}; // JQ
+                            } else {
+                                delete relData[$(obj.item).attr('row-id')]; // JQ
+                            }
+
+                            var items = $(evt.target).find('.row'); // JQ
                             for (var i=0; i<items.length; i++) {
                                 relData[$(items[i]).attr('row-id')].ord = i;
                             }
+
+                            $scope.updateList();
                             $scope.expose({data: 'saveRelData'})();
                         };
 
@@ -71,6 +78,9 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
                         }, 1800); // let's be generous
                     },
                     'm-p'  :function($scope, $element) {
+                        $scope.handleSort = function(evt, obj) {
+                        }
+
                         $scope.saveRelData = function() {
                             _.isEmpty($scope.relData[$scope.rowId]) && ($scope.relData[$scope.rowId] = {});
 
