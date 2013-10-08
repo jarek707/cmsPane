@@ -80,28 +80,25 @@ angular.module('app.services', ['app.gridConf'])
     }])
     .factory('jquery_ui', ['$http', 'config', function($http, config) {
         return  {
-            setUp : function($scope) {
-                $scope.sortable = _.isUndefined($scope.meta.jqSortable) ? false : 'sortable';
-            },
+            'init' : function(el, cbs) { 
+                var meta = el.data().meta;
 
-            init: function($element, cb) { 
-                var sortable = $element.data().meta.jqSortable;
-                if ( !_.isUndefined(sortable)){
-                    
-                    var params = {
-                        'tolerance' : 'pointer',
-                        'helper'    : 'clone',
-                        'cursor'    : 'move',
-                        'distance'  : 1,
-                        'cursorAt'  : {left: 5},
-                        'update'    : _.isFunction(cb) ? cb : function() {}
-                    };
+                _.isUndefined(meta.jqSortable) || this.sortable(el, cbs.sortable, meta.jqSortable);
+            }, 
+            'sortable' : function(el, cb, sortable) {
+                var params = {
+                    'tolerance' : 'pointer',
+                    'helper'    : 'clone',
+                    'cursor'    : 'move',
+                    'distance'  : 1,
+                    'cursorAt'  : {left: 5},
+                    'update'    : _.isFunction(cb) ? cb : function() {}
+                };
 
-                    _.isEmpty(sortable) ||
-                        (params = _.extend(params, {"connectWith" : $scope.meta.sortable}));
+                _.isEmpty(sortable) ||
+                    (params = _.extend(params, {"connectWith" : '[key="' + sortable + '"] .dataContent'}));
 
-                    $($element).find('.sortable').sortable(params);
-                }
+                $(el).find('.sortable').sortable(params);
             }
         }
     }])

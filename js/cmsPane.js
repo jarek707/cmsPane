@@ -139,6 +139,25 @@ angular.module('app.directives', ['app.gridConf', 'app.scopes'])
             };
         }
     ])
+    .directive('iterate', ['config', 'dom', '$compile',
+        function (config, dom, $compile) {
+            return {
+                replace : true,
+                restrict : 'A',
+                template : '',
+                compile  : function(el, attrs) {
+                    var iterate = el.html();
+                    el.html('');
+                    function link($scope, $element) {
+                        $element.append(
+                            $compile($scope.templates.cmsPane.replace('<inject-iterator />', iterate)
+                        )($scope));
+                    };
+                    return link;
+                }
+            }
+        }
+    ])
     .directive('cmsPane', ['config', 'controllers','linkers','dom',
         function (config, controllers, linkers, dom) {
             return {
@@ -179,27 +198,6 @@ angular.module('app.directives', ['app.gridConf', 'app.scopes'])
                     controllers.set('main', $scope);
                 }
             };
-        }
-    ])
-    .directive('iterate', ['config', 'dom', '$compile',
-        function (config, dom, $compile) {
-            return {
-                replace : true,
-                restrict : 'A',
-                template : '',
-                compile  : function(el, attrs) {
-                    var iterate = el.html();
-                    var buttons=el.find('buttons').attr('use');
-                    el.find('buttons').replaceWith('<div>BUTTONS</div>');
-                    el.html('');
-                    function link($scope, $element) {
-                        $element.append(
-                            $compile($scope.templates.cmsPane.replace('<inject-iterator />', iterate)
-                        )($scope));
-                    };
-                    return link;
-                }
-            }
         }
     ])
     .directive('cmsChild', ['config', 'dom', '$compile',

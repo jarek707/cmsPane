@@ -55,7 +55,8 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
                         $scope.$on('relDataChanged', $scope.updateList);
                         $scope.$watch('rowId',       $scope.updateList);
 
-                        $scope.handleSort = function(evt) {
+                        $scope.handleSort = function() {
+                            var evt = arguments[0];
                             var items = $(evt.target).find('.row');
                             var relData = $scope.expose({data:'relData'})[$scope.rowId];
 
@@ -66,8 +67,8 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
                         };
 
                         setTimeout( function() {
-                            jquery_ui.init($element, $scope.handleSort); 
-                        }, 800); // let's be generous
+                            jquery_ui.init($element, {"sortable" : $scope.handleSort}); 
+                        }, 1800); // let's be generous
                     },
                     'm-p'  :function($scope, $element) {
                         $scope.saveRelData = function() {
@@ -100,8 +101,8 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
                         }
                             
                         setTimeout( function() { 
-                            jquery_ui.init($element, $scope.handleSort); 
-                        }, 800);
+                            jquery_ui.init($element, {"sortable" : $scope.handleSort}); 
+                        }, 1800);
                     },
                     '1-m'  :function($scope, $element) {
                         if (!_.isUndefined($scope.meta.selected)) // autoInit - simulate click of the first data row
@@ -110,7 +111,7 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
                             }, 1000);
                     },
                     'default' : function($scope, $element) {
-                        jquery_ui.setUp($scope);
+                        $scope.sortable = _.isUndefined($scope.meta.jqSortable) ? false : 'sortable';
 
                         $scope.lastRowScope = null;
                         $scope.relScope     = null;

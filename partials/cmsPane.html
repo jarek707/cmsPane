@@ -1,4 +1,4 @@
-<ul class="dataContent" ng-class='sortable' ng-hide='hideContent'>
+<ul class="dataContent {{meta.key}}" ng-class='sortable' ng-hide='hideContent'>
      <li ng-repeat="(id,row) in list|trimList:listFilter" ng-class='rowClass' class='row' row-id="{{row.id}}" 
         ng-dblclick="dblClk();" ng-click="clk();" ng-mouseover="hover();"
      >
