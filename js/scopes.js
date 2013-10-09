@@ -121,6 +121,7 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
                             }, 1000);
                     },
                     'default' : function($scope, $element) {
+                        $scope.ord = 'left';
                         $scope.sortable = _.isUndefined($scope.meta.jqSortable) ? false : 'sortable';
 
                         $scope.lastRowScope = null;
@@ -129,6 +130,7 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
                         $scope.setData = function(data) {
                             $scope.list  = data;
                             $scope.listW = angular.copy(data);
+                            LG( ($scope.list) );
                         };
 
                         setTimeout( function() { // wait for other relations to load
