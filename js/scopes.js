@@ -49,7 +49,7 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
                             }
                         };
 
-                        $scope.setData = function() {
+                        $scope.loadData = function() {
                         };
 
                         $scope.$on('relDataChanged', $scope.updateList);
@@ -57,6 +57,9 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
 
                         $scope.handleSort = function(evt, obj) {
                             var relData = $scope.expose({data:'relData'})[$scope.rowId];
+
+                            if( _.isUndefined(relData) ) 
+                                relData = $scope.expose({data:'relData'})[$scope.rowId] = {};
 
                             if (_.isUndefined(relData[$(obj.item).attr('row-id')])) {
                                 relData[$(obj.item).attr('row-id')] = {}; // JQ
@@ -104,8 +107,8 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
                         });
 
 
-                        var parentSetData = $scope.setData;
-                        $scope.setData = function(data) {
+                        var parentSetData = $scope.loadData;
+                        $scope.loadData = function(data) {
                             parentSetData(data);
                             $scope.fullList = angular.copy($scope.list);
                         }
@@ -127,14 +130,11 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
                         $scope.lastRowScope = null;
                         $scope.relScope     = null;
 
-                        $scope.setData = function(data) {
-                            $scope.list  = data;
-                            $scope.listW = angular.copy(data);
-                            LG( ($scope.list) );
-                        };
+                        $scope.loadData = function(data) { $scope.listW = angular.copy(data); $scope.setData() };
+                        $scope.setData  = function()     { $scope.list = angular.copy($scope.listW); };
 
                         setTimeout( function() { // wait for other relations to load
-                            _.isUndefined($scope.meta.key) || lData.getData($scope.meta.key, $scope.setData);
+                            _.isUndefined($scope.meta.key) || lData.getData($scope.meta.key, $scope.loadData);
                         },0);
 
                         $scope.handleSort = function() {
@@ -217,6 +217,8 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
                 },
                 'head' : {
                     'default' : function($scope) {
+                        $scope.loadButton = false;
+
                         $scope.showContent = function() {
                             $scope.hideContent = $scope.hideContent ? false : 'hidden';
                         };

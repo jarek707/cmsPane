@@ -24,7 +24,6 @@ function LGT()    {
 
 function contentPane($scope, lData) {
     $scope.saved = false;
-
     $scope.clearLocalStorage = function() {
         lData.clear();
         document.location = document.location;
@@ -50,6 +49,17 @@ function contentPane($scope, lData) {
                 document.location = document.location;
             });
         });
+    }
+
+    $scope.$root.logIn = function() {
+        $('#entryInfo').hide();
+        $scope.$root.logged = true;
+        _.isUndefined($scope.$root.userName) && ($scope.$root.userName = 'Guest');
+    }
+
+    $scope.$root.logOut = function() {
+        $scope.$root.logged = false;
+        $('#entryInfo').show();
     }
 }
 

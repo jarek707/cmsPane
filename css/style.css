@@ -96,6 +96,10 @@ div.topMenu div.loginWrap div.login button:hover {
 div.topMenu div.loginWrap div.login:hover label {
   color: #222;
 }
+div.topMenu div.loginWrap div.login div.logged span {
+  font-size: 1.3em;
+  padding: 0 3px;
+}
 div.contentWrap {
   border-left: 180px solid #d3dce0;
   border-right: 182px solid #d3dce0;
@@ -186,6 +190,10 @@ cms-pane .restoreTable {
 div[cms-pane] .peekTable,
 cms-pane .peekTable {
   background: transparent url('../image/glyph.png') -266px -26px no-repeat;
+}
+div[cms-pane] .loadData,
+cms-pane .loadData {
+  background: transparent url('../image/glyph.png') -266px -2px no-repeat;
 }
 div[cms-pane] .headButtons input,
 cms-pane .headButtons input {
