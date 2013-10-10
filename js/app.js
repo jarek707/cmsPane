@@ -57,7 +57,5 @@ var myApp = angular.module('app', ['app.services', 'app.directives', 'app.custom
 contentPane.$inject = ['$scope','lData'];
 myApp.controller('contentPane', contentPane);
 
-function leftPane() {}
-
-function rightPane($scope) {
-}
+function leftPane()         {}
+function rightPane($scope)  {}

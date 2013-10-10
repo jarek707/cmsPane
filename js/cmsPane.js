@@ -16,6 +16,7 @@ angular.module('app.directives', ['app.gridConf', 'app.scopes'])
                 };
 
                 $scope.logIn = function() {
+                    $scope.userName = _.isUndefined($scope.userName) ? 'Guest' : $scope.userName;
                     $scope.logged = true;
                 };
 
@@ -29,11 +30,12 @@ angular.module('app.directives', ['app.gridConf', 'app.scopes'])
                     $scope.pwNotify = true;
                     var match = $scope.password == $scope.confirmPassword;
                     $scope.pwMatch = match ? '' : 'not';
-                    $element.find('notify')[(match ? 'add' : 'remove') + 'Class']('matched');
+                    $element.find('notify').toggleClass('matched');
+                    LG( $element );
                 };
 
                 $scope.submitSignUp = function() {
-                    LG( ' submit sign up');
+                    $scope.logIn();
                 };
 
                 $scope.logOut();

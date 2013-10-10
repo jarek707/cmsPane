@@ -108,6 +108,9 @@ div.topMenu div.menuInfo > div {
   margin: 0 auto;
   padding: 12px;
 }
+div.topMenu div.menuInfo > div ul {
+  margin-right: 22px;
+}
 div.topMenu div.menuInfo > div ul li {
   width: 100%;
 }
@@ -116,12 +119,13 @@ div.topMenu div.menuInfo > div ul li label {
   float: left;
   min-width: 140px;
 }
-div.topMenu div.menuInfo > div ul li.notify {
+div.topMenu div.menuInfo > div ul notify {
   font-style: italic;
-  font-size: 0.9em;
-  text-align: right;
+  font-size: 0.80em;
+  float: right;
+  color: red;
 }
-div.topMenu div.menuInfo > div ul li.notify.matched {
+div.topMenu div.menuInfo > div ul notify.matched {
   color: green;
 }
 div.contentWrap {
