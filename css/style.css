@@ -690,6 +690,7 @@ detail {
 detail img {
   width: 96%;
   margin: 2%;
+  border-radius: 6px;
 }
 detail div.box {
   width: 99%;
