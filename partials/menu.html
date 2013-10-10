@@ -16,7 +16,7 @@
         </div>
     </div>
     <div class='menuInfo' ng-hide='logged'>
-        <div class='box splash' ng-show='showSplash'>
+        <div class='box splash' ng-hide='showSignup'>
             Just click <span>Log In</span> in the upper right.
         </div>
         <div class='box signUp' ng-show='showSignup'>
@@ -31,7 +31,7 @@
                     <label>Confirm Password:</label><input type='password' ng-model='confirmPassword' ng-change='passVerify()'></input>
                 </li>
                 <li>
-                    <notify class='matched' ng-show='pwNotify'>Passwords do {{pwMatch}} match.</li></notify>
+                    <notify class='matched' ng-show='pwNotify'>Passwords {{pwMatch}} match.</li></notify>
                 </li>
                 <li><button ng-click='submitSignUp()'>Sign Up</button></li>
             </ul>

@@ -6,12 +6,9 @@ angular.module('app.directives', ['app.gridConf', 'app.scopes'])
             transclude  : true,
             templateUrl : 'partials/menu.html',
             link        : function($scope, $element, $attrs) { 
-                $scope.showSplash = true;
-
                 $scope.signUp = function() {
                     $scope.pwNotify = false;
                     $scope.showSignup = true;
-                    $scope.showSplash = false;
                     $element.find('input').val('');
                 };
 
@@ -23,15 +20,13 @@ angular.module('app.directives', ['app.gridConf', 'app.scopes'])
                 $scope.logOut = function() {
                     $scope.logged = false;
                     $scope.showSignup = false;
-                    $scope.showSplash = true;
                 };
 
                 $scope.passVerify = function() {
                     $scope.pwNotify = true;
                     var match = $scope.password == $scope.confirmPassword;
-                    $scope.pwMatch = match ? '' : 'not';
+                    $scope.pwMatch = match ? '' : 'do not';
                     $element.find('notify').toggleClass('matched');
-                    LG( $element );
                 };
 
                 $scope.submitSignUp = function() {
