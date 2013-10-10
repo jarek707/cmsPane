@@ -1,4 +1,45 @@
 angular.module('app.directives', ['app.gridConf', 'app.scopes'])
+    .directive('menu', ['config', 'dom', function(config, dom) {
+        return {
+            restrict    : 'A',
+            replace     : false,
+            transclude  : true,
+            templateUrl : 'partials/menu.html',
+            link        : function($scope, $element, $attrs) { 
+                $scope.showSplash = true;
+
+                $scope.signUp = function() {
+                    $scope.pwNotify = false;
+                    $scope.showSignup = true;
+                    $scope.showSplash = false;
+                    $element.find('input').val('');
+                };
+
+                $scope.logIn = function() {
+                    $scope.logged = true;
+                };
+
+                $scope.logOut = function() {
+                    $scope.logged = false;
+                    $scope.showSignup = false;
+                    $scope.showSplash = true;
+                };
+
+                $scope.passVerify = function() {
+                    $scope.pwNotify = true;
+                    var match = $scope.password == $scope.confirmPassword;
+                    $scope.pwMatch = match ? '' : 'not';
+                    $element.find('notify')[(match ? 'add' : 'remove') + 'Class']('matched');
+                };
+
+                $scope.submitSignUp = function() {
+                    LG( ' submit sign up');
+                };
+
+                $scope.logOut();
+            }
+        };
+    }])
     .directive('cmsItem', ['config', 'dom', function(config, dom) {
         return {
             restrict    : 'A',

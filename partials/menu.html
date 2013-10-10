@@ -1,0 +1,40 @@
+    <div class='bar'>
+        <h1>just come by ...</h1>
+        <div class='loginWrap'>
+            <div class='login'>
+                <div ng-hide='logged'>
+                    <label for='username'>User Name:</label><input ng-model='userName' type='text'></input>
+                    <label for='password'>Password:</label><input type='password'></input>
+                    <button ng-click='signUp()'>Sign Up</button>
+                    <button ng-click='logIn()'>Log in</button>
+                </div>
+                <div ng-show='logged'>
+                    <span>Welcome</span> <span>{{userName}}</span>
+                    <button ng-click='logOut()'>Log Out</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class='menuInfo' ng-hide='logged'>
+        <div class='box splash' ng-show='showSplash'>
+            Just click <span>Log In</span> in the upper right.
+        </div>
+        <div class='box signUp' ng-show='showSignup'>
+            <ul>
+                <li>
+                    <label>User Name:</label><input type='text' ng-model='userName'></input>
+                </li>
+                <li>
+                    <label>Password:</label><input type='password' ng-model='password' ng-change='passVerify()'></input>
+                </li>
+                <li>
+                    <label>Confirm Password:</label><input type='password' ng-model='confirmPassword' ng-change='passVerify()'></input>
+                </li>
+                <li class='notify' ng-show='pwNotify'>Passwords do {{pwMatch}} match.</li>
+                <li>
+                    <button ng-click='submitSignUp()'>Sign Up</button>
+                </li>
+            </ul>
+        </div>
+        <br />
+    </div>

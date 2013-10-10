@@ -81,67 +81,93 @@ div.topMenu{
     margin: 0;
     padding:0;
     width: 100%;
-    height: @menuHeight;
-    color:  @menuColor;
-    background: @menuBg;
-    overflow:hidden;
-    color:#ddd;
-    border-bottom-left-radius:9px;
-    border-bottom-right-radius:9px;
-    background-color:#abc;
-    h1 {
-        font-style:italic;
-        margin:2px 0 0 22px;
-        float:left;
-        font-family:georgia;
-        font-size:1.9em;
-    }
-    div.loginWrap {
-        position:absolute;
-        width:100%;
-        div.login {
-            white-space:nowrap;
-            position:relative;
-            float:right;
-            font-size:0.7em;
+    div.bar {
+        color:  @menuColor;
+        overflow:hidden;
+        color:#ddd;
+        border-bottom-left-radius:9px;
+        border-bottom-right-radius:9px;
+        background-color:#abc;
+        height: @menuHeight;
+        h1 {
             font-style:italic;
-            margin:0;
-            background:@bodyBg;
-            padding:1px 5px 0px 5px;
-            border-bottom-left-radius:7px;
-            border-top-left-radius:3px;
-            color:#888;
-            label {
-            }
-            input {
-                border:1px solid #888;
-                width:80px;
-                margin:0 2px;
-                background:#cde;
-                border-top-left-radius:2px;
-                border-top-right-radius:2px;
-            }
-            button {
-                border:none;
+            margin:2px 0 0 22px;
+            float:left;
+            font-family:georgia;
+            font-size:1.9em;
+        }
+        div.loginWrap {
+            position:absolute;
+            width:100%;
+            div.login {
+                white-space:nowrap;
+                position:relative;
+                float:right;
+                font-size:0.7em;
+                font-style:italic;
+                margin:0;
+                background:@bodyBg;
+                padding:1px 5px 0px 5px;
+                border-bottom-left-radius:7px;
+                border-top-left-radius:3px;
                 color:#888;
-                background:transparent;
-                cursor:pointer;
-                padding-left:0px;
-                padding-right:0px;
-                margin:0 4px;
-                font-style:none;
-            }
-            button:hover {
-                color:#222
-            }
-            &:hover {
                 label {
-                    color:#222;
+                }
+                input {
+                    border:1px solid #888;
+                    width:80px;
+                    margin:0 2px;
+                    background:#cde;
+                    border-top-left-radius:2px;
+                    border-top-right-radius:2px;
+                }
+                button {
+                    border:none;
+                    color:#888;
+                    background:transparent;
+                    cursor:pointer;
+                    padding-left:0px;
+                    padding-right:0px;
+                    margin:0 4px;
+                    font-style:none;
+                }
+                button:hover {
+                    color:#222
+                }
+                &:hover {
+                    label {
+                        color:#222;
+                    }
+                }
+                div.logged span{
+                    font-size:1.3em;
+                    padding:0 3px;
                 }
             }
-            div.logged span{
-                font-size:1.3em;
-                padding:0 3px;
+        }
+    }
+    div.menuInfo {
+        margin:60px 0 0 100px;
+        &>div {
+            margin:0 auto;
+            padding:12px;
+            ul {
+                li {
+                    width:100%;
+                    label {
+                        position:relative;
+                        float:left;
+                        min-width:140px;
+                    }
+                }
+                li.notify {
+                    font-style:italic;
+                    font-size:0.9em;
+                    text-align:right;
+                }
+                li.notify.matched {
+                    color: green;
+                }
             }
         }
     }

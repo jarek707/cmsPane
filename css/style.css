@@ -39,27 +39,28 @@ div.topMenu {
   margin: 0;
   padding: 0;
   width: 100%;
-  height: 40px;
+}
+div.topMenu div.bar {
   color: #eeeeee;
-  background: #ffffff;
   overflow: hidden;
   color: #ddd;
   border-bottom-left-radius: 9px;
   border-bottom-right-radius: 9px;
   background-color: #abc;
+  height: 40px;
 }
-div.topMenu h1 {
+div.topMenu div.bar h1 {
   font-style: italic;
   margin: 2px 0 0 22px;
   float: left;
   font-family: georgia;
   font-size: 1.9em;
 }
-div.topMenu div.loginWrap {
+div.topMenu div.bar div.loginWrap {
   position: absolute;
   width: 100%;
 }
-div.topMenu div.loginWrap div.login {
+div.topMenu div.bar div.loginWrap div.login {
   white-space: nowrap;
   position: relative;
   float: right;
@@ -72,7 +73,7 @@ div.topMenu div.loginWrap div.login {
   border-top-left-radius: 3px;
   color: #888;
 }
-div.topMenu div.loginWrap div.login input {
+div.topMenu div.bar div.loginWrap div.login input {
   border: 1px solid #888;
   width: 80px;
   margin: 0 2px;
@@ -80,7 +81,7 @@ div.topMenu div.loginWrap div.login input {
   border-top-left-radius: 2px;
   border-top-right-radius: 2px;
 }
-div.topMenu div.loginWrap div.login button {
+div.topMenu div.bar div.loginWrap div.login button {
   border: none;
   color: #888;
   background: transparent;
@@ -90,15 +91,38 @@ div.topMenu div.loginWrap div.login button {
   margin: 0 4px;
   font-style: none;
 }
-div.topMenu div.loginWrap div.login button:hover {
+div.topMenu div.bar div.loginWrap div.login button:hover {
   color: #222222;
 }
-div.topMenu div.loginWrap div.login:hover label {
+div.topMenu div.bar div.loginWrap div.login:hover label {
   color: #222;
 }
-div.topMenu div.loginWrap div.login div.logged span {
+div.topMenu div.bar div.loginWrap div.login div.logged span {
   font-size: 1.3em;
   padding: 0 3px;
+}
+div.topMenu div.menuInfo {
+  margin: 60px 0 0 100px;
+}
+div.topMenu div.menuInfo > div {
+  margin: 0 auto;
+  padding: 12px;
+}
+div.topMenu div.menuInfo > div ul li {
+  width: 100%;
+}
+div.topMenu div.menuInfo > div ul li label {
+  position: relative;
+  float: left;
+  min-width: 140px;
+}
+div.topMenu div.menuInfo > div ul li.notify {
+  font-style: italic;
+  font-size: 0.9em;
+  text-align: right;
+}
+div.topMenu div.menuInfo > div ul li.notify.matched {
+  color: green;
 }
 div.contentWrap {
   border-left: 180px solid #d3dce0;

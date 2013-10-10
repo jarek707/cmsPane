@@ -53,25 +53,9 @@
 
     <body>
         <div id='page'>
-            <div class='topMenu'>
-                <h1>just come by ...</h1>
-                <div class='loginWrap'>
-                    <div class='login'>
-                        <div class='notLogged' ng-hide='logged'>
-                            <label for='username'>User Name:</label><input ng-model='userName' type='text'></input>
-                            <label for='password'>Password:</label><input type='password'></input>
-                            <button ng-click=''>Sign Up</button>
-                            <button ng-click='logIn()'>Log in</button>
-                        </div>
-                        <div class='logged' ng-show='logged'>
-                            <span>Welcome</span> <span>{{userName}}</span>
-                            <button ng-click='logOut()'>Log Out</button>
-                        </div>
-                    </div>
-                </div>
+            <div class='topMenu' menu>
             </div>
-            <div id='entryInfo' style='margin-top:60px;  margin-left:100px; float:left;position:relative; width:100%;'> Just click <span style='font-style:italic; font-size:1.2em;'>Log In</span> in the upper right.</div>
-            <div class='contentWrap' ng-show='logged' a='{{$id}}'>
+            <div class='contentWrap' ng-show='logged'>
                 <div class='contentPane' ng-controller="contentPane">
                     <div class='box' style='width:99%; display:none;'>
                         <div style='padding:3px; float:left; font-size:0.9em;'>Local Storage:</div>

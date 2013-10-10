@@ -50,21 +50,6 @@ function contentPane($scope, lData) {
             });
         });
     }
-
-    $scope.$root.logIn = function() {
-        $('#entryInfo').hide();
-        $scope.$root.logged = true;
-        _.isUndefined($scope.$root.userName) && ($scope.$root.userName = 'Guest');
-    }
-
-    $scope.$root.logOut = function() {
-        $scope.$root.logged = false;
-        $scope.$root.userName = '';
-        $('#entryInfo').show();
-        _.defer( function() { $('.loginWrap .login .notLogged input[type="text"]').focus(); });
-    }
-
-    $scope.$root.logOut();
 }
 
 var myApp = angular.module('app', ['app.services', 'app.directives', 'app.customDirectives']);
