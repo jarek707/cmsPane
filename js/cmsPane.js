@@ -177,6 +177,19 @@ angular.module('app.directives', ['app.gridConf', 'app.scopes'])
             };
         }
     ])
+    .directive('detail', ['config', 'dom', function(config, dom) {
+        return {
+            restrict    : 'E',
+            replace     : false,
+            transclude  : true,
+            templateUrl : 'partials/detail.html',
+            compile     : function(el, attrs) {
+                return function($scope, $element, $attrs) { 
+                    $element.data(_.extend($element.data(), {'$scope' : $scope}));
+                }
+            }
+        };
+    }])
     .directive('iterate', ['config', 'dom', '$compile',
         function (config, dom, $compile) {
             return {

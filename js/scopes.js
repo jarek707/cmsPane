@@ -409,14 +409,10 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
                             $scope.$parent.$broadcast('relDataChanged'); // update rel pane
                         };
                         $scope.clk = function() {
-                            angular.element('detail').html('').show();;
-                            angular.element('detail').append(
-                                '<div class="box">' +
-                                '<input type="button" onclick="$(this).parent().html(\'\').hide();" style="position:relative; margin:12px 12px 0 12px; float:right;" value="close"></input>' +
-                                '<div style="margin:12px 12px 0 12px;">' + $scope.workRow.left + '</div>' +
-                                '<img src="' + $scope.workRow.right + '"></img>' +
-                                '</div>'
-                            );
+                            var detailScope = angular.element('detail').show().data().$scope;
+
+                            detailScope.url     = $scope.workRow.right;
+                            detailScope.caption = $scope.workRow.left;
                         };
                     },
                     'm-p-out' : function($scope, $element) {
@@ -425,14 +421,10 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
                             $scope.updateList();
                         };
                         $scope.clk = function() {
-                            angular.element('detail').html('').show();
-                            angular.element('detail').append(
-                                '<div class="box">' +
-                                '<input type="button" onclick="$(this).parent().html(\'\').hide();" style="position:relative; margin:12px 12px 0 12px; float:right;" value="close"></input>' +
-                                '<div style="margin:12px 12px 0 12px;">' + $scope.workRow.left + '</div>' +
-                                '<img src="' + $scope.workRow.right + '"></img>' +
-                                '</div>'
-                            );
+                            var detailScope = angular.element('detail').show().data().$scope;
+
+                            detailScope.url     = $scope.workRow.right;
+                            detailScope.caption = $scope.workRow.left;
                         }
                     },
                     'default' : function($scope) {
