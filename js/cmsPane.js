@@ -33,7 +33,8 @@ angular.module('app.directives', ['app.gridConf', 'app.scopes'])
                     $scope.logIn();
                 };
 
-                $scope.logOut();
+                //$scope.logOut();
+                $scope.logIn();
             }
         };
     }])
