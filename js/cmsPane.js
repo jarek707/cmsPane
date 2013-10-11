@@ -183,9 +183,19 @@ angular.module('app.directives', ['app.gridConf', 'app.scopes'])
             replace     : false,
             transclude  : true,
             templateUrl : 'partials/detail.html',
+            scope       : {},
             compile     : function(el, attrs) {
                 return function($scope, $element, $attrs) { 
                     $element.data(_.extend($element.data(), {'$scope' : $scope}));
+
+                    $scope.close = function() {
+                        $element.hide();
+                    };
+
+                    $scope.show = function(args) {
+                        $element.show();
+                        _.each(args, function(v,k) { $scope[k] = v; });
+                    };
                 }
             }
         };

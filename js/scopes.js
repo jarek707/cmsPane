@@ -423,8 +423,10 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
                         $scope.clk = function() {
                             var detailScope = angular.element('detail').show().data().$scope;
 
-                            detailScope.url     = $scope.workRow.right;
-                            detailScope.caption = $scope.workRow.left;
+                            detailScope.show({
+                                'url' : $scope.workRow.right,
+                                'caption' : $scope.workRow.left
+                            });
                         }
                     },
                     'default' : function($scope) {

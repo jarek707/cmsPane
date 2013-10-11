@@ -221,6 +221,9 @@ div.gridBox {
         }
     }
 }
+
+.removeButton   { .glyphBg(-312px,    0px); }
+
 div[cms-pane],
 cms-pane {
     margin:0;
@@ -231,7 +234,6 @@ cms-pane {
     .addButton      { .glyphBg(-408px, -98px);  }
     .outButton      { .glyphBg(-120px, -72px);  }
     .closeButton    { .glyphBg(-218px, -96px);  }
-    .removeButton   { .glyphBg(-312px,    0px); }
     .restoreTable   { .glyphBg(-266px,  -24px); }
     //.peekTable      { .glyphBgWhite(-266px,  -24px); }
     .peekTable      { .glyphBg(-266px,  -26px); }
@@ -607,11 +609,19 @@ detail {
         margin:2%;
         border-radius:6px;
     }
-    div.box {
-        width:99%;
+    div .removeButton {
+        position:relative;
+        float:right;
+        margin:12px 12px 0 12px;
+        width:14px;
+        height:14px;
+        cursor:pointer;
     }
-    input[type="button"] {
-        color:black;
+    div {
+        margin:12px 12px 0 12px;
+    }
+    div.box {
+        width:98%;
     }
 }
 

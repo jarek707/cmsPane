@@ -175,6 +175,9 @@ div.gridBox {
   float: left;
   width: auto;
 }
+.removeButton {
+  background: transparent url('../image/glyph.png') -312px 0px no-repeat;
+}
 div[cms-pane],
 cms-pane {
   margin: 0;
@@ -206,10 +209,6 @@ cms-pane .outButton {
 div[cms-pane] .closeButton,
 cms-pane .closeButton {
   background: transparent url('../image/glyph.png') -218px -96px no-repeat;
-}
-div[cms-pane] .removeButton,
-cms-pane .removeButton {
-  background: transparent url('../image/glyph.png') -312px 0px no-repeat;
 }
 div[cms-pane] .restoreTable,
 cms-pane .restoreTable {
@@ -692,11 +691,19 @@ detail img {
   margin: 2%;
   border-radius: 6px;
 }
-detail div.box {
-  width: 99%;
+detail div .removeButton {
+  position: relative;
+  float: right;
+  margin: 12px 12px 0 12px;
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
 }
-detail input[type="button"] {
-  color: black;
+detail div {
+  margin: 12px 12px 0 12px;
+}
+detail div.box {
+  width: 98%;
 }
 .paneScroll {
   overflow-y: auto;
