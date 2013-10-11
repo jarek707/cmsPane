@@ -178,17 +178,21 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
                         $scope.buttonsOnOff('edit,del', 'add,save,sub,close');
                         $scope.rowClass  = '';
 
-                        var joinVals = false;
-                        if (!_.isUndefined($scope.row) ) {
-                            for (var i=0; i<$scope.meta.cols.length; i++ ) {
-                                joinVals |= $scope.row[$scope.meta.cols[i][0]] !== '';
+                        $scope.rowEmpty = function() {
+                            var $return = false;
+                            if (!_.isUndefined($scope.row) ) {
+                                for (var i=0; i<$scope.meta.cols.length; i++ ) {
+                                    $return |= $scope.row[$scope.meta.cols[i][0]] !== '';
+                                }
                             }
+                            return !$return;
                         }
 
-                        if (joinVals) {
-                            $scope.rowClass = ''; 
-                        } else {
+                        if ($scope.rowEmpty()) {
                             $scope.rowClass = 'editable'; 
+                            $scope.buttonsOnOff('close','edit');
+                        } else {
+                            $scope.rowClass = ''; 
                         }
 
                         // Setup a shadow data row to keep local changes for comparisons and saving
@@ -504,7 +508,11 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
                         };
 
                         $scope.close = function() {
-                            $scope.workRow = _.clone($scope.row);
+                            if ( $scope.rowEmpty()) {
+                                $scope.$parent.list = _($scope.list).omit($scope.id);
+                            } else {
+                                $scope.workRow = _.clone($scope.row);
+                            }
                             $scope.blr();
                         };
                     }
