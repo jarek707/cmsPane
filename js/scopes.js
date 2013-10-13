@@ -19,13 +19,19 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
                 },
                 // Main grid scope LINK
                 'main' : {
-                    'm-a' : function( $scope, $element) {
-                        $scope.saveRelData = function() {
-                            $scope.relDataKey = $scope.expose({data: 'meta'}).key + 
-                                                '/' + $scope.rowId + '/' + $scope.meta.key;
+                    'm-a-out' : function($scope) {
+                        $scope.loadData = function() {}; 
 
-                            lData.save($scope.relDataKey, $scope.relData, $scope.rowId);
+                        $scope.updateList = function() {
+                            if ( !_.isEmpty($scope.rowId) ) {
+                                if ( !_.isUndefined($scope.parentList) ) {
+                                    $scope.list = {};
+                                    $scope.list[$scope.parentId] =  $scope.parentList[$scope.parentId];
+                                }
+                            }
                         };
+
+                        $scope.$watch('parentId', $scope.updateList);
                     },
                     'm-p-out'  :function($scope, $element) {
                         $scope.updateList = function() {
@@ -42,7 +48,7 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
                                             list[relData[i].ord].id = i;
                                         }
                                     }
-                                    setTimeout(function() { $scope.list = list; $scope.$digest(); }, 0);
+                                    _.defer(function() { $scope.list = list; $scope.$digest(); });
                                 } else {
                                     relData = {};
                                 }
@@ -61,11 +67,8 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
                             if( _.isUndefined(relData) ) 
                                 relData = $scope.expose({data:'relData'})[$scope.rowId] = {};
 
-                            if (_.isUndefined(relData[$(obj.item).attr('row-id')])) {
+                            if (_.isUndefined(relData[$(obj.item).attr('row-id')]))
                                 relData[$(obj.item).attr('row-id')] = {}; // JQ
-                            } else {
-                                delete relData[$(obj.item).attr('row-id')]; // JQ
-                            }
 
                             var items = $(evt.target).find('.row'); // JQ
                             for (var i=0; i<items.length; i++) {
@@ -76,9 +79,9 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
                             $scope.expose({data: 'saveRelData'})();
                         };
 
-                        setTimeout( function() {
+                        UT.wait($scope, 'list', function() {
                             jquery_ui.init($element, {"sortable" : $scope.handleSort}); 
-                        }, 1800); // let's be generous
+                        });
                     },
                     'm-p'  :function($scope, $element) {
                         $scope.handleSort = function(evt, obj) {
@@ -93,9 +96,9 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
                         $scope.listFilter = function(list) {
                             if (_.isUndefined($scope.relData) || _.isEmpty($scope.rowId)) {
                                 return list;
-                             } else {
+                            } else {
                                 if (_.isUndefined($scope.relData[$scope.rowId])) return list;
-                             }
+                            }
                             return $ret = _(list).omit(_($scope.relData[$scope.rowId]).keys());
                         };
 
@@ -112,16 +115,33 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
                             parentSetData(data);
                             $scope.fullList = angular.copy($scope.list);
                         }
+                        $scope.dataInit();
                             
-                        setTimeout( function() { 
+                        UT.wait($scope, 'list', function() { 
                             jquery_ui.init($element, {"sortable" : $scope.handleSort}); 
-                        }, 1800);
+                        });
+                    },
+                    'm-a' : function( $scope, $element) {
+                        $scope.saveRelData = function() {};
+                        $scope.dataInit = function() {
+                            $scope.loadData($scope.rowId);
+                        };
+
+                        $scope.$watch('rowId', function() {
+                            if (!_.isEmpty($scope.rowId)) {
+                                $scope.dataInit();
+                            }
+                        });
+
                     },
                     '1-m'  :function($scope, $element) {
-                        if (!_.isUndefined($scope.meta.selected)) // autoInit - simulate click of the first data row
-                            setTimeout( function() { 
-                                $scope.$broadcast('init',$scope.meta.selected); 
-                            }, 1000);
+                        // autoInit - simulate click of the first data row
+                        _.isUndefined($scope.meta.selected) ||
+                            UT.wait($scope, 'list', function() {
+                                $scope.$broadcast('initSelected',$scope.meta.selected); 
+                            });
+
+                        _.defer($scope.dataInit);
                     },
                     'default' : function($scope, $element) {
                         $scope.ord = 'left';
@@ -130,16 +150,27 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
                         $scope.lastRowScope = null;
                         $scope.relScope     = null;
 
-                        $scope.loadData = function(data) { $scope.listW = angular.copy(data); $scope.setData() };
-                        $scope.setData  = function()     { $scope.list = angular.copy($scope.listW); };
+                        $scope.loadData = function(pid) { 
+                            _.defer( function() { // wait for other relations to load
+                                _.isUndefined($scope.meta.key) || lData.getData($scope.meta.key, $scope.getData, pid);
+                            });
+                        };
+                        $scope.getData = function(data) {
+                            $scope.listW = angular.copy(data); 
+                            $scope.setList();
+                        };
 
-                        setTimeout( function() { // wait for other relations to load
-                            _.isUndefined($scope.meta.key) || lData.getData($scope.meta.key, $scope.loadData);
-                        },0);
+                        $scope.setList = function() { 
+                            $scope.list = angular.copy($scope.listW); 
+                        };
+
+                        $scope.dataInit = function() { 
+                            $scope.loadData(); 
+                        };
 
                         $scope.handleSort = function() {
                             LGW( 'Presistent sorting not implemented for this relation');
-                        }
+                        };
                         
                         // Append child pane after the table
                         $scope.after = function(html, rowScope) {
@@ -158,7 +189,10 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
                     },
                     'm-p' : function($scope) {
                         $scope.buttonsOnOff('edit,del,add,out', 'save,sub,close');
+                        $scope.$watch('id', function() { $scope.$parent.id = $scope.id;} );
                     },
+                    'm-a': function($scope) {},
+                    'm-a-out' : function($scope) { },
                     'm-p-out' : function($scope) {
                         $scope.buttonsOnOff('remove', '');
                     },
@@ -237,6 +271,13 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
                     }
                 },
                 'main' : { // CONTROLLER
+                    'm-a' : function($scope) {
+                        var parentSave = $scope.save;
+                        $scope.save = function(row, id) {
+                            row.pid = $scope.rowId;
+                            parentSave(row,id);
+                        }
+                    },
                     'default' : function($scope) {
                         // Turns off selected/edittable in the last row, stores currently clicked row
                         // Returns : true  - different row was clicked
@@ -333,7 +374,7 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
                 },
                 'row' : { // CONTROLLER
                     '1-m' : function($scope) {
-                        $scope.$on('init', function(evt, data) {
+                        $scope.$on('initSelected', function(evt, data) {
                             // Simulate click on the first row for autoInit
                             if ( _.isEmpty(data) ) {
                                 if ($scope.id === _.keys($scope.list)[0]) {
@@ -341,11 +382,12 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
                                     $scope.$parent.$digest();
                                 }
                             } else {
-                                if ( !_.isUndefined($scope.id)) 
+                                UT.wait($scope, 'id', function() {
                                     if ( $scope.list[$scope.id][$scope.meta.cols[0][0]] === data ) {
                                         $scope.clk();
                                         $scope.$parent.$digest();
                                     }
+                                });
                             }
                         });
 
@@ -356,6 +398,13 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
                             parentClk();
                         };
 
+                    },
+                    'm-a' : function($scope) {
+                        var parentClk = $scope.clk;
+                        $scope.clk = function() {
+                            $scope.$parent.id = $scope.id;
+                            parentClk();
+                        };
                     },
                     'm-p' : function($scope) {
                         function add(){ // We are adding on click in this one

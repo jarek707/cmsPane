@@ -1,4 +1,6 @@
 // GLOBAL Utility START
+var TM = new Date().getTime();
+
 function SER(arg) { return JSON.stringify(arg); }
 function LG()     { if (window.console) console.log(arguments);     }
 function LGW()     { 

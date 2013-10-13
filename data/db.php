@@ -35,6 +35,10 @@ class db extends mysqli {
     }
 
     public function update($tab, $rowId,  $data) {
+        foreach($data as $key => $val) {
+            $data[$key] = mysql_real_escape_string($data[$key]);
+        }
+
         extract($data);
 
         $ret = $this->genSql($tab);
@@ -42,7 +46,7 @@ class db extends mysqli {
         eval('$sql=' . $ret[$rowId < 0 ? 'insert' : 'update'] . ';');
         $this->query($sql);
 
-        return array($sql, $this->error);
+        return array($sql, $this->error, json_encode($data));
     }
 
     public function updateRel($tab, $rowId, $data) {
@@ -58,10 +62,11 @@ class db extends mysqli {
     }
 
 
-    public function getAll($tab, $rel) {
+    public function getAll($tab, $rel, $pid) {
         $out = array();
 
-        if ($res = $this->query($sql = "SELECT * FROM $tab"))
+        $where = $pid > 0 ? "WHERE pid=$pid" : '';
+        if ($res = $this->query($sql = "SELECT * FROM $tab $where"))
             while( $obj = $res->fetch_object() )
                 $out[$obj->id] = $rel ? json_decode($obj->rel) : $obj;
 
@@ -88,11 +93,12 @@ $db = new db($dbHost, 'club', 'club_99','club');
 
 $tab   = $_GET['table'];
 $rowId = intval($_GET['rowId']);
+$pid   = intval($_GET['pid']);
 $rel   = isset($_GET['rel']);
 
 switch ($_GET['action']) {
     case 'schema' : $ret = $db->genCols($tab);          break;
-    case 'get'    : $ret = $db->getAll($tab, $rel);     break;
+    case 'get'    : $ret = $db->getAll($tab, $rel, $pid);     break;
     case 'del'    : $ret = $db->delete($tab, $rowId);   break;
     case 'post'   : 
         $ret = $rel ? $db->updateRel($tab, $rowId, $_POST)

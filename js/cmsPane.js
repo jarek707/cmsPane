@@ -45,7 +45,7 @@ angular.module('app.directives', ['app.gridConf', 'app.scopes'])
             transclude  : true,
             template    : '',
             link        : function($scope, $element, $attrs) { 
-                dom.getItem($scope, $attrs.cmsItem, function(compiled) {
+                dom.getTpl($scope, $attrs.cmsItem, function(compiled) {
                     $element.replaceWith(compiled);
                 });
             }
@@ -183,11 +183,17 @@ angular.module('app.directives', ['app.gridConf', 'app.scopes'])
             restrict    : 'E',
             replace     : false,
             transclude  : true,
-            templateUrl : 'partials/detail.html',
+            template    : '',
             scope       : {},
             compile     : function(el, attrs) {
                 return function($scope, $element, $attrs) { 
-                    $element.data(_.extend($element.data(), {'$scope' : $scope}));
+                    var tpl = $attrs.tpl;
+                    tpl = _.isEmpty(tpl) ? 'detail' : tpl;
+                    dom.getTpl($scope, tpl, function(compiled) {
+                        $element.append(compiled);
+                        $element.data(_.extend($element.data(), {'$scope' : $scope}));
+                    });
+
 
                     $scope.close = function() {
                         $element.hide();
@@ -225,7 +231,7 @@ angular.module('app.directives', ['app.gridConf', 'app.scopes'])
             return {
                 replace     : false,
                 restrict    : 'EA',
-                scope       : { expose : '&', parentList : '=', rowId : "@"},
+                scope       : { expose : '&', parentList : '=', rowId : "@", parentId : "@" },
                 transclude  : false,
                 template    : "",
                 compile     : function(el, attrs, trans) {
@@ -252,6 +258,7 @@ angular.module('app.directives', ['app.gridConf', 'app.scopes'])
                     return link;
                 },
                 controller  :  function($scope, $element, $attrs) {
+                    $scope.scopeId = -1;
                     $scope.exposing = function(dataItem) {
                         return $scope[dataItem];
                     };

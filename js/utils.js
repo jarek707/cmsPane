@@ -14,7 +14,17 @@ function LGT()    {
 }
 
 UT = {
-    minIntKey : function(obj, offset) {
+    'wait' : function(obj, key, cb, maxCount) { // wait for object until defined and non-empty
+        maxCount = _.isUndefined(maxCount) ? 20 : maxCount; // safety
+
+        function ready() {
+            return --maxCount && (_.isUndefined(obj[key]) || _.isEmpty(obj[key])) 
+                                 ? setTimeout(ready, 50) : setTimeout(cb, 50);
+        }
+
+        return ready();
+    },
+    'minIntKey' : function(obj, offset) {
         if (_.isUndefined(offset)) offset = 0;
 
         if ( _.isEmpty(obj) ) {
@@ -25,11 +35,11 @@ UT = {
         }
     },
 
-    mkEmpty : function(arr, data) {
+    'mkEmpty' : function(arr, data) {
         return _.map(arr, function(a) {return (_.isUndefined(data) ? '' : data);});
     },
 
-    camelize : function(str, upFirst) {
+    'camelize' : function(str, upFirst) {
         var firstChar = str.charAt(0);
 
         var $return = UT.join( _(str.split('_')).map( 
@@ -38,7 +48,7 @@ UT = {
 
         return upFirst ? $return : firstChar + $return.substr(1);
     },
-    camelDash: function(inStr) {
+    'camelDash' : function(inStr) {
         var a = inStr.split('-'); 
         var $return = a[0];
         for (var i=1; i<a.length; i++) {
@@ -46,18 +56,18 @@ UT = {
         }
         return $return;
     },
-    doubleCopy : function(src, dest) {
+    'doubleCopy' : function(src, dest) {
         if (_(dest).isObject()) angular.copy(src, dest);
 
         return angular.copy(src);
     },
 
-    gridKey : function( inKey ) {
+    'gridKey' : function( inKey ) {
         return inKey.replace(/-*\d+\//g, '');
     },
 
     // IE8 workaround for array.join()
-    join : function(inArr, delim) {
+    'join' : function(inArr, delim) {
         if (typeof delim == 'undefined') 
             delim = ', ';
             

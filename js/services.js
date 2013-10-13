@@ -14,8 +14,8 @@ angular.module('app.services', ['app.gridConf'])
                     //el.html('');
                 }
             },
-            'getItem' : function($scope, item, cb) {
-                $http.get('partials/' + item + '.html').success(function(html) {
+            'getTpl' : function($scope, tpl, cb) {
+                $http.get('partials/' + tpl + '.html').success(function(html) {
                     cb($compile(html)($scope));
                 });
             },
@@ -53,7 +53,7 @@ angular.module('app.services', ['app.gridConf'])
 
 
                 child.data().outer = 
-                    '<div cms-pane row-id="{{rowId}}" parent-list="list" expose="exposing(data)"' +
+                    '<div cms-pane row-id="{{rowId}}" parent-id="{{id}}"  parent-list="list" expose="exposing(data)"' +
                     ' key="' + dataAttrs.key + '" rel="' + dataAttrs.rel + '">' +
                         el.innerHTML +
                     '</div>'
@@ -123,7 +123,6 @@ angular.module('app.services', ['app.gridConf'])
                     key = UT.gridKey(key);
                 }
 
-                if (_.isEmpty(list) ) return false;
                 if (false && this.useLocal)
                     localStorage[this.prefix + key] = JSON.stringify(list);
                 else // TODO implement real server save
@@ -140,7 +139,7 @@ angular.module('app.services', ['app.gridConf'])
                 scope.listW = angular.copy(scope.list = this.getData(attrs.key));
             },
 
-            getData: function(key, cb) {
+            getData: function(key, cb, pid) {
                 if (false && this.useLocal) {
                     var localData = localStorage[this.prefix + key];
                     if (_.isUndefined(localData) || _.isEmpty(localData))
@@ -150,7 +149,8 @@ angular.module('app.services', ['app.gridConf'])
                 } else {
                     var url = key.replace('/','_');
                     var rel = ( url.indexOf('_') > -1 ) ? '&rel' : ''; 
-                    $http.get('data/db.php?action=get&table=' + url + rel).success( function(data) { 
+                    var pid = _.isUndefined(pid) ? '' : '&pid=' + pid;
+                    $http.get('data/db.php?action=get&table=' + url + rel + pid).success( function(data) { 
                         if (_.isEmpty(data)) data = {};
                         cb(data); 
                     }).error(

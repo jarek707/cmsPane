@@ -3,8 +3,8 @@ cat lib/json3.js \
     config.js \
     services.js \
     custom.js \
-    controllers.js \
-    grid.js \
+    scopes.js \
+    cmsPane.js \
     app.js >all.js
 
 

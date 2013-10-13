@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html id="ng-app" ng-app="app" debug="false">
+    <head>
+        <title>just come by ...</title>
+
+        <link href="css/style.css" rel="stylesheet" type="text/css" />
+        <!--
+        <script type="text/javascript" src="https://getfirebug.com/firebug-lite-debug.js"></script>
+        -->
+        <!-- disable browser cache -->
+        <meta http-equiv="cache-control" content="max-age=0" />
+        <meta http-equiv="cache-control" content="no-cache" />
+        <meta http-equiv="expires"  content="0" />
+        <meta http-equiv="expires"  content="Tue, 01 Jan 1980 1:00:00 GMT" />
+        <meta http-equiv="pragma"   content="no-cache" />
+
+        <!--[if lte IE 8]>
+            <link href="http://ang/css/ie8.css" rel="stylesheet" type="text/css" />
+            <script src='http://ang/js/lib/json2.js'></script>
+            <script>
+                document.createElement('iterate');
+                document.createElement('inline');
+                document.createElement('cms-pane');
+                document.createElement('cms-child');
+                document.createElement('cms-header');
+                document.createElement('cms-item');
+                document.createElement('buttons');
+                document.createElement('p-img');
+                document.createElement('div-img');
+                document.createElement('detail');
+                document.createElement('notify');
+            </script>
+        <![endif]-->
+        <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+            <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+
+        <script src='lib/lib.min.js'></script>
+
+        <script src="js/utils.js"></script>
+        <script src="js/paneConfig.js"></script>
+        <script src="js/config.js"></script>
+        <script src="js/services.js"></script>
+        <script src="js/custom.js"></script>
+        <script src="js/relations.js"></script>
+        <script src="js/scopes.js"></script>
+        <script src="js/app.js"></script>
+
+        <script src="js/cmsPane.js"></script>
+    </head>
+
+
+    <body>
+        <div id='page'>
+            <div class='topMenu' menu>
+            </div>
+            <div class='contentWrap' ng-show='logged'>
+                <div class='contentPane' ng-controller="contentPane">
+                    <div class='box' style='width:99%; display:none;'>
+                        <div style='padding:3px; float:left; font-size:0.9em;'>Local Storage:</div>
+                        <button ng-click='clearLocalStorage()'>Clear</button>
+                        <button ng-click='dumpLocalStorage()'>Save</button>
+                        <button ng-click='restoreLocalStorage()'>Restore</button>
+                        <button onclick='LG(localStorage)'>To Console</button>
+                        <div style='float:right; height:16px; width:14px; margin-top:3px;' class='savButton' ng-show="saved" is-success='{{saved}}'></div>
+                    </div>
+                    <detail></detail>
+                    &nbsp;
+                </div>
+                <div class='left'>
+                    <div class='box'>
+                        <cms-pane key='stylists' rel='1-m' selected='Raymond'>
+                            <div cms-header></div>
+                            <div iterate><buttons use='sav,del,edit,close'></buttons><div p-img></div></div>
+
+                            <inline class='inlineWrapper'>
+                                <div class='box'>
+                                    <div cms-child key="client-result" rel='m-p-out' jq-sortable='clients' parent-key='clients'>
+                                        <div cms-header title='Selected Clients' no-add-button></div>
+                                        <div iterate><div p-img></div><buttons use='remove'></buttons></div>
+                                    </div>
+                                    <div cms-child key="salon-result" rel='m-p-out' jq-sortable='salons' parent-key='salons'>
+                                        <div cms-header title='Selected Salons' no-add-button></div>
+                                        <div iterate><div p-img></div><buttons use='remove'></buttons></div>
+                                    </div>
+                                </div>
+                            </inline>
+                        </cms-pane>
+                    </div>
+                </div>
+                <div class='right'>
+                    <div class='box'>
+                        <cms-child key="clients" rel='m-p' jq-sortable='client-result' id='clients' parent-key='stylists' cols='[["left", "Name"], ["right", "Image URL"]]'>
+                            <div cms-header title='Available Clients' ></div>
+                            <div iterate><buttons use='sav,close,edit,del,out'></buttons><div cms-item='oneLabel'></div></div>
+                        </cms-child>
+                    </div>
+                    <div class='box'>
+                        <div cms-child key="salons" rel='m-p' jq-sortable='salon-result'  parent-key='stylists' class='abc' cols='[["left", "Name"], ["right", "Image URL"]]'>
+                            <div cms-header title='Available Salons' ></div>
+                            <div iterate><buttons use='sav,close,edit,del,out'></buttons><div cms-item='oneLabel'></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- contentWrap -->
+        </div> <!-- page -->
+    </body>
+</html>

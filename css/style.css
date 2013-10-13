@@ -573,6 +573,10 @@ cms-pane ul.dataContent li.row > .item {
   border-bottom: 1px dotted #ccc;
   width: 97%;
 }
+div[cms-pane] ul.dataContent li.row > .item .content,
+cms-pane ul.dataContent li.row > .item .content {
+  padding: 0  0 12px 18px;
+}
 div[cms-pane] ul.dataContent li,
 cms-pane ul.dataContent li {
   float: left;
