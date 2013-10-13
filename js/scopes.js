@@ -332,6 +332,7 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
                         // Row data methods END
 
                         // Sub panes BEGIN
+/*
                         $scope.openSub = function(rowData) {
                             $scope.hideContent  = $scope.meta.autoHide;
                             $scope.rowContent = '{' + rowData + '}';
@@ -354,6 +355,7 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
                             );
                             $scope.openSub(rowText);
                         };
+*/
                         // Sub panes END
                     },
                     'm-p' : function($scope) {
