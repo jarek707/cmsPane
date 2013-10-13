@@ -5,9 +5,7 @@
         echo ' not exist';
     }
 
-    ob_clean();
-    flush();
-    readfile('index.html');
+    echo file_get_contents('index.html');
 
     echo '<pre>';
     var_dump($_SERVER);
