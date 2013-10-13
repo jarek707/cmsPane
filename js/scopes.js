@@ -140,12 +140,11 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
                         _.defer($scope.dataInit);
                     },
                     'default' : function($scope, $element) {
-                        $scope.ord = 'left';
+                        //$scope.ord = 'left';
                         $scope.sortable = _.isUndefined($scope.meta.jqSortable) ? false : 'sortable';
-                        $scope.expose = function(arg) { return $scope.exposer({"data" : arg}) };
+                        $scope.expose   = function(arg) { return $scope.exposer({"data" : arg}) };
 
                         $scope.lastRowScope = null;
-                        $scope.relScope     = null;
 
                         $scope.loadData = function(pid) { 
                             _.defer( function() { // wait for other relations to load
