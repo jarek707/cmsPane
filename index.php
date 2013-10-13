@@ -1,3 +1,3 @@
 <?php
-    echo 'in index';
+    var_dump($_SERVER);
 ?>
