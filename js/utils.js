@@ -19,7 +19,7 @@ UT = {
 
         function ready() {
             return --maxCount && (_.isUndefined(obj[key]) || _.isEmpty(obj[key])) 
-                                 ? setTimeout(ready, 50) : setTimeout(cb, 50);
+                                 ? setTimeout(ready, 50) : setTimeout(cb, 100);
         }
 
         return ready();

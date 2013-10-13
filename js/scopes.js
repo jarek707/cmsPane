@@ -37,7 +37,7 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
                         $scope.updateList = function() {
                             $scope.list = {};
                             if (!_.isEmpty($scope.rowId)) { 
-                                var relData = $scope.expose({data:'relData'})[$scope.rowId];
+                                var relData = $scope.expose('relData')[$scope.rowId];
                                 if (!_.isUndefined(relData) && !_.isEmpty(relData)) {
                                     var list = {};
                                     for (var i in relData) {
@@ -53,30 +53,26 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
                                     relData = {};
                                 }
                             }
+                            return $scope;
                         };
 
-                        $scope.loadData = function() {
-                        };
+                        $scope.loadData = function() {}; // parent will handle relational data
 
                         $scope.$on('relDataChanged', $scope.updateList);
                         $scope.$watch('rowId',       $scope.updateList);
 
-                        $scope.handleSort = function(evt, obj) {
-                            var relData = $scope.expose({data:'relData'})[$scope.rowId];
+                        $scope.handleSort = function(evt, obj, sorted) {
+                            var relData = $scope.expose('relData');
 
-                            if( _.isUndefined(relData) ) 
-                                relData = $scope.expose({data:'relData'})[$scope.rowId] = {};
+                            _.isUndefined(relData[$scope.rowId]) && (relData[$scope.rowId] = {});
 
-                            if (_.isUndefined(relData[$(obj.item).attr('row-id')]))
-                                relData[$(obj.item).attr('row-id')] = {}; // JQ
-
-                            var items = $(evt.target).find('.row'); // JQ
-                            for (var i=0; i<items.length; i++) {
-                                relData[$(items[i]).attr('row-id')].ord = i;
+                            var relRow = relData[$scope.rowId];
+                            for (var i=0; i<sorted.length; i++) {
+                                _.isUndefined(relRow[sorted[i]]) && (relRow[sorted[i]] = {});
+                                relRow[sorted[i]].ord = i;
                             }
 
-                            $scope.updateList();
-                            $scope.expose({data: 'saveRelData'})();
+                            $scope.updateList().expose('saveRelData')();
                         };
 
                         UT.wait($scope, 'list', function() {
@@ -102,7 +98,7 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
                             return $ret = _(list).omit(_($scope.relData[$scope.rowId]).keys());
                         };
 
-                        $scope.relDataKey = $scope.expose({data: 'meta'}).key + '/' + $scope.meta.key;
+                        $scope.relDataKey = $scope.expose('meta').key + '/' + $scope.meta.key;
 
                         lData.getData($scope.relDataKey, function(relData) {
                             $scope.allRelData = _.isString(relData) ? json_parse(relData) : relData;
@@ -146,6 +142,7 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
                     'default' : function($scope, $element) {
                         $scope.ord = 'left';
                         $scope.sortable = _.isUndefined($scope.meta.jqSortable) ? false : 'sortable';
+                        $scope.expose = function(arg) { return $scope.exposer({"data" : arg}) };
 
                         $scope.lastRowScope = null;
                         $scope.relScope     = null;
@@ -345,7 +342,7 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
                             _(config.getChildren($scope.meta.key)).each( function(v, childKey) { 
                                 $scope.after(
                                     '<div grid key="' + $scope.meta.key + '/' + rowScope.id + '/' + childKey + '" ' +
-                                    'expose="exposing(data)" parentList="list" ></div>', rowScope
+                                    'exposer="exposing(data)" parentList="list" ></div>', rowScope
                                 );
                             });
                             $scope.openSub(workRow);
@@ -470,7 +467,7 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
                     },
                     'm-p-out' : function($scope, $element) {
                         $scope.remove = function() { // Remove related item
-                            $scope.expose({data : 'remove'})($scope.list[$scope.id].id);
+                            $scope.expose('remove')($scope.list[$scope.id].id);
                             $scope.updateList();
                         };
                         $scope.clk = function() {

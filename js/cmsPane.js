@@ -231,14 +231,14 @@ angular.module('app.directives', ['app.gridConf', 'app.scopes'])
             return {
                 replace     : false,
                 restrict    : 'EA',
-                scope       : { expose : '&', parentList : '=', rowId : "@", parentId : "@" },
+                scope       : { exposer : '&', parentList : '=', rowId : "@", parentId : "@" },
                 transclude  : false,
                 template    : "",
                 compile     : function(el, attrs, trans) {
                     if ( typeof USING_IE == 'undefined') USING_IE = false;
 
                     function link($scope, $element, $attrs) {
-                        var parentMeta = _.clone($scope.expose({data:'meta'}));
+                        var parentMeta = _.clone($scope.exposer({data:'meta'}));
 
                         $scope.meta = _.isUndefined(parentMeta) ? {} : parentMeta;
                         $scope.meta = _($scope.meta).extend( config.setParams(domMeta) );
@@ -274,7 +274,7 @@ angular.module('app.directives', ['app.gridConf', 'app.scopes'])
             return {
                 replace     : false,
                 restrict    : 'EA',
-                scope       : { expose : '&', parentList : '=', rowId : "@"},
+                scope       : { exposer : '&', parentList : '=', rowId : "@"},
                 transclude  : false,
                 template    : "",
                 compile     : function(el, attrs, trans) {

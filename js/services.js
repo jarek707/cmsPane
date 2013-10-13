@@ -53,7 +53,7 @@ angular.module('app.services', ['app.gridConf'])
 
 
                 child.data().outer = 
-                    '<div cms-pane row-id="{{rowId}}" parent-id="{{id}}"  parent-list="list" expose="exposing(data)"' +
+                    '<div cms-pane row-id="{{rowId}}" parent-id="{{id}}"  parent-list="list" exposer="exposing(data)"' +
                     ' key="' + dataAttrs.key + '" rel="' + dataAttrs.rel + '">' +
                         el.innerHTML +
                     '</div>'
@@ -92,7 +92,10 @@ angular.module('app.services', ['app.gridConf'])
                     'cursor'    : 'move',
                     'distance'  : 1,
                     'cursorAt'  : {left: 5},
-                    'update'    : _.isFunction(cb) ? cb : function() {}
+                    'update'    : function(evt, obj) {
+                        sort = $(this).sortable('toArray', {"attribute" : "row-id"});
+                        _.isFunction(cb) && cb(evt, obj, sort);
+                    }
                 };
 
                 _.isEmpty(sortable) ||
