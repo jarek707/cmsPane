@@ -35,8 +35,11 @@ class db extends mysqli {
     }
 
     public function update($tab, $rowId,  $data) {
+        $zdata = $data;
         foreach($data as $key => $val) {
-            $data[$key] = mysql_real_escape_string($data[$key]);
+            //$data[$key] = mysqli_real_escape_string($val);
+            //$data[$key] = mysqli_real_escape_string($val, $this);
+            $data[$key] = filter_var($val, FILTER_SANITIZE_STRING);
         }
 
         extract($data);
@@ -46,7 +49,7 @@ class db extends mysqli {
         eval('$sql=' . $ret[$rowId < 0 ? 'insert' : 'update'] . ';');
         $this->query($sql);
 
-        return array($sql, $this->error, json_encode($data));
+        return array($zdata, $data, $sql, $this->error);
     }
 
     public function updateRel($tab, $rowId, $data) {
