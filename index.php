@@ -1,6 +1,4 @@
 <?php
+    var_dump( $_GET);
     readfile('index.html');
 ?>
-<script>
-    console.log( window );
-</script>

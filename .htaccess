@@ -1,4 +1,7 @@
 RewriteEngine on
 RewriteCond  %{REQUEST_URI} !=/index.php
-RewriteCond  %{REQUEST_URI} !/zpartials/.*\.html [NC]
-RewriteRule .[.\/]*\.html /index.php
+RewriteCond  %{REQUEST_URI} !/partials/.*\.html [NC]
+RewriteCond  %{REQUEST_URI} !/js/.*\.js [NC]
+RewriteCond  %{REQUEST_URI} !/css/.*\.css [NC]
+RewriteCond  %{REQUEST_URI} !/data/.*\.php [NC]
+RewriteRule  .* /index.php
