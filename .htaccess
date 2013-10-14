@@ -1,2 +1,4 @@
 RewriteEngine on
-RewriteRule .html index.php [L]
+RewriteCond  %{REQUEST_URI} !=/index.php
+RewriteCond  %{REQUEST_URI} !=/partials/*.html
+RewriteRule *.html index.php [L]
