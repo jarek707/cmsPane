@@ -1,5 +1,5 @@
 angular.module('app.directives', ['app.gridConf', 'app.scopes'])
-    .directive('menu', ['config', 'dom', function(config, dom) {
+    .directive('menu', [ function() {
         return {
             restrict    : 'A',
             replace     : false,
@@ -38,7 +38,7 @@ angular.module('app.directives', ['app.gridConf', 'app.scopes'])
             }
         };
     }])
-    .directive('cmsItem', ['config', 'dom', function(config, dom) {
+    .directive('cmsItem', ['dom', function(dom) {
         return {
             restrict    : 'A',
             replace     : true,
@@ -51,7 +51,7 @@ angular.module('app.directives', ['app.gridConf', 'app.scopes'])
             }
         };
     }])
-    .directive('pImg', ['config', function(config) {
+    .directive('pImg', [ function() {
         return {
             restrict    : 'A',
             replace     : true,
@@ -64,7 +64,7 @@ angular.module('app.directives', ['app.gridConf', 'app.scopes'])
             }
         };
     }])
-    .directive('cmsText', ['config', function(config) {
+    .directive('cmsText', [function() {
         return {
             restrict    : 'A',
             replace     : true,
@@ -84,7 +84,7 @@ angular.module('app.directives', ['app.gridConf', 'app.scopes'])
             }
         };
     }])
-    .directive('cmsRadio', ['config', function(config) {
+    .directive('cmsRadio', [function() {
         return {
             restrict    : 'EA',
             replace     : true,
@@ -99,7 +99,7 @@ angular.module('app.directives', ['app.gridConf', 'app.scopes'])
             }
         };
     }])
-    .directive('cmsCheckbox', ['config', function(config) {
+    .directive('cmsCheckbox', [function() {
         return {
             replace     : true,
             restrict    : 'EA',
@@ -120,7 +120,7 @@ angular.module('app.directives', ['app.gridConf', 'app.scopes'])
             }
         };
     }])
-    .directive('cmsSelect', ['config', function(config) {
+    .directive('cmsSelect', [function() {
         return {
             replace     : true,
             restrict    : 'EA',
@@ -133,8 +133,7 @@ angular.module('app.directives', ['app.gridConf', 'app.scopes'])
             }
         };
     }])
-    .directive('cmsFooter', ['config', 'controllers', 'linkers', '$compile',
-        function(config, controllers, linkers, $compile) {
+    .directive('cmsFooter', ['controllers', function(controllers) {
             return {
                 replace  : false,
                 restrict : 'EA',
@@ -142,12 +141,11 @@ angular.module('app.directives', ['app.gridConf', 'app.scopes'])
                 link        : function($scope, $element, $attrs) {
                     //($scope.spaces = UT.gridKey($scope.$attrs.key).split('/')).pop();
                 },
-                controller  : function($scope) { controllers.head['default']($scope); }
+                controller  : function($scope) { controllers.head($scope); }
             };
         }
     ])
-    .directive('cmsHeader', ['config', 'controllers', 'linkers', '$compile',
-        function(config, controllers, linkers, $compile) {
+    .directive('cmsHeader', [ 'controllers', function(controllers) {
             return {
                 replace  : false,
                 restrict : 'EA',
@@ -156,12 +154,12 @@ angular.module('app.directives', ['app.gridConf', 'app.scopes'])
                     $scope.title       = _.isUndefined($attrs.title) ? $scope.meta.key : $attrs.title;
                     $scope.showHeadAdd = _.isUndefined($attrs.noAddButton);
                 },
-                controller  : function($scope) { controllers.head['default']($scope); }
+                controller  : function($scope) { controllers.head($scope); }
             };
         }
     ])
-    .directive('buttons', ['config', 'controllers', 'linkers', 'dom',
-        function(config, controllers, linkers, dom) {
+    .directive('buttons', ['controllers', 'linkers', 'dom',
+        function(controllers, linkers, dom) {
             return {
                 replace     : true,
                 restrict    : 'E',
@@ -178,7 +176,7 @@ angular.module('app.directives', ['app.gridConf', 'app.scopes'])
             };
         }
     ])
-    .directive('detail', ['config', 'dom', function(config, dom) {
+    .directive('detail', ['dom', function(dom) {
         return {
             restrict    : 'E',
             replace     : false,
@@ -207,8 +205,8 @@ angular.module('app.directives', ['app.gridConf', 'app.scopes'])
             }
         };
     }])
-    .directive('iterate', ['config', 'dom', '$compile',
-        function (config, dom, $compile) {
+    .directive('iterate', ['$compile',
+        function ($compile) {
             return {
                 replace : true,
                 restrict : 'A',
@@ -269,8 +267,7 @@ angular.module('app.directives', ['app.gridConf', 'app.scopes'])
             };
         }
     ])
-    .directive('cmsChild', ['config', 'dom', '$compile',
-        function (config, dom, $compile) {
+    .directive('cmsChild', ['dom', function (dom) {
             return {
                 replace     : false,
                 restrict    : 'EA',

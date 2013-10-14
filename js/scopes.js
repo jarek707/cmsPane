@@ -1,145 +1,24 @@
 angular.module('app.scopes', ['app.gridConf', 'app.relations'])
     /*
-     *
      *          LINKERS
-     *
     */
-    .service('linkers', ['$http', 'config', '$compile', 'lData','jquery_ui',
-        function($http, config, $compile, lData, jquery_ui) {
+    .service('linkers', ['$compile', 'lData', 'scope',
+        function($compile, lData, scope) {
             'use strict';
 
             return {
                 'set' : function(type, $scope, $element) {
-                    this[type]['default']($scope, $element);
-                    var rel = $scope.meta.rel;
-                    
-                    if (!_.isUndefined(rel) && _.isFunction(this[type][rel])) {
-                        this[type][rel]($scope, $element);
+                    this[type]($scope, $element);
+                    var relFn = this[type][$scope.meta.rel];
+
+                    if (!_.isUndefined(scope[$scope.meta.rel] ))
+                    if (_.isFunction(scope[$scope.meta.rel].link[type])) {
+                        scope[$scope.meta.rel].link[type]($scope, $element);
                     }
+                    _.isFunction(relFn) && relFn($scope, $element);
                 },
                 // Main grid scope LINK
-                'main' : {
-                    'm-a-out' : function($scope) {
-                        $scope.loadData = function() {}; 
-
-                        $scope.updateList = function() {
-                            if ( !_.isEmpty($scope.rowId) ) {
-                                if ( !_.isUndefined($scope.parentList) ) {
-                                    $scope.list = {};
-                                    $scope.list[$scope.parentId] =  $scope.parentList[$scope.parentId];
-                                }
-                            }
-                        };
-
-                        $scope.$watch('parentId', $scope.updateList);
-                    },
-                    'm-p-out'  :function($scope, $element) {
-                        $scope.updateList = function() {
-                            $scope.list = {};
-                            if (!_.isEmpty($scope.rowId)) { 
-                                var relData = $scope.expose('relData')[$scope.rowId];
-                                if (!_.isUndefined(relData) && !_.isEmpty(relData)) {
-                                    var list = {};
-                                    for (var i in relData) {
-                                        list[relData[i].ord] = $scope.parentList[i];
-                                        if (_.isUndefined(list[relData[i].ord])) {
-                                            delete relData[i]; // SAFETY orphaned relation
-                                        } else {
-                                            list[relData[i].ord].id = i;
-                                        }
-                                    }
-                                    _.defer(function() { $scope.list = list; $scope.$digest(); });
-                                } else {
-                                    relData = {};
-                                }
-                            }
-                            return $scope;
-                        };
-
-                        $scope.loadData = function() {}; // parent will handle relational data
-
-                        $scope.$on('relDataChanged', $scope.updateList);
-                        $scope.$watch('rowId',       $scope.updateList);
-
-                        $scope.handleSort = function(evt, obj, sorted) {
-                            var relData = $scope.expose('relData');
-
-                            _.isUndefined(relData[$scope.rowId]) && (relData[$scope.rowId] = {});
-
-                            var relRow = relData[$scope.rowId];
-                            for (var i=0; i<sorted.length; i++) {
-                                _.isUndefined(relRow[sorted[i]]) && (relRow[sorted[i]] = {});
-                                relRow[sorted[i]].ord = i;
-                            }
-
-                            $scope.updateList().expose('saveRelData')();
-                        };
-
-                        UT.wait($scope, 'list', function() {
-                            jquery_ui.init($element, {"sortable" : $scope.handleSort}); 
-                        });
-                    },
-                    'm-p'  :function($scope, $element) {
-                        $scope.handleSort = function(evt, obj) {
-                        }
-
-                        $scope.saveRelData = function() {
-                            _.isEmpty($scope.relData[$scope.rowId]) && ($scope.relData[$scope.rowId] = {});
-
-                            lData.save($scope.relDataKey, $scope.relData, $scope.rowId);
-                        };
-
-                        $scope.listFilter = function(list) {
-                            if (_.isUndefined($scope.relData) || _.isEmpty($scope.rowId)) {
-                                return list;
-                            } else {
-                                if (_.isUndefined($scope.relData[$scope.rowId])) return list;
-                            }
-                            return $ret = _(list).omit(_($scope.relData[$scope.rowId]).keys());
-                        };
-
-                        $scope.relDataKey = $scope.expose('meta').key + '/' + $scope.meta.key;
-
-                        lData.getData($scope.relDataKey, function(relData) {
-                            $scope.allRelData = _.isString(relData) ? json_parse(relData) : relData;
-                            $scope.relData = _.isEmpty(relData) ? {} : relData;
-                        });
-
-
-                        var parentSetData = $scope.loadData;
-                        $scope.loadData = function(data) {
-                            parentSetData(data);
-                            $scope.fullList = angular.copy($scope.list);
-                        }
-                        $scope.dataInit();
-                            
-                        UT.wait($scope, 'list', function() { 
-                            jquery_ui.init($element, {"sortable" : $scope.handleSort}); 
-                        });
-                    },
-                    'm-a' : function( $scope, $element) {
-                        $scope.saveRelData = function() {};
-                        $scope.dataInit = function() {
-                            $scope.loadData($scope.rowId);
-                        };
-
-                        $scope.$watch('rowId', function() {
-                            if (!_.isEmpty($scope.rowId)) {
-                                $scope.dataInit();
-                            }
-                        });
-
-                    },
-                    '1-m'  :function($scope, $element) {
-                        // autoInit - simulate click of the first data row
-                        _.isUndefined($scope.meta.selected) ||
-                            UT.wait($scope, 'list', function() {
-                                $scope.$broadcast('initSelected',$scope.meta.selected); 
-                            });
-
-                        _.defer($scope.dataInit);
-                    },
-                    'default' : function($scope, $element) {
+                'main' : function($scope, $element) {
                         //$scope.ord = 'left';
                         $scope.sortable = _.isUndefined($scope.meta.jqSortable) ? false : 'sortable';
                         $scope.expose   = function(arg) { return $scope.exposer({"data" : arg}) };
@@ -178,21 +57,8 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
                             var compiled = $compile(html)(rowScope);
                             $element.find('table').after( compiled );
                         };
-                    }
                 },
-                'row' : { // LINK
-                    '1-m' : function($scope, $element) {
-                    },
-                    'm-p' : function($scope) {
-                        $scope.buttonsOnOff('edit,del,add,out', 'save,sub,close');
-                        $scope.$watch('id', function() { $scope.$parent.id = $scope.id;} );
-                    },
-                    'm-a': function($scope) {},
-                    'm-a-out' : function($scope) { },
-                    'm-p-out' : function($scope) {
-                        $scope.buttonsOnOff('remove', '');
-                    },
-                    'default' : function($scope, $element) {
+                'row' : function($scope, $element) {
                         $scope.attachAfterRow = function() {
                             $element.parent().after(
                                 $scope.meta.element.find('inline').detach()
@@ -227,7 +93,6 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
 
                         // Setup a shadow data row to keep local changes for comparisons and saving
                         $scope.workRow = angular.copy($scope.row);
-                    }
                 } 
 
             };
@@ -238,19 +103,20 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
      *          CONTROLLERS
      *
     */
-    .service('controllers', ['$http', 'config', '$compile', 'lData', 
-        function($http, config, $compile, lData) {
+    .service('controllers', ['lData', 'scope',
+        function(lData, scope) {
             'use strict';
             return {
-                'defaultScope' : null,
                 'set' : function(type, $scope, $element) {
-                    this[type]['default']($scope);
-                    this.defaultScope = _.clone($scope);
+                    this[type]($scope);
                     
+                    if (!_.isUndefined(scope[$scope.meta.rel] ))
+                    if (_.isFunction(scope[$scope.meta.rel].controller[type])) {
+                        scope[$scope.meta.rel].controller[type]($scope, $element);
+                    }
                     _.isFunction(this[type][$scope.meta.rel]) && this[type][$scope.meta.rel]($scope, $element);
                 },
-                'head' : {
-                    'default' : function($scope) {
+                'head' : function($scope) {
                         $scope.loadButton = false;
 
                         $scope.showContent = function() {
@@ -264,17 +130,8 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
                                 $scope.toggleTable();
                             }
                         };
-                    }
                 },
-                'main' : { // CONTROLLER
-                    'm-a' : function($scope) {
-                        var parentSave = $scope.save;
-                        $scope.save = function(row, id) {
-                            row.pid = $scope.rowId;
-                            parentSave(row,id);
-                        }
-                    },
-                    'default' : function($scope) {
+                'main' : function($scope) {
                         // Turns off selected/edittable in the last row, stores currently clicked row
                         // Returns : true  - different row was clicked
                         //           false - same row was clicked (or double clicked)
@@ -331,156 +188,8 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
                         };
                         // Row data methods END
 
-                        // Sub panes BEGIN
-/*
-                        $scope.openSub = function(rowData) {
-                            $scope.hideContent  = $scope.meta.autoHide;
-                            $scope.rowContent = '{' + rowData + '}';
-                        };
-
-                        $scope.subPane = function(rowScope, workRow) {
-                            _(config.getChildren($scope.meta.key)).each( function(v, childKey) { 
-                                $scope.after(
-                                    '<div grid key="' + $scope.meta.key + '/' + rowScope.id + '/' + childKey + '" ' +
-                                    'exposer="exposing(data)" parentList="list" ></div>', rowScope
-                                );
-                            });
-                            $scope.openSub(workRow);
-                        };
-
-                        $scope.edit = function(rowScope, rowText) {
-                            $scope.closeLastRow(rowScope);
-                            $scope.after(
-                                '<div edit key="' + $scope.meta.key + '/' + rowScope.id + '/"></div>', rowScope
-                            );
-                            $scope.openSub(rowText);
-                        };
-*/
-                        // Sub panes END
-                    },
-                    'm-p' : function($scope) {
-                        var parentSave = $scope.save;
-                        $scope.save = function(row, id) {
-                            parentSave(row, id);
-                        };
-
-                        $scope.remove = function(id) {
-                            delete $scope.relData[$scope.rowId][id];
-                            $scope.saveRelData();
-                        };
-                    }
                 },
-                'row' : { // CONTROLLER
-                    '1-m' : function($scope) {
-                        $scope.$on('initSelected', function(evt, data) {
-                            // Simulate click on the first row for autoInit
-                            if ( _.isEmpty(data) ) {
-                                if ($scope.id === _.keys($scope.list)[0]) {
-                                    $scope.clk();
-                                    $scope.$parent.$digest();
-                                }
-                            } else {
-                                UT.wait($scope, 'id', function() {
-                                    if ( $scope.list[$scope.id][$scope.meta.cols[0][0]] === data ) {
-                                        $scope.clk();
-                                        $scope.$parent.$digest();
-                                    }
-                                });
-                            }
-                        });
-
-                        var parentClk = $scope.clk;
-                        $scope.clk = function() {
-                            $scope.$parent.rowId = $scope.id;
-                            $scope.attachAfterRow();
-                            parentClk();
-                        };
-
-                    },
-                    'm-a' : function($scope) {
-                        var parentClk = $scope.clk;
-                        $scope.clk = function() {
-                            $scope.$parent.id = $scope.id;
-                            parentClk();
-                        };
-                    },
-                    'm-p' : function($scope) {
-                        function add(){ // We are adding on click in this one
-                            if ( $scope.rowClass.indexOf('editable') === -1 ) {
-                                /// TODO see if contains does anything here
-                                if (!_.contains($scope.relData[$scope.rowId], $scope.id)) {
-                                    var relData = $scope.relData[$scope.rowId];
-
-                                    _.isUndefined(relData) && 
-                                        ($scope.relData[$scope.rowId] = relData = {});
-
-                                    var maxId = 0;
-                                    // Get max id of all related items 
-                                    for (var i in relData) {
-                                        if (relData[i].ord >= maxId ) {
-                                           maxId = parseInt(relData[i].ord) + 1;
-                                        }
-                                    }
-
-                                    if (_.isUndefined(relData[$scope.id])) {
-                                        $scope.relData[$scope.rowId][$scope.id] = ({'ord' : maxId});
-                                    }
-                                }
-
-                                $scope.saveRelData();
-                                $scope.$parent.$broadcast('relDataChanged'); // update rel pane
-                            }
-                        };
-
-                        function updateRelData() {
-                            if ( $scope.relData ) {
-                                for (var i in $scope.relData ) {
-                                    if (!_.has($scope.relData[i], $scope.id))
-                                        $scope.relData[i] = _($scope.relData[i]).omit($scope.id);
-                                }
-                            }
-                        };
-
-                        $scope.dblClk = function() { add(); }
-                        $scope.out    = function() {  add();}
-
-                        var parentDel = $scope.del;
-                        $scope.del = function() {
-                            // TODO add sorting 'ord' for relData
-                            updateRelData();
-                            $scope.saveRelData();
-                            $scope.$parent.$broadcast('relDataChanged'); // update rel pane
-                            parentDel();
-                        };
-                        
-                        var parentSave = $scope.save;
-                        $scope.save = function() {
-                            updateRelData();
-                            parentSave();
-                            $scope.$parent.$broadcast('relDataChanged'); // update rel pane
-                        };
-                        $scope.clk = function() {
-                            var detailScope = angular.element('detail').show().data().$scope;
-
-                            detailScope.url     = $scope.workRow.right;
-                            detailScope.caption = $scope.workRow.left;
-                        };
-                    },
-                    'm-p-out' : function($scope, $element) {
-                        $scope.remove = function() { // Remove related item
-                            $scope.expose('remove')($scope.list[$scope.id].id);
-                            $scope.updateList();
-                        };
-                        $scope.clk = function() {
-                            var detailScope = angular.element('detail').show().data().$scope;
-
-                            detailScope.show({
-                                'url' : $scope.workRow.right,
-                                'caption' : $scope.workRow.left
-                            });
-                        }
-                    },
-                    'default' : function($scope) {
+                'row' : function($scope) {
                         function isDirty() { 
                             return ($scope.buttons.save = $scope.dirty = !_($scope.row).isEqual($scope.workRow));
                         }
@@ -563,7 +272,6 @@ angular.module('app.scopes', ['app.gridConf', 'app.relations'])
                             $scope.blr();
                         };
                     }
-                }
             };
         }
     ])

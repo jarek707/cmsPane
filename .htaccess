@@ -4,4 +4,5 @@ RewriteCond  %{REQUEST_URI} !/partials/.*\.html [NC]
 RewriteCond  %{REQUEST_URI} !/js/.*\.js [NC]
 RewriteCond  %{REQUEST_URI} !/css/.*\.css [NC]
 RewriteCond  %{REQUEST_URI} !/data/.*\.php [NC]
+RewriteCond  %{REQUEST_URI} !/lib/.*\.js [NC]
 RewriteRule  .* /index.php
