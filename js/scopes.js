@@ -1,120 +1,95 @@
-angular.module('app.scopes', ['app.gridConf', 'app.relations'])
+angular.module('app.scopes', ['app.gridConf', 'app.relationScopes'])
     /*
      *          LINKERS
     */
-    .service('linkers', ['$compile', 'lData', 'scope',
-        function($compile, lData, scope) {
-            'use strict';
+    .service('linkers', ['$compile', 'lData', 'relScopes', function($compile, lData, relScopes) {
+        return {
+            'set' : function(type, $scope, $element) {
+                this[type]($scope, $element);
+                var relObj = relScopes[$scope.meta.rel];
 
-            return {
-                'set' : function(type, $scope, $element) {
-                    this[type]($scope, $element);
-                    var relFn = this[type][$scope.meta.rel];
+                !_.isUndefined(relObj) && _.isFunction(relObj.link[type]) &&
+                    relObj.link[type]($scope, $element);
+            },
+            // Main grid scope LINK
+            'main' : function($scope, $element) {
+                $scope.sortable = _.isUndefined($scope.meta.jqSortable) ? false : 'sortable';
+                $scope.expose   = function(arg) { return $scope.exposer({"data" : arg}) };
 
-                    if (!_.isUndefined(scope[$scope.meta.rel] ))
-                    if (_.isFunction(scope[$scope.meta.rel].link[type])) {
-                        scope[$scope.meta.rel].link[type]($scope, $element);
+                $scope.lastRowScope = null;
+
+                $scope.setList = function() { $scope.list = angular.copy($scope.listW); };
+
+                $scope.getData = function(data) {
+                    $scope.listW = angular.copy(data); 
+                    $scope.setList();
+                };
+
+                $scope.loadData = function(pid) { 
+                    _.defer( function() { // wait for other relations to load
+                        _.isUndefined($scope.meta.key) || lData.getData($scope.meta.key, $scope.getData, pid);
+                    });
+                };
+
+                $scope.dataInit = function() { $scope.loadData(); };
+
+                $scope.handleSort = function() {
+                    LGW( 'Presistent sorting not implemented for this relation');
+                };
+            },
+            'row' : function($scope, $element) {
+                $scope.attachAfterRow = function() {
+                    $element.parent().after(
+                        $scope.meta.element.find('inline').detach()
+                    );
+                };
+
+                $scope.buttons = {};
+                $scope.buttonsOnOff = function (on, off) {
+                    _(on.split(',')).each(function(v,k)  { $scope.buttons[v] = true; });
+                    _(off.split(',')).each(function(v,k)  { $scope.buttons[v] = false; });
+                };
+
+                $scope.buttonsOnOff('edit,del', 'add,save,sub,close');
+                $scope.rowClass  = '';
+
+                $scope.rowEmpty = function() {
+                    var $return = false;
+                    if (!_.isUndefined($scope.row) ) {
+                        for (var i=0; i<$scope.meta.cols.length; i++ ) {
+                            $return |= $scope.row[$scope.meta.cols[i][0]] !== '';
+                        }
                     }
-                    _.isFunction(relFn) && relFn($scope, $element);
-                },
-                // Main grid scope LINK
-                'main' : function($scope, $element) {
-                        //$scope.ord = 'left';
-                        $scope.sortable = _.isUndefined($scope.meta.jqSortable) ? false : 'sortable';
-                        $scope.expose   = function(arg) { return $scope.exposer({"data" : arg}) };
+                    return !$return;
+                }
 
-                        $scope.lastRowScope = null;
+                if ($scope.rowEmpty()) {
+                    $scope.rowClass = 'editable'; 
+                    $scope.buttonsOnOff('close','edit');
+                } else {
+                    $scope.rowClass = ''; 
+                }
 
-                        $scope.loadData = function(pid) { 
-                            _.defer( function() { // wait for other relations to load
-                                _.isUndefined($scope.meta.key) || lData.getData($scope.meta.key, $scope.getData, pid);
-                            });
-                        };
-                        $scope.getData = function(data) {
-                            $scope.listW = angular.copy(data); 
-                            $scope.setList();
-                        };
-
-                        $scope.setList = function() { 
-                            $scope.list = angular.copy($scope.listW); 
-                        };
-
-                        $scope.dataInit = function() { 
-                            $scope.loadData(); 
-                        };
-
-                        $scope.handleSort = function() {
-                            LGW( 'Presistent sorting not implemented for this relation');
-                        };
-                        
-                        // Append child pane after the table
-                        $scope.after = function(html, rowScope) {
-                            // IE8 needs this
-                            if ($element.find('table').parent().children().length > 2) {
-                                $element.find('table').next().remove();
-                            }
-
-                            var compiled = $compile(html)(rowScope);
-                            $element.find('table').after( compiled );
-                        };
-                },
-                'row' : function($scope, $element) {
-                        $scope.attachAfterRow = function() {
-                            $element.parent().after(
-                                $scope.meta.element.find('inline').detach()
-                            );
-                        };
-
-                        $scope.buttons = {};
-                        $scope.buttonsOnOff = function (on, off) {
-                            _(on.split(',')).each(function(v,k)  { $scope.buttons[v] = true; });
-                            _(off.split(',')).each(function(v,k)  { $scope.buttons[v] = false; });
-                        };
-
-                        $scope.buttonsOnOff('edit,del', 'add,save,sub,close');
-                        $scope.rowClass  = '';
-
-                        $scope.rowEmpty = function() {
-                            var $return = false;
-                            if (!_.isUndefined($scope.row) ) {
-                                for (var i=0; i<$scope.meta.cols.length; i++ ) {
-                                    $return |= $scope.row[$scope.meta.cols[i][0]] !== '';
-                                }
-                            }
-                            return !$return;
-                        }
-
-                        if ($scope.rowEmpty()) {
-                            $scope.rowClass = 'editable'; 
-                            $scope.buttonsOnOff('close','edit');
-                        } else {
-                            $scope.rowClass = ''; 
-                        }
-
-                        // Setup a shadow data row to keep local changes for comparisons and saving
-                        $scope.workRow = angular.copy($scope.row);
-                } 
-
-            };
-        }
-    ])
+                // Setup a shadow data row to keep local changes for comparisons and saving
+                $scope.workRow = angular.copy($scope.row);
+            } 
+        };
+    }])
     /*
      *
      *          CONTROLLERS
      *
     */
-    .service('controllers', ['lData', 'scope',
-        function(lData, scope) {
+    .service('controllers', ['lData', 'relScopes',
+        function(lData, relScopes) {
             'use strict';
             return {
                 'set' : function(type, $scope, $element) {
                     this[type]($scope);
-                    
-                    if (!_.isUndefined(scope[$scope.meta.rel] ))
-                    if (_.isFunction(scope[$scope.meta.rel].controller[type])) {
-                        scope[$scope.meta.rel].controller[type]($scope, $element);
-                    }
-                    _.isFunction(this[type][$scope.meta.rel]) && this[type][$scope.meta.rel]($scope, $element);
+                    var relObj = relScopes[$scope.meta.rel];
+
+                    !_.isUndefined(relObj) && _.isFunction(relObj.controller[type]) &&
+                        relObj.controller[type]($scope, $element);
                 },
                 'head' : function($scope) {
                         $scope.loadButton = false;
