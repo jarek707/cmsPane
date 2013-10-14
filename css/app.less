@@ -235,9 +235,11 @@ cms-pane {
     .outButton      { .glyphBg(-120px, -72px);  }
     .closeButton    { .glyphBg(-218px, -96px);  }
     .restoreTable   { .glyphBg(-266px,  -24px); }
-    //.peekTable      { .glyphBgWhite(-266px,  -24px); }
-    .peekTable      { .glyphBg(-266px,  -26px); }
     .loadData       { .glyphBg(-266px,  -2px); }
+
+    .peekTable          { .glyphBg(-266px,  -26px); }
+    .peekTable.hidden   { .glyphBgWhite(-266px,  -26px); display:block; }
+
     .headButtons { 
         input {
             width:14px; 

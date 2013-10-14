@@ -4,9 +4,8 @@
     <div><div>{{title|Last}}</div></div>
     <div>{{rowContent}}</div>
     <div class='headButtons button'>
-        <input type="button" class="addButton"    value=' ' ng-click="add()" ng-show='showHeadAdd'></input>
-        <input type="button" class="peekTable"    ng-hide='hideContent' value=' ' ng-click="showContent();" ></input>
-        <input type="button" class="restoreTable" ng-show='hideContent' value=' ' ng-click="showContent();"></input>
-        <input type="button" class="loadData"     ng-show='loadButton'    value=' ' ng-click="setData();"></input>
+        <input type="button" class="addButton" value=' ' ng-click="add()" ng-show='showHeadAdd'></input>
+        <input type="button" class="peekTable" ng-class="hideContent" value=' ' ng-click="toggleContent();" ></input>
+        <input type="button" class="loadData"  ng-show='loadButton'   value=' ' ng-click="setData();"></input>
     </div>
     <span class='notify'></span>

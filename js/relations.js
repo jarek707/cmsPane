@@ -1,4 +1,4 @@
-angular.module('app.relationScopes', ['app.gridConf'])
+angular.module('app.relationScopes', [])
     .service('relScopes', ['lData','jquery_ui', function(lData, jquery_ui) {
         return {
             'oneToMany' : {
@@ -248,6 +248,7 @@ angular.module('app.relationScopes', ['app.gridConf'])
 
                         UT.wait($scope, 'list', function() {
                             jquery_ui.init($element, {"sortable" : $scope.handleSort}); 
+                            TM($scope.meta.key);
                         });
                     },
                     'row': function($scope, $element) {

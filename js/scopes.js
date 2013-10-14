@@ -1,8 +1,8 @@
-angular.module('app.scopes', ['app.gridConf', 'app.relationScopes'])
+angular.module('app.scopes', ['app.relationScopes'])
     /*
      *          LINKERS
     */
-    .service('linkers', ['$compile', 'lData', 'relScopes', function($compile, lData, relScopes) {
+    .service('linkers', ['lData', 'relScopes', function(lData, relScopes) {
         return {
             'set' : function(type, $scope, $element) {
                 this[type]($scope, $element);
@@ -38,12 +38,7 @@ angular.module('app.scopes', ['app.gridConf', 'app.relationScopes'])
                 };
             },
             'row' : function($scope, $element) {
-                $scope.attachAfterRow = function() {
-                    $element.parent().after(
-                        $scope.meta.element.find('inline').detach()
-                    );
-                };
-
+                $scope.rowClass  = '';
                 $scope.buttons = {};
                 $scope.buttonsOnOff = function (on, off) {
                     _(on.split(',')).each(function(v,k)  { $scope.buttons[v] = true; });
@@ -51,7 +46,10 @@ angular.module('app.scopes', ['app.gridConf', 'app.relationScopes'])
                 };
 
                 $scope.buttonsOnOff('edit,del', 'add,save,sub,close');
-                $scope.rowClass  = '';
+
+                $scope.attachAfterRow = function() {
+                    $element.parent().after($scope.meta.element.find('inline').detach());
+                };
 
                 $scope.rowEmpty = function() {
                     var $return = false;
@@ -66,8 +64,6 @@ angular.module('app.scopes', ['app.gridConf', 'app.relationScopes'])
                 if ($scope.rowEmpty()) {
                     $scope.rowClass = 'editable'; 
                     $scope.buttonsOnOff('close','edit');
-                } else {
-                    $scope.rowClass = ''; 
                 }
 
                 // Setup a shadow data row to keep local changes for comparisons and saving
@@ -94,7 +90,7 @@ angular.module('app.scopes', ['app.gridConf', 'app.relationScopes'])
                 'head' : function($scope) {
                         $scope.loadButton = false;
 
-                        $scope.showContent = function() {
+                        $scope.toggleContent = function() {
                             $scope.hideContent = $scope.hideContent ? false : 'hidden';
                         };
 

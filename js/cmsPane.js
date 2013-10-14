@@ -214,10 +214,19 @@ angular.module('app.directives', ['app.gridConf', 'app.scopes'])
                 compile  : function(el, attrs) {
                     var iterate = el.html();
                     el.html('');
+
                     function link($scope, $element) {
-                        $element.append(
-                            $compile($scope.templates.cmsPane.replace('<inject-iterator />', iterate)
-                        )($scope));
+                        var tpl = $scope.templates.cmsPane;
+
+                        if ( iterate.indexOf('buttons') === -1 && tpl.indexOf('buttons') === -1) {
+                            if (!_.isUndefined(attrs.buttons) ) {
+                                iterate = '<buttons use="' + attrs.buttons + '"></buttons>' + iterate;
+                            } else {
+                                iterate = '<buttons use="none"></buttons>' + iterate;
+                            }
+                        }
+
+                        $element.append($compile(tpl.replace('<inject-iterator />', iterate))($scope));
                     };
                     return link;
                 }

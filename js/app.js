@@ -1,5 +1,9 @@
 // GLOBAL Utility START
-var TM = new Date().getTime();
+var TMIN = new Date().getTime();
+function TM(label) {
+    var now = new Date().getTime();
+    console.log( 'TIMER FOR ' + label + ': ' + (now - TMIN)); 
+};
 
 function SER(arg) { return JSON.stringify(arg); }
 function LG()     { if (window.console) console.log(arguments);     }

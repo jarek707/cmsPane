@@ -214,13 +214,18 @@ div[cms-pane] .restoreTable,
 cms-pane .restoreTable {
   background: transparent url('../image/glyph.png') -266px -24px no-repeat;
 }
+div[cms-pane] .loadData,
+cms-pane .loadData {
+  background: transparent url('../image/glyph.png') -266px -2px no-repeat;
+}
 div[cms-pane] .peekTable,
 cms-pane .peekTable {
   background: transparent url('../image/glyph.png') -266px -26px no-repeat;
 }
-div[cms-pane] .loadData,
-cms-pane .loadData {
-  background: transparent url('../image/glyph.png') -266px -2px no-repeat;
+div[cms-pane] .peekTable.hidden,
+cms-pane .peekTable.hidden {
+  background: transparent url('../image/glyph-white.png') -266px -26px no-repeat;
+  display: block;
 }
 div[cms-pane] .headButtons input,
 cms-pane .headButtons input {
