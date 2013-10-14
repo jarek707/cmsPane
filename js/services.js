@@ -1,6 +1,9 @@
 angular.module('app.services', ['app.gridConf'])
     .factory('dom', ['$compile', '$http', function($compile, $http) {
         return {
+            'pushRelToIterate': function(el, rel) {
+                $(el).find('>div[iterate]').attr('rel', rel);
+            },
             'setupButtons' : function(el, attrs) {
                 if ( !_.isUndefined(attrs.use)) {
                     var buttons = el.find('input');

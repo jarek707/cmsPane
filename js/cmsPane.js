@@ -209,26 +209,26 @@ angular.module('app.directives', ['app.gridConf', 'app.scopes'])
         function ($compile) {
             return {
                 replace : true,
-                restrict : 'A',
+                restrict : 'AE',
                 template : '',
                 compile  : function(el, attrs) {
                     var iterate = el.html();
                     el.html('');
+                    return {
+                        post : function post($scope, $element) {
+                            var tpl = $scope.templates.cmsPane;
 
-                    function link($scope, $element) {
-                        var tpl = $scope.templates.cmsPane;
-
-                        if ( iterate.indexOf('buttons') === -1 && tpl.indexOf('buttons') === -1) {
-                            if (!_.isUndefined(attrs.buttons) ) {
-                                iterate = '<buttons use="' + attrs.buttons + '"></buttons>' + iterate;
-                            } else {
-                                iterate = '<buttons use="none"></buttons>' + iterate;
+                            if ( iterate.indexOf('buttons') === -1 && tpl.indexOf('buttons') === -1) {
+                                if (!_.isUndefined(attrs.buttons) ) {
+                                    iterate = '<buttons use="' + attrs.buttons + '"></buttons>' + iterate;
+                                } else {
+                                    iterate = '<buttons use="none"></buttons>' + iterate;
+                                }
                             }
-                        }
 
-                        $element.append($compile(tpl.replace('<inject-iterator />', iterate))($scope));
-                    };
-                    return link;
+                            $element.append($compile(tpl.replace('<inject-iterator />', iterate))($scope));
+                        }
+                    }
                 }
             }
         }
@@ -242,6 +242,7 @@ angular.module('app.directives', ['app.gridConf', 'app.scopes'])
                 transclude  : false,
                 template    : "",
                 compile     : function(el, attrs, trans) {
+                    dom.pushRelToIterate(el, attrs.rel);
                     if ( typeof USING_IE == 'undefined') USING_IE = false;
 
                     function link($scope, $element, $attrs) {
