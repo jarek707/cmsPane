@@ -5,9 +5,7 @@ angular.module('app.relationScopes', [])
                 'link' : {
                     'main' : function($scope) {
                         _.isUndefined($scope.meta.selected) ||
-                            LG( 'wait list', $scope.meta.key );
                             UT.wait($scope, 'list', function() {
-                                LG( ' found list', $scope.meta.key );
                                 $scope.$broadcast('initSelected',$scope.meta.selected); 
                             });
 
@@ -22,7 +20,6 @@ angular.module('app.relationScopes', [])
                                     $scope.$parent.$digest();
                                 }
                             } else {
-                                LG( ' call wait id' , $scope.meta.key );
                                 UT.wait($scope, 'id', function() {
                                     if ($scope.list[$scope.id][$scope.meta.cols[0][0]] === selected) {
                                         $scope.clk();

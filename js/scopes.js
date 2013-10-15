@@ -23,7 +23,6 @@ angular.module('app.scopes', ['app.relationScopes'])
                 $scope.getData = function(data) {
                     $scope.listW = angular.copy(data); 
                     $scope.setList();
-                    LG( 'set list', $scope.meta.key );
                 };
 
                 $scope.loadData = function(pid) { 
