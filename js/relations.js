@@ -4,6 +4,7 @@ angular.module('app.relationScopes', [])
             'oneToMany' : {
                 'link' : {
                     'main' : function($scope) {
+                        LG( ' here ' );
                         _.isUndefined($scope.meta.selected) ||
                             UT.wait($scope, 'list', function() {
                                 $scope.$broadcast('initSelected',$scope.meta.selected); 
