@@ -35,7 +35,6 @@ class db extends mysqli {
     }
 
     public function update($tab, $rowId,  $data) {
-        $zdata = $data;
         foreach($data as $key => $val) {
             //$data[$key] = mysqli_real_escape_string($val);
             //$data[$key] = mysqli_real_escape_string($val, $this);
@@ -49,7 +48,7 @@ class db extends mysqli {
         eval('$sql=' . $ret[$rowId < 0 ? 'insert' : 'update'] . ';');
         $this->query($sql);
 
-        return array($zdata, $data, $sql, $this->error);
+        return array($data, $sql, $this->error);
     }
 
     public function updateRel($tab, $rowId, $data) {
