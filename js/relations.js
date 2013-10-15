@@ -4,9 +4,10 @@ angular.module('app.relationScopes', [])
             'oneToMany' : {
                 'link' : {
                     'main' : function($scope) {
-                        LG( ' here ' );
                         _.isUndefined($scope.meta.selected) ||
+                        LG( ' waiting for list' );
                             UT.wait($scope, 'list', function() {
+                        LG( ' list is in' );
                                 $scope.$broadcast('initSelected',$scope.meta.selected); 
                             });
 
