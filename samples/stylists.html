@@ -70,19 +70,19 @@
                 </div>
                 <div class='left'>
                     <div class='box'>
-                        <cms-pane key='stylists' rel='oneToMany' selected='Raymond'>
+                        <cms-pane key='stylists' rel='oneToMany' selected='Antek'>
                             <div cms-header></div>
-                            <div iterate><buttons use='sav,del,edit,close'></buttons><div p-img></div></div>
+                            <div iterate buttons='sav,del,edit,close'><div p-img></div></div>
 
                             <inline class='inlineWrapper'>
                                 <div class='box'>
                                     <div cms-child key="client-result" rel='oneToSelectOut' jq-sortable='clients' parent-key='clients'>
                                         <div cms-header title='Selected Clients' no-add-button></div>
-                                        <div iterate><div p-img></div><buttons use='remove'></buttons></div>
+                                        <div iterate buttons='remove'><div p-img></div></div>
                                     </div>
                                     <div cms-child key="salon-result" rel='oneToSelectOut' jq-sortable='salons' parent-key='salons'>
                                         <div cms-header title='Selected Salons' no-add-button></div>
-                                        <div iterate><div p-img></div><buttons use='remove'></buttons></div>
+                                        <div iterate buttons='remove'><div p-img></div></div>
                                     </div>
                                 </div>
                             </inline>
@@ -91,15 +91,15 @@
                 </div>
                 <div class='right'>
                     <div class='box'>
-                        <cms-child key="clients" rel='oneToSelect' jq-sortable='client-result' id='clients' parent-key='stylists' cols='[["left", "Name"], ["right", "Image URL"]]'>
+                        <cms-child key="clients" rel='oneToSelect' jq-sortable='client-result' auto-add id='clients' parent-key='stylists' cols='[["left", "Name"], ["right", "Image URL"]]'>
                             <div cms-header title='Available Clients' ></div>
-                            <div iterate><buttons use='sav,close,edit,del,out'></buttons><div cms-item='oneLabel'></div></div>
+                            <div iterate buttons='sav,close,edit,del,out'><div cms-item='oneLabel'></div></div>
                         </cms-child>
                     </div>
                     <div class='box'>
-                        <div cms-child key="salons" rel='oneToSelect' jq-sortable='salon-result'  parent-key='stylists' class='abc' cols='[["left", "Name"], ["right", "Image URL"]]'>
+                        <div cms-child key="salons" rel='oneToSelect' jq-sortable='salon-result' parent-key='stylists' class='abc' cols='[["left", "Name"], ["right", "Image URL"]]'>
                             <div cms-header title='Available Salons' ></div>
-                            <div iterate><buttons use='sav,close,edit,del,out'></buttons><div cms-item='oneLabel'></div></div>
+                            <div iterate buttons='sav,close,edit,del,out'><div cms-item='oneLabel'></div></div>
                         </div>
                     </div>
                 </div>
