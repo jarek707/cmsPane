@@ -21,6 +21,7 @@ angular.module('app.relationScopes', [])
                                 }
                             } else {
                                 UT.wait($scope, 'id', function() {
+                                    LG( ' got id' );
                                     if ($scope.list[$scope.id][$scope.meta.cols[0][0]] === selected) {
                                         $scope.clk();
                                         $scope.$parent.$digest();
