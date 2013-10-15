@@ -2,7 +2,7 @@
 var TMIN = new Date().getTime();
 function TM(label) {
     var now = new Date().getTime();
-    console.log( 'TIMER FOR ' + label + ': ' + (now - TMIN)); 
+    console.log((now-TMIN) + ' : TIMER FOR ' + label);
 };
 
 function SER(arg) { return JSON.stringify(arg); }

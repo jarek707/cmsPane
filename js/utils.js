@@ -14,13 +14,13 @@ function LGT()    {
 }
 
 UT = {
-    'wait' : function(obj, key, cb, maxCount) { // wait for object until defined and non-empty
-        maxCount = _.isUndefined(maxCount) ? 50 : maxCount; // safety
+    'wait' : function(obj, key, cb) { // wait for object until defined and non-empty
+        cnt = 60;
 
         function ready() {
-            return --maxCount && (_.isUndefined(obj[key]) || _.isEmpty(obj[key])) 
-                                 ? setTimeout(function() { ready(obj, key, ready, maxCount); }, 40)
-                                 : setTimeout(cb, 100);
+            return --cnt && (_.isUndefined(obj[key]) || _.isEmpty(obj[key])) 
+                    ? setTimeout(function() { ready(obj, key, ready); }, 50)
+                    : setTimeout(function() { cb(cnt) }, 100);
         }
 
         return ready();

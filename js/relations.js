@@ -4,28 +4,21 @@ angular.module('app.relationScopes', [])
             'oneToMany' : {
                 'link' : {
                     'main' : function($scope) {
-                        _.isUndefined($scope.meta.selected) ||
-                            UT.wait($scope, 'list', function() {
-                                $scope.$broadcast('initSelected',$scope.meta.selected); 
-                            });
-
                         _.defer($scope.dataInit);
                     }, 
                     'row' : function($scope) {
-                        $scope.$on('initSelected', function(evt, selected) {
-                            if ( _.isEmpty(selected) ) {
+                        UT.wait($scope, 'id', function() {
+                            if ( _.isEmpty($scope.meta.selected) ) {
                                 // Simulate click on the first row for autoInit
                                 if ($scope.id === _.keys($scope.list)[0]) {
                                     $scope.clk();
                                     $scope.$parent.$digest();
                                 }
                             } else {
-                                UT.wait($scope, 'id', function() {
-                                    if ($scope.list[$scope.id][$scope.meta.cols[0][0]] === selected) {
-                                        $scope.clk();
-                                        $scope.$parent.$digest();
-                                    }
-                                });
+                                if ($scope.list[$scope.id][$scope.meta.cols[0][0]] === $scope.meta.selected) {
+                                    $scope.clk();
+                                    $scope.$parent.$digest();
+                                }
                             }
                         });
                     }
