@@ -19,7 +19,6 @@ UT = {
         LG( maxCount, obj.meta.key );
 
         function ready() {
-            LG( this );
             return --maxCount && (_.isUndefined(obj[key]) || _.isEmpty(obj[key])) 
                                  ? setTimeout(function() { ready(obj, key, ready, maxCount); }, 50)
                                  : setTimeout(cb, 100);
