@@ -7,18 +7,13 @@ angular.module('app.relationScopes', [])
                         _.defer($scope.dataInit);
                     }, 
                     'row' : function($scope) {
-                        UT.wait($scope, 'id', function() {
-                            if ( _.isEmpty($scope.meta.selected) ) {
-                                // Simulate click on the first row for autoInit
-                                if ($scope.id === _.keys($scope.list)[0]) {
-                                    $scope.clk();
-                                    $scope.$parent.$digest();
-                                }
+                        var selected = $scope.meta.selected;
+
+                        _.isUndefined(selected) || UT.wait($scope, 'id', function() {
+                            if (_.isEmpty(selected)) {
+                                $scope.id == _.keys($scope.list)[0] && $scope.clk();
                             } else {
-                                if ($scope.list[$scope.id][$scope.meta.cols[0][0]] === $scope.meta.selected) {
-                                    $scope.clk();
-                                    $scope.$parent.$digest();
-                                }
+                                $scope.list[$scope.id][$scope.meta.cols[0][0]] === selected && $scope.clk();
                             }
                         });
                     }

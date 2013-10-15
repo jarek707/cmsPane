@@ -173,20 +173,8 @@ angular.module('app.scopes', ['app.relationScopes'])
                             }));
                         }
 
-                        $scope.hover = function() {
-                        };
-
-                        $scope.getElementClass = function(i) {
-                            return $scope.meta.tab[i].type === 'T' ? '' : 'notext';
-                        };
-
                         $scope.chg = function() {
                             $scope.rowClass = 'editable' + (isDirty() ? ' dirty' : '');   
-
-                        };
-
-                        $scope.sel = function() {
-                            $scope.rowClass = 'selected' + (isDirty() ? ' dirty' : '');   
                         };
 
                         $scope.blr = function() { 
@@ -199,19 +187,13 @@ angular.module('app.scopes', ['app.relationScopes'])
 
                             $scope.buttonsOnOff('edit','save,close');
                         };
-                        
-                        $scope.editRow = function() { // Usually on ng-Dblclick
-                           $scope.closeLastRow($scope);
-                           $scope.chg();
-                        };
 
-                        $scope.defaultClk = function(idx) {
+                        $scope.sel = function() {
+                            $scope.rowClass = 'selected' + (isDirty() ? ' dirty' : '');   
                         };
 
                         $scope.clk = function(idx, noAttach) {
-                            if ($scope.closeLastRow($scope)) {
-                                $scope.sel();
-                            }
+                            $scope.closeLastRow($scope) && $scope.sel();
                         };
 
                         $scope.save = function() {
@@ -235,7 +217,7 @@ angular.module('app.scopes', ['app.relationScopes'])
                         };
 
                         $scope.close = function() {
-                            if ( $scope.rowEmpty()) {
+                            if ($scope.rowEmpty()) {
                                 $scope.$parent.list = _($scope.list).omit($scope.id);
                             } else {
                                 $scope.workRow = _.clone($scope.row);
