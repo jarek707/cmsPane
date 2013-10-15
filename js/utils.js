@@ -18,7 +18,6 @@ UT = {
         maxCount = _.isUndefined(maxCount) ? 50 : maxCount; // safety
 
         function ready() {
-            LG( maxCount, obj.meta.key, key );
             return --maxCount && (_.isUndefined(obj[key]) || _.isEmpty(obj[key])) 
                                  ? setTimeout(function() { ready(obj, key, ready, maxCount); }, 40)
                                  : setTimeout(cb, 100);
