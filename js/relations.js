@@ -5,7 +5,9 @@ angular.module('app.relationScopes', [])
                 'link' : {
                     'main' : function($scope) {
                         _.isUndefined($scope.meta.selected) ||
+                            LG( 'wait list', $scope.meta.key );
                             UT.wait($scope, 'list', function() {
+                                LG( ' found list', $scope.meta.key );
                                 $scope.$broadcast('initSelected',$scope.meta.selected); 
                             });
 
