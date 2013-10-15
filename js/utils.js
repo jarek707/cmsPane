@@ -16,9 +16,9 @@ function LGT()    {
 UT = {
     'wait' : function(obj, key, cb, maxCount) { // wait for object until defined and non-empty
         maxCount = _.isUndefined(maxCount) ? 20 : maxCount; // safety
-        LG( maxCount, obj.meta.key );
 
         function ready() {
+            LG( maxCount, obj.meta.key );
             return --maxCount && (_.isUndefined(obj[key]) || _.isEmpty(obj[key])) 
                                  ? setTimeout(function() { ready(obj, key, ready, maxCount); }, 50)
                                  : setTimeout(cb, 100);
