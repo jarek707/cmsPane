@@ -11,9 +11,9 @@ angular.module('app.relationScopes', [])
 
                         _.isUndefined(selected) || UT.wait($scope, 'id', function() {
                             if (_.isEmpty(selected)) {
-                                $scope.id == _.keys($scope.list)[0] && $scope.clk();
+                                $scope.id == _.keys($scope.list)[0] && $scope.clk(true);
                             } else {
-                                $scope.list[$scope.id][$scope.meta.cols[0][0]] === selected && $scope.clk();
+                                $scope.list[$scope.id][$scope.meta.cols[0][0]] === selected && $scope.clk(true);
                             }
                         });
                     }
@@ -22,10 +22,12 @@ angular.module('app.relationScopes', [])
                     'row': function($scope) {
 
                         var parentClk = $scope.clk;
-                        $scope.clk = function() {
+                        $scope.clk = function(doDigest) {
                             $scope.$parent.rowId = $scope.id;
                             $scope.attachAfterRow();
                             parentClk();
+
+                            doDigest && $scope.$parent.$digest();
                         };
                     }
                 }
