@@ -1,20 +1,118 @@
-PaneConfig  = {
-    'stylists' : {
-        'cols'    : [["name", "Stylist's Name"], 
-                     ["image_url", "Image Url"],
-                     ["address", "Address"],
-                     ["phone", "Phone"],
-                     ["email", "Email"]
-                    ]
+PaneConfig = {
+    "article": {
+        "cols": [
+            [
+                "content",
+                "Content"
+            ],
+            [
+                "title",
+                "Title"
+            ]
+        ]
     },
-    'salons' : {
-        'cols'    : [["left", "Salon Name"], ["right", "Image Url"]]
+    "clients": {
+        "cols": [
+            [
+                "left",
+                "Left"
+            ],
+            [
+                "right",
+                "Right"
+            ],
+            [
+                "ord",
+                "Ord"
+            ]
+        ]
     },
-    'clients' : {
-        'cols'    : [["left", "Name"], ["right", "Image Url"]]
+    "salons": {
+        "cols": [
+            [
+                "left",
+                "Left"
+            ],
+            [
+                "right",
+                "Right"
+            ],
+            [
+                "ord",
+                "Ord"
+            ]
+        ]
     },
-    'users' :{
-        //'cols' : [["first", "First Name"], ["last", "Last Name"], ["email", "Email"]]
-        'cols' : [["left", "First Name"], ["right", "Last Name"]]
+    "stylists": {
+        "cols": [
+            [
+                "name",
+                "Name"
+            ],
+            [
+                "image_url",
+                "Image_url"
+            ],
+            [
+                "user_id",
+                "User_id"
+            ],
+            [
+                "address",
+                "Address"
+            ],
+            [
+                "email",
+                "Email"
+            ],
+            [
+                "phone",
+                "Phone"
+            ],
+            [
+                "ord",
+                "Ord"
+            ]
+        ]
+    },
+    "topic": {
+        "cols": [
+            [
+                "name",
+                "Name"
+            ],
+            [
+                "ord",
+                "Ord"
+            ]
+        ]
+    },
+    "users": {
+        "cols": [
+            [
+                "first",
+                "First"
+            ],
+            [
+                "last",
+                "Last"
+            ],
+            [
+                "email",
+                "Email"
+            ],
+            [
+                "phone",
+                "Phone"
+            ],
+            [
+                "role",
+                "Role"
+            ],
+            [
+                "password",
+                "Password"
+            ]
+        ]
     }
-};
+}

@@ -20,6 +20,7 @@ angular.module('app.relationScopes', [])
                 },
                 'controller' : {
                     'row': function($scope) {
+
                         var parentClk = $scope.clk;
                         $scope.clk = function() {
                             $scope.$parent.rowId = $scope.id;

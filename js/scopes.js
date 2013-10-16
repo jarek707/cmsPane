@@ -53,6 +53,8 @@ angular.module('app.scopes', ['app.relationScopes'])
 
                 $scope.rowEmpty = function() {
                     var $return = false;
+                    if (_.isUndefined($scope.meta.cols)) return $return;
+
                     if (!_.isUndefined($scope.row) ) {
                         for (var i=0; i<$scope.meta.cols.length; i++ ) {
                             $return |= $scope.row[$scope.meta.cols[i][0]] !== '';
@@ -192,7 +194,7 @@ angular.module('app.scopes', ['app.relationScopes'])
                             $scope.rowClass = 'selected' + (isDirty() ? ' dirty' : '');   
                         };
 
-                        $scope.clk = function(idx, noAttach) {
+                        $scope.clk = function() {
                             $scope.closeLastRow($scope) && $scope.sel();
                         };
 

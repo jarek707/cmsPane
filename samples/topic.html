@@ -65,35 +65,26 @@
                         <button onclick='LG(localStorage)'>To Console</button>
                         <div style='float:right; height:16px; width:14px; margin-top:3px;' class='savButton' ng-show="saved" is-success='{{saved}}'></div>
                     </div>
-                        <cms-child key="article_content" rel='manyToOneOut' parent-key='article'cols='[["title","Title"], ["content", "Content"]]'>
+                        <cms-child key="article_content" rel='manyToOneOut' parent-key='article'>
                             <div cms-header title='Article Content' no-add-button ></div>
-                            <div iterate><buttons use='none'></buttons><div cms-item='article'></div></div>
+                            <div iterate buttons use='none'><div cms-item='article'></div></div>
                         </cms-child>
                     <detail tpl></detail>
                     &nbsp;
                 </div>
                 <div class='left'>
                     <div class='box'>
-                        <cms-pane key='topic' rel='oneToMany' cols='[["name", "Name"]]' selected='Kendo'>
+                        <cms-pane jq-sortable key='topic' rel='oneToMany' selected='Kendo'>
                             <div cms-header></div>
-                            <div iterate><buttons use='sav,del,edit,close'></buttons><div p-img></div></div>
-
-                            <inline class='inlineWrapper'>
-                                <div class='box'>
-                                    <div cms-child key="topic-article" rel='manyToOneOut' jq-sortable='salons' parent-key='salons'>
-                                        <div cms-header title='Selected Salons' no-add-button></div>
-                                        <div iterate><div p-img></div><buttons use='remove'></buttons></div>
-                                    </div>
-                                </div>
-                            </inline>
+                            <div iterate buttons='sav,del,edit,close'><div p-img></div></div>
                         </cms-pane>
                     </div>
                 </div>
                 <div class='right'>
                     <div class='box'>
-                        <cms-child key="article" rel='manyToOne' jq-sortable id='topic' parent-key='topic' cols='[["title","Title"], ["content", "Content"]]'>
+                        <cms-child key="article" rel='manyToOne' jq-sortable id='topic' parent-key='topic'>
                             <div cms-header title='Articles' ></div>
-                            <div iterate><buttons use='sav,close,edit,del,out'></buttons><div cms-item='oneLabel'></div></div>
+                            <div iterate><buttons use='sav,close,edit,del,out'></buttons><div cms-item='topicArticle'></div></div>
                         </cms-child>
                     </div>
                 </div>

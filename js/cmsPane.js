@@ -192,7 +192,6 @@ angular.module('app.directives', ['app.gridConf', 'app.scopes'])
                         $element.data(_.extend($element.data(), {'$scope' : $scope}));
                     });
 
-
                     $scope.close = function() {
                         $element.hide();
                     };

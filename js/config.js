@@ -20,7 +20,11 @@ angular.module('app.gridConf', ['app.directives'])
 
                 this.setConfigObject(_.isUndefined(attrs.PaneConfig) ? 'PaneConfig' : attrs.PaneConfig);
 
-                var $ret = _(this.getMeta(attrs.key)).extend(attrs);
+                if (_.isUndefined(PaneConfig[attrs.key]))
+                    var $ret = attrs;
+                else {
+                    var $ret = _.extend(PaneConfig[attrs.key], attrs);
+                }
 
                 setDefault('paneConfig',     'PaneConfig');
                 setDefault('tplDir',         'partials');
