@@ -248,8 +248,9 @@ angular.module('app.directives', ['app.gridConf', 'app.scopes'])
                         var parentMeta = _.clone($scope.exposer({data:'meta'}));
 
                         $scope.meta = _.isUndefined(parentMeta) ? {} : parentMeta;
-                        $scope.meta = _($scope.meta).extend( config.setParams(domMeta) );
-                        $scope.meta.element = $element;
+                        $scope.meta = _($scope.meta).extend(config.setParams(domMeta));
+                        $scope.meta.element  = $element;
+                        $element.data().meta = $scope.meta;
 
                         linkers.set('main', $scope, $element);
 

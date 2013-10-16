@@ -27,7 +27,7 @@ angular.module('app.relationScopes', [])
                             $scope.attachAfterRow();
                             parentClk();
 
-                            //doDigest && $scope.$parent.$digest();
+                            doDigest && $scope.$parent.$digest();
                         };
                     }
                 }
@@ -108,9 +108,6 @@ angular.module('app.relationScopes', [])
 
                         $scope.dataInit();
                             
-                        UT.wait($scope, 'list', function() { 
-                            jquery_ui.init($element, {"sortable" : $scope.handleSort}); 
-                        });
                     },
                     'row': function($scope) {
                         $scope.buttonsOnOff('edit,del,add,out', 'save,sub,close');
@@ -236,11 +233,6 @@ angular.module('app.relationScopes', [])
 
                             $scope.updateRefList().expose('saveRelData')();
                         };
-
-                        UT.wait($scope, 'list', function() {
-                            jquery_ui.init($element, {"sortable" : $scope.handleSort}); 
-                            TM($scope.meta.key);
-                        });
                     },
                     'row': function($scope, $element) {
                         $scope.buttonsOnOff('remove', '');

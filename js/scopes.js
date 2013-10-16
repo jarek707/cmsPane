@@ -2,7 +2,7 @@ angular.module('app.scopes', ['app.relationScopes'])
     /*
      *          LINKERS
     */
-    .service('linkers', ['lData', 'relScopes', function(lData, relScopes) {
+    .service('linkers', ['lData', 'relScopes', 'jquery_ui', function(lData, relScopes, jquery_ui) {
         return {
             'set' : function(type, $scope, $element) {
                 this[type]($scope, $element);
@@ -36,6 +36,11 @@ angular.module('app.scopes', ['app.relationScopes'])
                 $scope.handleSort = function() {
                     LGW( 'Presistent sorting not implemented for this relation');
                 };
+
+                UT.wait($scope, 'list', function() {
+                    jquery_ui.init($element, {"sortable" : $scope.handleSort}); 
+                    TM($scope.meta.key);
+                });
             },
             'row' : function($scope, $element) {
                 $scope.rowClass  = '';
