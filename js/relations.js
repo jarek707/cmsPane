@@ -27,7 +27,7 @@ angular.module('app.relationScopes', [])
                             $scope.attachAfterRow();
                             parentClk();
 
-                            doDigest && $scope.$parent.$digest();
+                            //doDigest && $scope.$parent.$digest();
                         };
                     }
                 }
