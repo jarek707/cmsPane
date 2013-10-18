@@ -1,22 +1,21 @@
 angular.module('app.relationScopes', [])
-.service('relData', ['lData','jquery_ui', function(lData, jquery_ui) {
+.service('relData', ['lData',function(lData) {
     this.init = function($scope) {
         this.scope = $scope;
-        LG( this );
 
         this.load = function() {
             LG( this.scope , ' this scope', this);
         }
     };
 }])
-.service('relScopes', ['lData','jquery_ui', 'relData', function(lData, jquery_ui, relData) {
+.service('relScopes', ['lData', 'relData', function(lData, relData) {
     return {
-        'oneToMany' : {
-            'link' : {
-                'main' : function($scope) {
+        'oneToMany' : function($scope, $element, dest, type) {
+            this.link = {
+                'main' : function() {
                     _.defer($scope.dataInit);
                 }, 
-                'row' : function($scope) {
+                'row' : function() {
                     var selected = $scope.meta.selected;
 
                     _.isUndefined(selected) || UT.wait($scope, 'id', function() {
@@ -27,10 +26,9 @@ angular.module('app.relationScopes', [])
                         }
                     });
                 }
-            },
-            'controller' : {
-                'row': function($scope) {
-
+            };
+            this.controller = {
+                'row' : function() {
                     var parentClk = $scope.clk;
                     $scope.clk = function(doDigest) {
                         $scope.$parent.rowId = $scope.id;
@@ -40,43 +38,43 @@ angular.module('app.relationScopes', [])
                         doDigest && $scope.$parent.$digest();
                     };
                 }
-            }
+            };
+
+            _.isUndefined(this[dest]) || !_.isFunction(this[dest][type]) || this[dest][type]();
         },
-        'manyToOne' : {
-            'link' : {
-                'main' : function($scope) {
+        'manyToOne' : function($scope, $element, dest, type) {
+            this.link = {
+                'main' : function() {
                     $scope.saveRelData = function() {};
                     $scope.dataInit = function() {
                         $scope.loadData($scope.rowId);
                     };
 
-                    $scope.$watch('rowId', function() {
-                        if (!_.isEmpty($scope.rowId)) {
-                            $scope.dataInit();
+                    $scope.$watch('rowId', function() { _.isEmpty($scope.rowId) || $scope.dataInit(); });
+                }, 
+                'row' : function() {
+                    UT.wait($scope, 'id', function() {
+                        if ($scope.id == _.keys($scope.list).shift()) {
+                            $scope.clk();
+                            $scope.$parent.$digest();
                         }
                     });
                 }
-            },
-            'controller' : {
-                'main' : function($scope) {
+            };
+            this.controller = {
+                'main' : function() {
                     var parentSave = $scope.save;
                     $scope.save = function(row, id) {
                         row.pid = $scope.rowId;
                         parentSave(row,id);
                     }
-                },
-                'row': function($scope) {
-                    var parentClk = $scope.clk;
-                    $scope.clk = function() {
-                        $scope.$parent.id = $scope.id;
-                        parentClk();
-                    };
                 }
-            }
+            };
+            _.isUndefined(this[dest]) || !_.isFunction(this[dest][type]) || this[dest][type]();
         },
-        'manyToOneOut' : {
-            'link' : {
-                'main' : function($scope) {
+        'manyToOneOut' : function($scope, $element, dest, type) {
+            this.link = {
+                'main' : function() {
                     $scope.loadData = function() {};  // turn off default loadData
 
                     $scope.updateRefList = function() {
@@ -88,12 +86,12 @@ angular.module('app.relationScopes', [])
 
                     $scope.$watch('parentId', $scope.updateRefList);
                 }
-            },
-            'controller' : {}
+            };
+            _.isUndefined(this[dest]) || !_.isFunction(this[dest][type]) || this[dest][type]();
         },
-        'oneToSelect' : {
-            'link' : {
-                'main' : function($scope, $element) {
+        'oneToSelect' : function($scope, $element, dest, type){
+            this.link = {
+                'main' : function() {
                     $scope.saveRelData = function() {
                         _.isEmpty($scope.relData[$scope.rowId]) && 
                             ($scope.relData[$scope.rowId] = {});
@@ -119,13 +117,13 @@ angular.module('app.relationScopes', [])
                     $scope.dataInit();
                         
                 },
-                'row': function($scope) {
+                'row': function() {
                     $scope.buttonsOnOff('edit,del,add,out', 'save,sub,close');
                     $scope.$watch('id', function() { $scope.$parent.id = $scope.id;} );
                 }
-            },
-            'controller' : {
-                'main' : function($scope, $element) {
+            };
+            this.controller = {
+                'main' : function() {
                     var parentSave = $scope.save;
                     $scope.save = function(row, id) {
                         parentSave(row, id);
@@ -136,7 +134,7 @@ angular.module('app.relationScopes', [])
                         $scope.saveRelData();
                     };
                 },
-                'row': function($scope, $element) {
+                'row': function() {
                     function add(){ // We are adding on click in this one
                         if ( $scope.rowClass.indexOf('editable') === -1 ) {
                             /// TODO see if contains does anything here
@@ -198,11 +196,13 @@ angular.module('app.relationScopes', [])
                         detailScope.caption = $scope.workRow.left;
                     };
                 }
-            }
+            };
+
+            _.isUndefined(this[dest]) || !_.isFunction(this[dest][type]) || this[dest][type]();
         },
-        'oneToSelectOut' : {
-            'link' : {
-                'main' : function($scope, $element) {
+        'oneToSelectOut' : function($scope, $element, dest, type) {
+            this.link = {
+                'main' : function() {
                     $scope.updateRefList = function() {
                         $scope.list = {};
                         if (!_.isEmpty($scope.rowId)) { 
@@ -244,12 +244,12 @@ angular.module('app.relationScopes', [])
                         $scope.updateRefList().expose('saveRelData')();
                     };
                 },
-                'row': function($scope, $element) {
+                'row': function() {
                     $scope.buttonsOnOff('remove', '');
                 }
-            },
-            'controller' : {
-                'row': function($scope, $element) {
+            };
+            this.controller = {
+                'row': function() {
                     $scope.remove = function() { // Remove related item
                         $scope.expose('remove')($scope.list[$scope.id].id);
                         $scope.updateRefList();
@@ -263,21 +263,26 @@ angular.module('app.relationScopes', [])
                         });
                     }
                 }
-            }
+            };
+
+            _.isUndefined(this[dest]) || !_.isFunction(this[dest][type]) || this[dest][type]();
         },
-        'null' : {
+        'null' : function($scope, $element) {
+            return {
             'link' : {
-                'main' : function($scope, $element) {
+                'main' : function() {
                 },
-                'row': function($scope, $element) {
+                'row': function() {
                 }
             },
             'controller' : {
-                'main' : function($scope, $element) {
+                'main' : function() {
                 },
-                'row': function($scope, $element) {
+                'row': function() {
                 }
             }
+            }
+            _.isUndefined(this[dest]) || !_.isFunction(this[dest][type]) || this[dest][type]();
         }
     }
 }]);

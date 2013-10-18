@@ -96,7 +96,7 @@ angular.module('app.services', ['app.gridConf'])
                     'distance'  : 1,
                     'cursorAt'  : {left: 5},
                     'update'    : function(evt, obj) {
-                        sort = $(this).sortable('toArray', {"attribute" : "row-id"});
+                        sort = $(this).sortable('toArray', {"attribute" : "jq-row-id"});
                         _.isFunction(cb) && cb(evt, obj, sort);
                     }
                 };
@@ -104,7 +104,9 @@ angular.module('app.services', ['app.gridConf'])
                 _.isEmpty(sortable) ||
                     (params = _.extend(params, {"connectWith" : '[key="' + sortable + '"] .dataContent'}));
 
-                $(el).find('.sortable').sortable(params);
+                setTimeout( function() {
+                    $(el).find('.sortable').sortable(params);
+                }, 100);
             }
         }
     }])
