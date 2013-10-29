@@ -17,7 +17,7 @@ class db extends mysqli {
         }
     }
 
-    public function genSql($tab) {
+    public function genSql($tab, $isInsert) {
         $ret = array(); $val = $cols = $upd = '';
 
         if ($res = $this->query($sql = "SHOW COLUMNS FROM `$tab`"))
@@ -28,24 +28,19 @@ class db extends mysqli {
                     $upd  .= ",`"  . $obj->Field . "`=" . "'$" . $obj->Field . "'";
                 }
 
-        $ret['insert'] = '"INSERT INTO `' . $tab . '` (' . substr($cols, 1) . ") VALUES (" . substr($vals, 1) . ')"';
-        $ret['update'] = '"UPDATE `' . $tab . '` SET ' . substr($upd, 1) . ' WHERE id=$rowId"';
-
-        return $ret;
+        return $isInsert 
+            ? '"INSERT INTO `' . $tab . '` (' . substr($cols, 1) . ") VALUES (" . substr($vals, 1) . ')"'
+            : '"UPDATE `' . $tab . '` SET ' . substr($upd, 1) . ' WHERE id=$rowId"';
     }
 
     public function update($tab, $rowId,  $data) {
         foreach($data as $key => $val) {
-            //$data[$key] = mysqli_real_escape_string($val);
-            //$data[$key] = mysqli_real_escape_string($val, $this);
             $data[$key] = filter_var($val, FILTER_SANITIZE_STRING);
         }
 
         extract($data);
 
-        $ret = $this->genSql($tab);
-
-        eval('$sql=' . $ret[$rowId < 0 ? 'insert' : 'update'] . ';');
+        eval('$sql=' . $this->genSql($tab, $rowId < 0) . ';');
         $this->query($sql);
 
         return array($data, $sql, $this->error);

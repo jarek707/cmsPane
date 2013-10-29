@@ -28,7 +28,7 @@ angular.module('app.services', ['app.gridConf'])
                     if (_.isString(v)) {
                         try { // Invalid JSON string will be considered a valid argument string
                             $ret[k] = _(['[', '{']).contains(v.substr(0,1)) ? JSON.parse(v) : v;
-                        } catch (e) { }
+                        } catch (e) {}
                     }
                 });
                 return $ret;
@@ -38,7 +38,7 @@ angular.module('app.services', ['app.gridConf'])
                 var comp = angular.element(el.data().outer);
                 comp.data().meta = data;
                 comp = $compile(comp)(parentScope);
-                el.replaceWith( comp );
+                el.replaceWith(comp);
             },
             'convertChild' : function( child ) {
                 var dataAttrs = {};
@@ -56,7 +56,7 @@ angular.module('app.services', ['app.gridConf'])
 
 
                 child.data().outer = 
-                    '<div cms-pane row-id="{{rowId}}" parent-id="{{id}}"  parent-list="list" exposer="exposing(data)"' +
+                    '<div cms-pane row-id="{{rowId}}" parent-id="id"  parent-list="list" exposer="exposing(data)"' +
                     ' key="' + dataAttrs.key + '" rel="' + dataAttrs.rel + '">' +
                         el.innerHTML +
                     '</div>'

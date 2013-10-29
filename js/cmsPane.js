@@ -237,7 +237,7 @@ angular.module('app.directives', ['app.gridConf', 'app.scopes'])
             return {
                 replace     : false,
                 restrict    : 'EA',
-                scope       : { exposer : '&', parentList : '=', rowId : "@", parentId : "@" },
+                scope       : { exposer : '&', parentList : '=', rowId : "@", parentId : "=" },
                 transclude  : false,
                 template    : "",
                 compile     : function(el, attrs, trans) {

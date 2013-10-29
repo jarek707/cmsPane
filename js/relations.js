@@ -4,8 +4,48 @@ angular.module('app.relationScopes', [])
         this.scope = $scope;
 
         this.load = function() {
-            LG( this.scope , ' this scope', this);
-        }
+            lData.getData($scope.relDataKey, function(relData) {
+                $scope.relData    = _.isEmpty(relData) ? {} : relData;
+            });
+        };
+
+        this.save = function() {
+            _.isEmpty($scope.relData[$scope.rowId]) && 
+                ($scope.relData[$scope.rowId] = {});
+
+            lData.save($scope.relDataKey, $scope.relData, $scope.rowId);
+        };
+
+        this.sort = function() {
+        };
+
+        this.del = function() {
+        };
+
+        this.add = function() {
+            if ( $scope.rowClass.indexOf('editable') === -1 ) {
+                /// TODO see if contains does anything here
+                if (!_.contains($scope.relData[$scope.rowId], $scope.id)) {
+                    var relData = $scope.relData[$scope.rowId];
+
+                    _.isUndefined(relData) && 
+                        ($scope.relData[$scope.rowId] = relData = {});
+
+                    // Get max id of all related items 
+                    var maxId = 0;
+                    for (var i in relData) {
+                        relData[i].ord >= maxId && (maxId = parseInt(relData[i].ord) + 1);
+                    }
+
+                    if (_.isUndefined(relData[$scope.id])) {
+                        $scope.relData[$scope.rowId][$scope.id] = ({'ord' : maxId});
+                    }
+               }
+
+               $scope.saveRelData();
+               $scope.$parent.$broadcast('relDataChanged'); // update rel pane
+           }
+        };
     };
 }])
 .service('relScopes', ['lData', 'relData', function(lData, relData) {
@@ -90,14 +130,12 @@ angular.module('app.relationScopes', [])
             _.isUndefined(this[dest]) || !_.isFunction(this[dest][type]) || this[dest][type]();
         },
         'oneToSelect' : function($scope, $element, dest, type){
+            var relD = new relData.init($scope);
             this.link = {
                 'main' : function() {
-                    $scope.saveRelData = function() {
-                        _.isEmpty($scope.relData[$scope.rowId]) && 
-                            ($scope.relData[$scope.rowId] = {});
-
-                        lData.save($scope.relDataKey, $scope.relData, $scope.rowId);
-                    };
+                    $scope.relDataKey = $scope.expose('meta').key + '/' + $scope.meta.key;
+                    
+                    $scope.saveRelData = function() { relD.save(); };
 
                     $scope.listFilter = function(list) {
                         if (_.isUndefined($scope.relData) || _.isEmpty($scope.rowId)) {
@@ -108,14 +146,8 @@ angular.module('app.relationScopes', [])
                         return _(list).omit(_($scope.relData[$scope.rowId]).keys());
                     };
 
-                    $scope.relDataKey = $scope.expose('meta').key + '/' + $scope.meta.key;
-
-                    lData.getData($scope.relDataKey, function(relData) {
-                        $scope.relData    = _.isEmpty(relData) ? {} : relData;
-                    });
-
+                    relD.load();
                     $scope.dataInit();
-                        
                 },
                 'row': function() {
                     $scope.buttonsOnOff('edit,del,add,out', 'save,sub,close');
@@ -144,12 +176,10 @@ angular.module('app.relationScopes', [])
                                 _.isUndefined(relData) && 
                                     ($scope.relData[$scope.rowId] = relData = {});
 
-                                var maxId = 0;
                                 // Get max id of all related items 
+                                var maxId = 0;
                                 for (var i in relData) {
-                                    if (relData[i].ord >= maxId ) {
-                                       maxId = parseInt(relData[i].ord) + 1;
-                                    }
+                                    relData[i].ord >= maxId && (maxId = parseInt(relData[i].ord) + 1);
                                 }
 
                                 if (_.isUndefined(relData[$scope.id])) {
@@ -241,7 +271,8 @@ angular.module('app.relationScopes', [])
                             relRow[sorted[i]].ord = i;
                         }
 
-                        $scope.updateRefList().expose('saveRelData')();
+                        $scope.updateRefList();
+                        $scope.expose('saveRelData')();
                     };
                 },
                 'row': function() {
@@ -267,20 +298,18 @@ angular.module('app.relationScopes', [])
 
             _.isUndefined(this[dest]) || !_.isFunction(this[dest][type]) || this[dest][type]();
         },
-        'null' : function($scope, $element) {
-            return {
-            'link' : {
+        'relationTemplate' : function($scope, $element) {
+            this.link = {
                 'main' : function() {
                 },
                 'row': function() {
                 }
-            },
-            'controller' : {
+            };
+            this.controller = {
                 'main' : function() {
                 },
                 'row': function() {
                 }
-            }
             }
             _.isUndefined(this[dest]) || !_.isFunction(this[dest][type]) || this[dest][type]();
         }
