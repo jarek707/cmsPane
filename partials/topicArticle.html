@@ -1,0 +1,15 @@
+<div class='item'>
+    <p>
+        <span>{{workRow.title}}</span>
+    </p>
+    <div class='active'>
+        <ul>
+            <li>
+                <label>Topic</label><textarea ng-model="workRow.title" ng-change='chg(0)'></textarea>
+            </li>
+            <li>
+                <label>Content</label><textarea ng-model="workRow.content" ng-change='chg(1)'></textarea>
+            </li>
+        </ul>
+    </div>
+</div>
