@@ -17,6 +17,10 @@ angular.module('app.directives', ['app.gridConf', 'app.scopes'])
                     $scope.logged = true;
                 };
 
+                $scope.submitSignUp = function() {
+                    $scope.logIn();
+                };
+
                 $scope.logOut = function() {
                     $scope.logged = false;
                     $scope.showSignup = false;
@@ -27,10 +31,6 @@ angular.module('app.directives', ['app.gridConf', 'app.scopes'])
                     var match = $scope.password == $scope.confirmPassword;
                     $scope.pwMatch = match ? '' : 'do not';
                     $element.find('notify').toggleClass('matched');
-                };
-
-                $scope.submitSignUp = function() {
-                    $scope.logIn();
                 };
 
                 //$scope.logOut();
